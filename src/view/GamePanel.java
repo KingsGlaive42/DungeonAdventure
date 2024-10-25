@@ -1,6 +1,7 @@
 package view;
 
 import controller.InputListener;
+import model.Player.Player;
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,6 +22,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private final InputListener myInputListener = new InputListener();
     private Thread myGameThread; // game clock
+    private final Player player = new Player(this, myInputListener, "Warrior", "Warrior");
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -60,6 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         // update game info here
+        player.update();
     }
 
     public void paintComponent(final Graphics theGraphics) {
@@ -68,6 +71,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D graphics2D = (Graphics2D) theGraphics;
 
         //Draw objects here
+        player.draw(graphics2D);
 
         graphics2D.dispose();
     }
