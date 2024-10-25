@@ -2,20 +2,20 @@ package model.DungeonCharacters;
 
 import java.util.Random;
 
-public class Thief extends Hero {
-    public Thief(final String theName) {
+public class Mage extends Hero {
+    public Mage(final String theName) {
         this.myName = theName;
         this.myHitPoints = 75;
-        this.myAttackSpeed = 6;
+        this.myAttackSpeed = 4;
         this.myChanceToHit = 0.8;
-        this.myChanceToBlock = 0.4;
-        this.myMinDamage = 20;
-        this.myMaxDamage = 40;
+        this.myChanceToBlock = 0.3;
+        this.myMinDamage = 25;
+        this.myMaxDamage = 45;
     }
 
     @Override
     public void attack(DungeonCharacter theTarget) {
-        System.out.println(myName + " attacks " + theTarget.myName); //Replace with however we'll announce it
+        System.out.println(myName + " casts fireball!"); //Would be fun to randomize attack name
         Random rand = new Random();
         if ((double) (rand.nextInt(10) + 1)/10 <= myChanceToHit) {
             System.out.println("Attack Landed!"); //Replace with however we'll announce it
@@ -28,17 +28,18 @@ public class Thief extends Hero {
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
-        System.out.println(myName + " used Surprise Attack on " + theTarget.myName);
+        System.out.println(myName + " used Ultima on " + theTarget.myName);
         Random rand = new Random();
-        if (rand.nextInt(10) + 1 <= 4) {
-            System.out.println(theTarget.myName + " didn't see it coming!"); //Replace with however we'll announce it
-            attack(theTarget);
-            attack(theTarget);
-        } else if (rand.nextInt(10) + 1 <= 8) {
-            attack(theTarget);
-            System.out.println(theTarget.myName + " deflected second attack"); //Replace with however we'll announce it sort of succeeded
+        if (rand.nextInt(10) + 1 <= 1) { //10% chance to insta-kill enemy
+            System.out.println("Direct Hit!"); //Replace with however we'll announce it
+            int damage = 999;
+            theTarget.takeDamage(damage);
+        } else if (rand.nextInt(10) + 1 <= 3) {
+            int damage = calculateDamage(75, 150);
+            theTarget.takeDamage(damage);
+            System.out.println(theTarget.myName + " partially dodged!"); //Replace with however we'll announce it
         } else {
-            System.out.println(myName + " was caught!"); //Replace with however we'll announce it failed
+            System.out.println("Ultima missed!"); //Replace with however we'll announce it
         }
     }
 

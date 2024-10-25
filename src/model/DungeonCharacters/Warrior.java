@@ -15,9 +15,10 @@ public class Warrior extends Hero {
 
     @Override
     public void attack(DungeonCharacter theTarget) {
+        System.out.println(myName + " performed an attack on " + theTarget.myName); //Replace with however we'll announce it
         Random rand = new Random();
         if ((double) (rand.nextInt(10) + 1)/10 <= myChanceToHit) {
-            System.out.println(myName + " performed an attack!"); //Replace with however we'll announce it succeeded
+            System.out.println("Attack Landed!"); //Replace with however we'll announce it
             int damage = calculateDamage(myMinDamage, myMaxDamage);
             theTarget.takeDamage(damage);
         } else {
@@ -27,9 +28,10 @@ public class Warrior extends Hero {
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
+        System.out.println(myName + " used Crushing Blow!"); //Replace with however we'll announce it
         Random rand = new Random();
         if (rand.nextInt(10) + 1 <= 4) {
-            System.out.println(myName + " used Crushing Blow!"); //Replace with however we'll announce it succeeded
+            System.out.println(theTarget.myName + " was crushed!"); //Replace with however we'll announce it
             int damage = calculateDamage(75, 175);
             theTarget.takeDamage(damage);
         } else {
