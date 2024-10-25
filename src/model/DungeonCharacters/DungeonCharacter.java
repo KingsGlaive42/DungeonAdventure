@@ -23,8 +23,6 @@ public abstract class DungeonCharacter {
 
     public abstract void takeDamage(final int theDamage);
 
-    public abstract void useSpecialSkill(final DungeonCharacter theTarget);
-
     public String getName() { return myName; }
     public int getHitPoints() { return myHitPoints; }
     public void setHitPoints(final int theHitPoints) { this.myHitPoints = theHitPoints; }
