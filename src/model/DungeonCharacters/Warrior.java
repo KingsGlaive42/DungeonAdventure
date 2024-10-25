@@ -15,25 +15,29 @@ public class Warrior extends Hero {
 
     @Override
     public void attack(DungeonCharacter theTarget) {
-        System.out.println(myName + " performs a strong attack!");
-        int damage = calculateDamage();
-        theTarget.takeDamage(damage);
+        Random rand = new Random();
+        if ((double) (rand.nextInt(10) + 1)/10 <= myChanceToHit) {
+            System.out.println(myName + " performed an attack!"); //Replace with however we'll announce it succeeded
+            int damage = calculateDamage(myMinDamage, myMaxDamage);
+            theTarget.takeDamage(damage);
+        } else {
+            System.out.println("MISSED!"); //Replace with however we'll announce it missed
+        }
     }
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
-        int damage = 75;
-        //If we're still using the meter idea, that'll determine damage amount. Else, we'll do random number.
         Random rand = new Random();
         if (rand.nextInt(10) + 1 <= 4) {
-            //Maybe Copy attack method but with different damage numbers?
-            System.out.println("SUCCESS!"); //Replace with however we'll announce it was succeeded
+            System.out.println(myName + " used Crushing Blow!"); //Replace with however we'll announce it succeeded
+            int damage = calculateDamage(75, 175);
+            theTarget.takeDamage(damage);
         } else {
-            System.out.println("MISSED!"); //Replace with however we'll announce it was succeeded
+            System.out.println("Crushing Blow Missed!"); //Replace with however we'll announce it missed
         }
     }
 
-    private int calculateDamage() {
-        return myMinDamage + (int) (Math.random() * ((myMaxDamage - myMinDamage) + 1));
+    private int calculateDamage(final int theMinDamage, final int theMaxDamage) {
+        return theMinDamage + (int) (Math.random() * ((theMaxDamage - theMinDamage) + 1));
     }
 }

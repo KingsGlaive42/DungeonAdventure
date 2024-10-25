@@ -13,7 +13,9 @@ public class Priestess extends Hero {
 
     @Override
     public void attack(DungeonCharacter theTarget) {
-
+        System.out.println(myName + " performs a strong attack!");
+        int damage = calculateDamage(myMinDamage, myMaxDamage);
+        theTarget.takeDamage(damage);
     }
 
     @Override
@@ -21,5 +23,9 @@ public class Priestess extends Hero {
         int healingAmount = 1;
         //If we're still using the meter idea, that'll determine healing amount. Else, we'll do random number.
         theTarget.myHitPoints = theTarget.myHitPoints + healingAmount;
+    }
+
+    private int calculateDamage(final int theMinDamage, final int theMaxDamage) {
+        return theMinDamage + (int) (Math.random() * ((theMaxDamage - theMinDamage) + 1));
     }
 }
