@@ -2,6 +2,10 @@ package model.DungeonCharacters;
 
 public class Hero extends DungeonCharacter {
 
+    public Hero() {
+        this.myName = "Hero";
+    }
+
     public Hero(final String theName) {
         this.myName = theName;
     }

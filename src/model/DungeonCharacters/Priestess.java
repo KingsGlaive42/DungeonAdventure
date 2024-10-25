@@ -1,6 +1,6 @@
 package model.DungeonCharacters;
 
-public class Priestess extends DungeonCharacter {
+public class Priestess extends Hero {
     public Priestess(final String theName) {
         this.myName = theName;
         this.myHitPoints = 75;
