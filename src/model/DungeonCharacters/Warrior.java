@@ -20,6 +20,14 @@ public class Warrior extends Hero {
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
-
+        int damage = 75;
+        //If we're still using the meter idea, that'll determine damage amount. Else, we'll do random number.
+        Random rand = new Random();
+        if (rand.nextInt(10) + 1 <= 4) {
+            //Maybe Copy attack method but with different damage numbers?
+            System.out.println("SUCCESS!"); //Replace with however we'll announce it was succeeded
+        } else {
+            System.out.println("MISSED!"); //Replace with however we'll announce it was succeeded
+        }
     }
 }

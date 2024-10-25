@@ -20,6 +20,16 @@ public class Thief extends Hero {
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
-
+        Random rand = new Random();
+        if (rand.nextInt(10) + 1 <= 4) {
+            attack(theTarget);
+            attack(theTarget); //Replace with get another turn
+            System.out.println("SUCCESS!"); //Replace with however we'll announce it succeeded
+        } else if (rand.nextInt(10) + 1 <= 8) {
+            attack(theTarget);
+            System.out.println("Half Success?"); //Replace with however we'll announce it sort of succeeded
+        } else {
+            System.out.println("CAUGHT!"); //Replace with however we'll announce it failed
+        }
     }
 }

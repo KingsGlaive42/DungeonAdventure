@@ -20,6 +20,8 @@ public class Priestess extends Hero {
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
-
+        int healingAmount = 1;
+        //If we're still using the meter idea, that'll determine healing amount. Else, we'll do random number.
+        theTarget.myHitPoints = theTarget.myHitPoints + healingAmount;
     }
 }
