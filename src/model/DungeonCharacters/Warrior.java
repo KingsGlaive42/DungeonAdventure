@@ -15,7 +15,9 @@ public class Warrior extends Hero {
 
     @Override
     public void attack(DungeonCharacter theTarget) {
-
+        System.out.println(myName + " performs a strong attack!");
+        int damage = calculateDamage();
+        theTarget.takeDamage(damage);
     }
 
     @Override
@@ -29,5 +31,9 @@ public class Warrior extends Hero {
         } else {
             System.out.println("MISSED!"); //Replace with however we'll announce it was succeeded
         }
+    }
+
+    private int calculateDamage() {
+        return myMinDamage + (int) (Math.random() * ((myMaxDamage - myMinDamage) + 1));
     }
 }
