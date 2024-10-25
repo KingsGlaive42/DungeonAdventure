@@ -1,7 +1,5 @@
 package model.DungeonCharacters;
 
-import java.util.Random;
-
 public class Priestess extends Hero {
     public Priestess(final String theName) {
         this.myName = theName;

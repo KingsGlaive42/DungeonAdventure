@@ -8,10 +8,6 @@ public abstract class Hero extends DungeonCharacter {
         this.myName = "Hero";
     }
 
-    public Hero(final String theName) {
-        this.myName = theName;
-    }
-
     @Override
     public void attack(DungeonCharacter theTarget) {
 
