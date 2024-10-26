@@ -5,6 +5,7 @@ import model.GameObject;
 public abstract class DungeonCharacter {
     protected String myName;
     protected int myHitPoints;
+    protected int myMagicPoints;
     protected int myMinDamage;
     protected int myMaxDamage;
     protected int myAttackSpeed;
@@ -14,6 +15,7 @@ public abstract class DungeonCharacter {
     protected DungeonCharacter() {
         this.myName = "";
         this.myHitPoints = 0;
+        this.myMagicPoints = 0;
         this.myMinDamage = 0;
         this.myMaxDamage = 0;
         this.myAttackSpeed = 0;

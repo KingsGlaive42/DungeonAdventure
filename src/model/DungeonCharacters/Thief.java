@@ -39,6 +39,7 @@ public class Thief extends Hero {
             System.out.println(theTarget.myName + " deflected second attack"); //Replace with however we'll announce it sort of succeeded
         } else {
             System.out.println(myName + " was caught!"); //Replace with however we'll announce it failed
+            theTarget.attack(this); //Added this just because lol.
         }
     }
 
