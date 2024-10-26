@@ -16,7 +16,14 @@ public class Priestess extends Hero {
 
     @Override
     public void attack(DungeonCharacter theTarget) {
-        System.out.println(myName + " bonks" + theTarget.myName); //Would be fun to randomize attack name
+        if (myMagicPoints <= 0) {
+            System.out.println("Out of MP!");
+            System.out.println(myName + " bonks" + theTarget.myName);
+            theTarget.takeDamage(1);
+            return;
+        }
+        System.out.println(myName + " casts wind!"); //Would be fun to randomize attack name
+        myMagicPoints = myMagicPoints - 5; //Since priestess uses magic attack, regular attacks use MP.
         Random rand = new Random();
         if ((double) (rand.nextInt(10) + 1)/10 <= myChanceToHit) {
             System.out.println("Attack Landed!"); //Replace with however we'll announce it
