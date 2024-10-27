@@ -23,7 +23,7 @@ public class Priestess extends Hero {
             return;
         }
         System.out.println(myName + " casts wind!"); //Would be fun to randomize attack name
-        myMagicPoints = myMagicPoints - 5; //Since priestess uses magic attack, regular attacks use MP.
+        setMagicPoints(getMagicPoints() - 5); //Since priestess uses magic attack, regular attacks use MP.
         Random rand = new Random();
         if ((double) (rand.nextInt(10) + 1)/10 <= myChanceToHit) {
             System.out.println("Attack Landed!"); //Replace with however we'll announce it
@@ -36,7 +36,7 @@ public class Priestess extends Hero {
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
-        if (myMagicPoints <= 0) {
+        if (getMagicPoints() <= 0) {
             System.out.println("Out of Mana!");
             return;
         }
@@ -44,28 +44,28 @@ public class Priestess extends Hero {
         // Heal I: heal 25, Heal II: heal 50, Heal III: heal 75
         int healRange = 1; //Replace with however it's chosen by user
         if (healRange == 1) {
-            if (myMagicPoints < 5) {
+            if (getMagicPoints() < 5) {
                 System.out.println("Not enough MP!");
             } else {
                 System.out.println(myName + " heals " + theTarget.myName);
                 theTarget.myHitPoints = theTarget.myHitPoints + 25;
-                myMagicPoints = myMagicPoints - 5;
+                setMagicPoints(getMagicPoints() - 5);
             }
         } else if (healRange == 2) {
-            if (myMagicPoints < 10) {
+            if (getMagicPoints() < 10) {
                 System.out.println("Not enough MP!");
             } else {
                 System.out.println(myName + " heals " + theTarget.myName);
                 theTarget.myHitPoints = theTarget.myHitPoints + 50;
-                myMagicPoints = myMagicPoints - 10;
+                setMagicPoints(getMagicPoints() - 10);
             }
         } else {
-            if (myMagicPoints < 15) {
+            if (getMagicPoints() < 15) {
                 System.out.println("Not enough MP!");
             } else {
                 System.out.println(myName + " heals " + theTarget.myName);
                 theTarget.myHitPoints = theTarget.myHitPoints + 75;
-                myMagicPoints = myMagicPoints - 15;
+                setMagicPoints(getMagicPoints() - 15);
             }
         }
     }

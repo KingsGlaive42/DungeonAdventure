@@ -36,14 +36,15 @@ public class Mage extends Hero {
 
     @Override
     public void useSpecialSkill(DungeonCharacter theTarget) {
-        if (myMagicPoints <= 0) {
+        if (getMagicPoints() <= 0) {
             System.out.println("Out of Mana!");
             return;
-        } else if (myMagicPoints <= 20) {
+        } else if (getMagicPoints() <= 20) {
             System.out.println("Not enough MP!");
             return;
         }
         System.out.println(myName + " used Ultima on " + theTarget.myName);
+        setMagicPoints(getMagicPoints()-20);
         Random rand = new Random();
         if (rand.nextInt(10) + 1 <= 1) { //10% chance to insta-kill enemy
             System.out.println("Direct Hit!"); //Replace with however we'll announce it

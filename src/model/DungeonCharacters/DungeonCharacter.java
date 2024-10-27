@@ -30,5 +30,11 @@ public abstract class DungeonCharacter {
     public String getName() { return myName; }
     public int getHitPoints() { return myHitPoints; }
     public void setHitPoints(final int theHitPoints) { this.myHitPoints = theHitPoints; }
+    public int getMagicPoints() { return myMagicPoints; }
+    public void setMagicPoints(final int theMagicPoints) { this.myMagicPoints = theMagicPoints; }
+    public int getMinDamage() { return myMinDamage; }
+    public void setMinDamage(final int theMinDamage) { this.myMinDamage = theMinDamage; }
+    public int getMaxDamage() { return myMaxDamage; }
+    public void setMaxDamage(final int theMaxDamage) { this.myMaxDamage = theMaxDamage; }
     public boolean isAlive() { return myHitPoints > 0; }
 }

@@ -19,7 +19,7 @@ public abstract class Hero extends DungeonCharacter {
         if (rand.nextInt(10) + 1 <= myChanceToBlock * 10) {
             System.out.println("BLOCKED!"); //Replace with however we'll announce it was blocked
         } else {
-            myHitPoints = myHitPoints - theDamage;
+            setHitPoints(myHitPoints - theDamage);
         }
     }
 
