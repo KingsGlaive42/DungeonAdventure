@@ -23,6 +23,16 @@ public abstract class DungeonCharacter {
         this.myChanceToBlock = 0;
     }
 
+    protected DungeonCharacter(String theName, int theHitPoints, int theMinDamage,
+                               int theMaxDamage, int theAttackSpeed, double theChanceToHit) {
+        this.myName = theName;
+        this.myHitPoints = theHitPoints;
+        this.myMinDamage = theMinDamage;
+        this.myMaxDamage = theMaxDamage;
+        this.myAttackSpeed = theAttackSpeed;
+        this.myChanceToHit = theChanceToHit;
+    }
+
     public abstract void attack(final DungeonCharacter theTarget);
 
     public abstract void takeDamage(final int theDamage);
