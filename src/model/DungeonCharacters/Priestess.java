@@ -1,5 +1,7 @@
 package model.DungeonCharacters;
 
+import model.Combat.CombatEngine;
+
 import java.util.Random;
 
 public class Priestess extends Hero {
@@ -15,27 +17,7 @@ public class Priestess extends Hero {
     }
 
     @Override
-    public void attack(DungeonCharacter theTarget) {
-        if (myMagicPoints <= 0) {
-            System.out.println("Out of MP!");
-            System.out.println(myName + " bonks" + theTarget.myName);
-            theTarget.takeDamage(1);
-            return;
-        }
-        System.out.println(myName + " casts wind!"); //Would be fun to randomize attack name
-        setMagicPoints(getMagicPoints() - 5); //Since priestess uses magic attack, regular attacks use MP.
-        Random rand = new Random();
-        if ((double) (rand.nextInt(10) + 1)/10 <= myChanceToHit) {
-            System.out.println("Attack Landed!"); //Replace with however we'll announce it
-            int damage = calculateDamage(myMinDamage, myMaxDamage);
-            theTarget.takeDamage(damage);
-        } else {
-            System.out.println("MISSED!"); //Replace with however we'll announce it
-        }
-    }
-
-    @Override
-    public void useSpecialSkill(DungeonCharacter theTarget) {
+    public void useSpecialSkill(final DungeonCharacter theTarget, final CombatEngine theEngine) {
         if (getMagicPoints() <= 0) {
             System.out.println("Out of Mana!");
             return;
@@ -68,9 +50,5 @@ public class Priestess extends Hero {
                 setMagicPoints(getMagicPoints() - 15);
             }
         }
-    }
-
-    private int calculateDamage(final int theMinDamage, final int theMaxDamage) {
-        return theMinDamage + (int) (Math.random() * ((theMaxDamage - theMinDamage) + 1));
     }
 }

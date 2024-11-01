@@ -33,10 +33,6 @@ public abstract class DungeonCharacter {
         this.myChanceToHit = theChanceToHit;
     }
 
-    public abstract void attack(final DungeonCharacter theTarget);
-
-    public abstract void takeDamage(final int theDamage);
-
     public String getName() { return myName; }
     public int getHitPoints() { return myHitPoints; }
     public void setHitPoints(final int theHitPoints) { this.myHitPoints = theHitPoints; }
@@ -46,5 +42,9 @@ public abstract class DungeonCharacter {
     public void setMinDamage(final int theMinDamage) { this.myMinDamage = theMinDamage; }
     public int getMaxDamage() { return myMaxDamage; }
     public void setMaxDamage(final int theMaxDamage) { this.myMaxDamage = theMaxDamage; }
+    public double getChanceToHit() { return myChanceToHit; }
+    public void setChanceToHit(final double theChanceToHit) { this.myChanceToHit = theChanceToHit; }
+    public double getChanceToBlock() { return myChanceToBlock; }
+    public void setMyChanceToBlock(final double theChanceToBlock) { this.myChanceToBlock = theChanceToBlock; }
     public boolean isAlive() { return myHitPoints > 0; }
 }

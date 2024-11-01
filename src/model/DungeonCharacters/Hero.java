@@ -1,6 +1,6 @@
 package model.DungeonCharacters;
 
-import java.util.Random;
+import model.Combat.CombatEngine;
 
 public abstract class Hero extends DungeonCharacter {
 
@@ -8,22 +8,5 @@ public abstract class Hero extends DungeonCharacter {
         this.myName = "Hero";
     }
 
-    @Override
-    public void attack(DungeonCharacter theTarget) {
-
-    }
-
-    @Override
-    public void takeDamage(int theDamage) {
-        Random rand = new Random();
-        if (rand.nextInt(10) + 1 <= myChanceToBlock * 10) {
-            System.out.println("BLOCKED!"); //Replace with however we'll announce it was blocked
-        } else {
-            setHitPoints(myHitPoints - theDamage);
-        }
-    }
-
-    public void useSpecialSkill(DungeonCharacter theTarget) {
-
-    }
+    public abstract void useSpecialSkill(DungeonCharacter theTarget, CombatEngine theEngine);
 }
