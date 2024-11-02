@@ -299,7 +299,46 @@ public class Player extends GameObject {
         myAnimation.update();
     }
 
+    public void moveToOppositeDoor(final String theDoorDirection) {
+        switch (theDoorDirection) {
+            case "UP":
+                this.myX = 7 * TILE_SIZE;
+                this.myY = 6 * TILE_SIZE;
+                break;
+            case "DOWN":
+                this.myX = 7 * TILE_SIZE;
+                this.myY = 6 * TILE_SIZE;
+                break;
+            case "LEFT":
+                this.myX = 7 * TILE_SIZE;
+                this.myY = 6 * TILE_SIZE;
+                break;
+            case "RIGHT":
+                this.myX = 7 * TILE_SIZE;
+                this.myY = 6 * TILE_SIZE;
+                break;
+        }
+    }
+
+    public int getX() {
+        return myX;
+    }
+
+    public int getY() {
+        return myY;
+    }
+
+    public int getSize() {
+        return PLAYER_SIZE;
+    }
+
+    public int getTileSize() {
+        return TILE_SIZE;
+    }
+
     public void draw(Graphics2D graphics2D) {
+        graphics2D.setColor(Color.PINK);
         graphics2D.drawImage(myAnimation.getSprite(), myX, myY, PLAYER_SIZE, PLAYER_SIZE, null);
+        graphics2D.fillRect(myX + TILE_SIZE, myY + TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 }
