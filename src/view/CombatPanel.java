@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import controller.CombatController;
+import model.DungeonCharacters.*;
 
 public class CombatPanel extends JFrame {
     private JLabel heroInfo;
@@ -13,8 +15,11 @@ public class CombatPanel extends JFrame {
     private JButton specialSkillButton;
     private JButton defendButton;
     private JButton backButton;
+    private CombatController combatController;
 
-    public CombatPanel() {
+    public CombatPanel(CombatController combatController) {
+        this.combatController = combatController;
+
         setTitle("Combat Screen");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -58,21 +63,21 @@ public class CombatPanel extends JFrame {
         attackButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                performAttack();
+                combatController.handleAttack();
             }
         });
 
         specialSkillButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                useSpecialSkill();
+                combatController.handleSpecialSkill();
             }
         });
 
         defendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                defend();
+                combatController.handleDefend();
             }
         });
 
@@ -82,22 +87,6 @@ public class CombatPanel extends JFrame {
                 dispose();  // Closes the combat screen
             }
         });
-    }
-
-    // Placeholder methods for combat actions
-    private void performAttack() {
-        actionLog.append("Hero performs a basic attack!\n");
-        // Call the CombatEngine or Controller for attack logic here
-    }
-
-    private void useSpecialSkill() {
-        actionLog.append("Hero uses a special skill!\n");
-        // Call the CombatEngine or Controller for special skill logic
-    }
-
-    private void defend() {
-        actionLog.append("Hero defends!\n");
-        // Call the CombatEngine or Controller for defend logic
     }
 
     public void updateHeroInfo(String info) {
@@ -114,8 +103,13 @@ public class CombatPanel extends JFrame {
 
     // Launch the Combat Screen (for testing)
     public static void main(String[] args) {
+        // Dummy data for testing purposes
+        Hero theHero = new Warrior("Hero Name");
+        DungeonCharacter enemy = new Ogre();
+        CombatController combatController = new CombatController(theHero, enemy);
+
         SwingUtilities.invokeLater(() -> {
-            CombatPanel screen = new CombatPanel();
+            CombatPanel screen = combatController.getCombatPanel();
             screen.setVisible(true);
         });
     }
