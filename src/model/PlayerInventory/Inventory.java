@@ -20,6 +20,15 @@ public class Inventory {
         System.out.println(theItem.getName() + " removed from inventory.");
     }
 
+    public void useItem(String theItemName) {
+       Item item = getItem(theItemName);
+       if (item != null) {
+           item.use();
+       } else {
+           System.out.println("Item not found in inventory.");
+       }
+    }
+
     public List<Item> getItems() {
         return myItems;
     }

@@ -1,6 +1,6 @@
 package model.PlayerInventory;
 
-public class Item {
+public abstract class Item {
     private final String myName;
     private final String myDescription;
     private final ItemType myType;
@@ -31,5 +31,5 @@ public class Item {
         return myType;
     }
 
-    // additional methods for using item/equipping.
+    public abstract void use();
 }

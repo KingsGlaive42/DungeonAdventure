@@ -1,7 +1,10 @@
 package model.DungeonCharacters;
 
 public class Gremlin extends Monster {
-    public Gremlin() {
-        super("Gremlin", 70, 15, 30, 5, 0.4, 0.4, 20, 40);
+    public Gremlin(int theHitPoints, int theMinDamage,
+                   int theMaxDamage, int theAttackSpeed, double theChanceToHit, double theHealChance,
+                   int theMinHeal, int theMaxHeal) {
+        super("Gremlin", theHitPoints, theMinDamage, theMaxDamage, theAttackSpeed, theChanceToHit,
+                theHealChance, theMinHeal, theMaxHeal);
     }
 }
