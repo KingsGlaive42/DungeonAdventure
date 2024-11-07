@@ -7,35 +7,72 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Room {
-    public enum RoomType { START, END, OBJECTIVE, FILLER }
     private final int myX;
     private final int myY;
     private RoomType myRoomType;
 
-    private final Map<String, Room> myConnectedRooms = new HashMap<>();
-    private final Map<String, Door> myDoors = new HashMap<>();
+    private final Map<DoorDirection, Room> myConnectedRooms = new HashMap<>();
+    private final Map<DoorDirection, Door> myDoors = new HashMap<>();
 
-    public Room(final int theX, final int theY, final RoomType theRoomType) {
+    Room(final int theX, final int theY, final RoomType theRoomType) {
         myX = theX;
         myY = theY;
         myRoomType = theRoomType;
     }
 
-    public void connectRoom(final int theDX, final int theDY, final Room theRoom) {
-        String direction = getDirection(theDX, theDY);
+    void connectRoom(final int theAdjX, final int theAdjY, final Room theRoom) {
+        DoorDirection direction = getDirection(theAdjX, theAdjY);
         if (direction != null) {
             myConnectedRooms.put(direction, theRoom);
             myDoors.put(direction, new Door(direction));
         }
     }
 
-    public String checkPlayerCollisionWithDoor(final Player thePlayer) {
-        for (Map.Entry<String, Door> entry : myDoors.entrySet()) {
+    private DoorDirection getDirection(final int dx, final int dy) {
+        if (dx == 1) return DoorDirection.RIGHT;
+        if (dx == -1) return DoorDirection.LEFT;
+        if (dy == -1) return DoorDirection.UP;
+        if (dy == 1) return DoorDirection.DOWN;
+        return null;
+    }
+
+    DoorDirection checkPlayerCollisionWithDoor(final Player thePlayer) {
+        for (Map.Entry<DoorDirection, Door> entry : myDoors.entrySet()) {
             if (entry.getValue().isPlayerColliding(thePlayer)) {
                 return entry.getKey(); // Return the direction of the door
             }
         }
         return null; // No collision
+    }
+
+    void addDoor(final DoorDirection theDirection, final Room theConnectedRoom) {
+        if (!myDoors.containsKey(theDirection)) {
+            myDoors.put(theDirection, new Door(theDirection));
+        }
+    }
+
+    int getX() {
+        return myX;
+    }
+
+    int getY() {
+        return myY;
+    }
+
+    Map<DoorDirection, Room> getConnectedRooms() {
+        return myConnectedRooms;
+    }
+
+    Map<DoorDirection, Door> getDoors() {
+        return myDoors;
+    }
+
+    void setType(final RoomType theRoomType) {
+        myRoomType = theRoomType;
+    }
+
+    RoomType getRoomType() {
+        return myRoomType;
     }
 
     public void draw(final Graphics2D theGraphics2D) {
@@ -48,43 +85,5 @@ public class Room {
         for (Door door : myDoors.values()) {
             door.draw(theGraphics2D);
         }
-    }
-
-    public void addDoor(final String theDirection, final Room theConnectedRoom) {
-        if (!myDoors.containsKey(theDirection)) {
-            myDoors.put(theDirection, new Door(theDirection));
-        }
-    }
-
-    public int getX() {
-        return myX;
-    }
-
-    public int getY() {
-        return myY;
-    }
-
-    public Map<String, Room> getConnectedRooms() {
-        return myConnectedRooms;
-    }
-
-    public Map<String, Door> getDoors() {
-        return myDoors;
-    }
-
-    public void setType(final RoomType theRoomType) {
-        myRoomType = theRoomType;
-    }
-
-    public RoomType getRoomType() {
-        return myRoomType;
-    }
-
-    private String getDirection(final int dx, final int dy) {
-        if (dx == 1) return "RIGHT";
-        if (dx == -1) return "LEFT";
-        if (dy == 1) return "UP";
-        if (dy == -1) return "DOWN";
-        return null;
     }
 }

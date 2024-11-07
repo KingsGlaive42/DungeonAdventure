@@ -2,48 +2,46 @@ package model.DungeonManager;
 
 import model.Player.Player;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.geom.Rectangle2D;
+import java.awt.Graphics2D;
 
-public class Door {
-    private final String myDirection;
-    private int myX, myY;
+class Door {
+    private final DoorDirection myDirection;
+    private double myX, myY;
     private static final int DOOR_WIDTH = 32;
     private static final int DOOR_HEIGHT = 32;
 
-    public Door(final String theDirection) {
+    Door(final DoorDirection theDirection) {
         myDirection = theDirection;
         switch (myDirection) {
-            case "UP":
-                myX = 7 * DOOR_WIDTH; // Centered on top
+            case DoorDirection.UP:
+                myX = 7.5 * DOOR_WIDTH; // Centered on top
                 myY = 0;
                 break;
-            case "DOWN":
-                myX = 7 * DOOR_WIDTH;
+            case DoorDirection.DOWN:
+                myX = 7.5 * DOOR_WIDTH;
                 myY = 11 * DOOR_HEIGHT;
                 break;
-            case "LEFT":
+            case DoorDirection.LEFT:
                 myX = 0;
-                myY = 6 * DOOR_HEIGHT;
+                myY = 5.5 * DOOR_HEIGHT;
                 break;
-            case "RIGHT":
+            case DoorDirection.RIGHT:
                 myX = 15 * DOOR_WIDTH;
-                myY = 6 * DOOR_HEIGHT;
+                myY = 5.5 * DOOR_HEIGHT;
                 break;
         }
     }
 
     public void draw(final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(Color.BLUE);
-        theGraphics2D.fillRect(myX, myY, DOOR_WIDTH, DOOR_HEIGHT);
+        theGraphics2D.fill(new Rectangle2D.Double(myX, myY, DOOR_WIDTH, DOOR_HEIGHT));
     }
 
-    public boolean isPlayerColliding(final Player thePlayer) {
-        Rectangle playerBounds = new Rectangle(thePlayer.getX() + thePlayer.getTileSize(), thePlayer.getY() + thePlayer.getTileSize(), thePlayer.getTileSize(), thePlayer.getTileSize());
-        Rectangle doorBounds = new Rectangle(myX, myY, DOOR_WIDTH, DOOR_HEIGHT);
+    boolean isPlayerColliding(final Player thePlayer) {
+        Rectangle2D.Double playerBounds = new Rectangle2D.Double(thePlayer.getX() + thePlayer.getTileSize(), thePlayer.getY() + thePlayer.getTileSize(), thePlayer.getTileSize(), thePlayer.getTileSize());
+        Rectangle2D.Double doorBounds = new Rectangle2D.Double(myX, myY, DOOR_WIDTH, DOOR_HEIGHT);
         return playerBounds.intersects(doorBounds);
-    }
-
-    public String getDirection() {
-        return myDirection;
     }
 }

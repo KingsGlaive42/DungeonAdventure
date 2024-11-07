@@ -7,11 +7,13 @@ import model.DungeonCharacters.DungeonCharacter;
 import model.DungeonCharacters.Priestess;
 import model.DungeonCharacters.Thief;
 import model.DungeonCharacters.Warrior;
+import model.DungeonManager.DoorDirection;
 import model.GameObject;
 import view.GamePanel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.geom.AffineTransform;
 
 public class Player extends GameObject {
     private final GamePanel myGamePanel;
@@ -197,9 +199,9 @@ public class Player extends GameObject {
     }
 
     private void setDefaultValues() {
-        myX = 100;
-        myY = 100;
-        mySpeed = 4;
+        myX = 6.5 * TILE_SIZE;
+        myY = 4 * TILE_SIZE;
+        mySpeed = 6;
     }
 
     public void update() {
@@ -299,32 +301,32 @@ public class Player extends GameObject {
         myAnimation.update();
     }
 
-    public void moveToOppositeDoor(final String theDoorDirection) {
+    public void moveToOppositeDoor(final DoorDirection theDoorDirection) {
         switch (theDoorDirection) {
-            case "UP":
-                this.myX = 7 * TILE_SIZE;
-                this.myY = 6 * TILE_SIZE;
+            case DoorDirection.DOWN:
+                this.myX = 6.5 * TILE_SIZE;
+                this.myY = 0;
                 break;
-            case "DOWN":
-                this.myX = 7 * TILE_SIZE;
-                this.myY = 6 * TILE_SIZE;
+            case DoorDirection.UP:
+                this.myX = 6.5 * TILE_SIZE;
+                this.myY = 9 * TILE_SIZE;
                 break;
-            case "LEFT":
-                this.myX = 7 * TILE_SIZE;
-                this.myY = 6 * TILE_SIZE;
+            case DoorDirection.RIGHT:
+                this.myX = (double) TILE_SIZE / 4;
+                this.myY = 4 * TILE_SIZE;
                 break;
-            case "RIGHT":
-                this.myX = 7 * TILE_SIZE;
-                this.myY = 6 * TILE_SIZE;
+            case DoorDirection.LEFT:
+                this.myX = 13 * TILE_SIZE;
+                this.myY = 4 * TILE_SIZE;
                 break;
         }
     }
 
-    public int getX() {
+    public double getX() {
         return myX;
     }
 
-    public int getY() {
+    public double getY() {
         return myY;
     }
 
@@ -338,7 +340,16 @@ public class Player extends GameObject {
 
     public void draw(Graphics2D graphics2D) {
         graphics2D.setColor(Color.PINK);
-        graphics2D.drawImage(myAnimation.getSprite(), myX, myY, PLAYER_SIZE, PLAYER_SIZE, null);
-        graphics2D.fillRect(myX + TILE_SIZE, myY + TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+        AffineTransform transform = AffineTransform.getTranslateInstance(myX, myY);
+
+        // If you want to scale the image as well, you can do this
+        double scaleX = (double) PLAYER_SIZE / myAnimation.getSprite().getWidth(null);
+        double scaleY = (double) PLAYER_SIZE / myAnimation.getSprite().getHeight(null);
+        transform.scale(scaleX, scaleY);
+
+        // Draw the image with the transform applied
+        graphics2D.drawImage(myAnimation.getSprite(), transform, null);
+        //graphics2D.fillRect(myX + TILE_SIZE, myY + TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 }

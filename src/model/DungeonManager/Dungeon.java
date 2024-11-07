@@ -19,19 +19,15 @@ public class Dungeon {
 
     private Room findStartRoom() {
         for (Room room : myRooms.values()) {
-            if (room.getRoomType() == Room.RoomType.START) {
+            if (room.getRoomType() == RoomType.START) {
                 return room;
             }
         }
         throw new IllegalStateException("No start room found in dungeon layout. " + generator.getGeneratedDungeon().toString());
     }
 
-    public Room getMyCurrentRoom() {
-        return myCurrentRoom;
-    }
-
     public void checkDoorCollisions(final Player thePlayer) {
-        String doorDirection = myCurrentRoom.checkPlayerCollisionWithDoor(thePlayer);
+        DoorDirection doorDirection = myCurrentRoom.checkPlayerCollisionWithDoor(thePlayer);
 
         if (doorDirection != null) {
             Room nextRoom = getRoomInDirection(myCurrentRoom, doorDirection);
@@ -42,14 +38,18 @@ public class Dungeon {
         }
     }
 
-    public Room getRoomInDirection(final Room theRoom, final String theDirection) {
+    private Room getRoomInDirection(final Room theRoom, final DoorDirection theDirection) {
         Point pos = new Point(theRoom.getX(), theRoom.getY());
         switch (theDirection) {
-            case "UP": pos.translate(0, -1); break;
-            case "DOWN": pos.translate(0, 1); break;
-            case "LEFT": pos.translate(-1, 0); break;
-            case "RIGHT": pos.translate(1, 0); break;
+            case DoorDirection.UP: pos.translate(0, -1); break;
+            case DoorDirection.DOWN: pos.translate(0, 1); break;
+            case DoorDirection.LEFT: pos.translate(-1, 0); break;
+            case DoorDirection.RIGHT: pos.translate(1, 0); break;
         }
         return myRooms.get(pos);
+    }
+
+    public Room getMyCurrentRoom() {
+        return myCurrentRoom;
     }
 }

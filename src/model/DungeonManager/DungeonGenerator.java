@@ -1,32 +1,30 @@
 package model.DungeonManager;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class DungeonGenerator {
-    private static final int ROOM_WIDTH = 16;
-    private static final int ROOM_HEIGHT = 12;
+class DungeonGenerator {
     private static final int MIN_DEAD_ENDS = 6;
+    private static final int MIN_DUNGEON_DIMENSION = 8;
+
     private final int myDungeonWidth;
     private final int myDungeonHeight;
     private Room[][] myDungeonGrid;
-    private ArrayList<Room> myRooms;
     private ArrayList<Point> myAvailableRoomLocations;
     private final Random random;
     private Room myStartRoom;
-    private Room myEndRoom;
     private ArrayList<Room> myObjectiveRooms;
 
-    public DungeonGenerator(final int theDungeonWidth, final int theDungeonHeight) {
-        myDungeonWidth = theDungeonWidth;
-        myDungeonHeight = theDungeonHeight;
+    DungeonGenerator(final int theDungeonWidth, final int theDungeonHeight) {
+        myDungeonWidth = Math.max(theDungeonWidth, MIN_DUNGEON_DIMENSION);
+        myDungeonHeight = Math.max(theDungeonHeight, MIN_DUNGEON_DIMENSION);
         random = new Random();
     }
 
-    public void generateDungeon(final int theNumRooms) {
+    void generateDungeon(final int theNumRooms) {
         do {
             initializeDungeon();
             createRooms(theNumRooms);
@@ -37,7 +35,6 @@ public class DungeonGenerator {
 
     private void initializeDungeon() {
         myDungeonGrid = new Room[myDungeonWidth][myDungeonHeight];
-        myRooms = new ArrayList<>();
         myAvailableRoomLocations = new ArrayList<>();
         myObjectiveRooms = new ArrayList<>();
     }
@@ -48,9 +45,8 @@ public class DungeonGenerator {
         int startX = centerX + random.nextInt(3) - 1;
         int startY = centerY + random.nextInt(3) - 1;
 
-        myStartRoom = new Room(startX, startY, Room.RoomType.FILLER);
+        myStartRoom = new Room(startX, startY, RoomType.FILLER);
         myDungeonGrid[startX][startY] = myStartRoom;
-        myRooms.add(myStartRoom);
         addAvailableLocations(startX, startY);
 
         for (int i = 1; i < theNumRooms; i++) {
@@ -59,9 +55,8 @@ public class DungeonGenerator {
             Point location = myAvailableRoomLocations.remove(random.nextInt(myAvailableRoomLocations.size()));
             int newX = location.x;
             int newY = location.y;
-            Room newRoom = new Room(newX, newY, Room.RoomType.FILLER);
+            Room newRoom = new Room(newX, newY, RoomType.FILLER);
             myDungeonGrid[newX][newY] = newRoom;
-            myRooms.add(newRoom);
             addAvailableLocations(newX, newY);
 
             connectAdjacentRooms(newRoom, newX, newY);
@@ -75,17 +70,17 @@ public class DungeonGenerator {
         }
 
         myStartRoom = deadEnds.remove(random.nextInt(deadEnds.size()));
-        myStartRoom.setType(Room.RoomType.START);
+        myStartRoom.setType(RoomType.START);
 
-        myEndRoom = findFurthestRoom(myStartRoom, deadEnds);
+        Room myEndRoom = findFurthestRoom(myStartRoom, deadEnds);
         if (myEndRoom != null) {
-            myEndRoom.setType(Room.RoomType.END);
+            myEndRoom.setType(RoomType.END);
             deadEnds.remove(myEndRoom);
         }
 
         for (int i = 0; i < 4; i++) {
             Room objectiveRoom = deadEnds.remove(random.nextInt(deadEnds.size()));
-            objectiveRoom.setType(Room.RoomType.OBJECTIVE);
+            objectiveRoom.setType(RoomType.OBJECTIVE);
             myObjectiveRooms.add(objectiveRoom);
         }
 
@@ -93,7 +88,7 @@ public class DungeonGenerator {
     }
 
     private void addAvailableLocations(final int theX, final int theY) {
-        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Up, Down, Right, Left
+        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Down, Up, Right, Left
         for (int[] dir : directions) {
             int adjX = theX + dir[0];
             int adjY = theY + dir[1];
@@ -104,23 +99,30 @@ public class DungeonGenerator {
     }
 
     private void connectAdjacentRooms(final Room theRoom, final int theX, final int theY) {
-        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Up, Down, Right, Left
+        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Down, Up, Right, Left
         for (int[] dir : directions) {
-            int adjX = theX + dir[0];
-            int adjY = theY + dir[1];
+            int xOffset = dir[0];
+            int yOffset = dir[1];
+            int adjX = theX + xOffset;
+            int adjY = theY + yOffset;
             if (adjX >= 0 && adjY >= 0 && adjX < myDungeonWidth && adjY < myDungeonHeight && myDungeonGrid[adjX][adjY] != null) {
                 Room adjacentRoom = myDungeonGrid[adjX][adjY];
-                theRoom.connectRoom(dir[0], dir[1], adjacentRoom);
-                adjacentRoom.connectRoom(-dir[0], -dir[1], theRoom);
+                theRoom.connectRoom(xOffset, yOffset, adjacentRoom);
+                adjacentRoom.connectRoom(-xOffset, -yOffset, theRoom);
             }
         }
     }
 
     private ArrayList<Room> getDeadEndRooms() {
         ArrayList<Room> deadEnds = new ArrayList<>();
-        for (Room room : myRooms) {
-            if (room.getConnectedRooms().size() == 1) {
-                deadEnds.add(room);
+
+        for (int i = 0; i < myDungeonWidth; i++) {
+            for (int j = 0; j < myDungeonHeight; j++) {
+                if (myDungeonGrid[i][j] == null) continue;
+
+                if (myDungeonGrid[i][j].getConnectedRooms().size() == 1) {
+                    deadEnds.add(myDungeonGrid[i][j]);
+                }
             }
         }
 
@@ -143,37 +145,49 @@ public class DungeonGenerator {
     }
 
     private boolean isValidRoomPlacement(final int theX, final int theY) {
-        return theX >= 0 && theY >= 0 && theX < myDungeonWidth && theY < myDungeonHeight && myDungeonGrid[theX][theY] == null;
+        return  theX >= 0 && theY >= 0 &&
+                theX < myDungeonWidth &&
+                theY < myDungeonHeight &&
+                myDungeonGrid[theX][theY] == null;
     }
 
     private void addDoors() {
-        for (Room room : myRooms) {
-            for (Map.Entry<String, Room> entry : room.getConnectedRooms().entrySet()) {
-                String direction = entry.getKey();
-                Room adjacentRoom = entry.getValue();
-                room.addDoor(direction, adjacentRoom);
+        for (int i = 0; i < myDungeonWidth; i++) {
+            for (int j = 0; j < myDungeonHeight; j++) {
+                if (myDungeonGrid[i][j] == null) continue;
+
+                for (Map.Entry<DoorDirection, Room> entry: myDungeonGrid[i][j].getConnectedRooms().entrySet()) {
+                    DoorDirection direction = entry.getKey();
+                    Room adjacentRoom = entry.getValue();
+                    myDungeonGrid[i][j].addDoor(direction, adjacentRoom);
+                }
             }
         }
     }
 
-    public Map<Point, Room> getGeneratedDungeon() {
+    Map<Point, Room> getGeneratedDungeon() {
         Map<Point, Room> generatedDungeon = new HashMap<>();
-        for (Room room : myRooms) {
-            generatedDungeon.put(new Point(room.getX(), room.getY()), room);
+
+        for (int i = 0; i < myDungeonWidth; i++) {
+            for (int j = 0; j < myDungeonHeight; j++) {
+                if (myDungeonGrid[i][j] == null) continue;
+
+                generatedDungeon.put(new Point(i, j), myDungeonGrid[i][j]);
+            }
         }
 
         return generatedDungeon;
     }
 
-    public void printDungeon() {
-        for (int y = myDungeonHeight - 1; y >= 0; y--) {
-            for (int x = 0; x < myDungeonWidth; x++) {
-                if (myDungeonGrid[x][y] != null) {
-                    if (myDungeonGrid[x][y].getRoomType() == Room.RoomType.START) {
+    void printDungeon() {
+        for (int i = 0; i < myDungeonWidth; i++) {
+            for (int j = 0; j < myDungeonHeight; j++) {
+                if (myDungeonGrid[i][j] != null) {
+                    if (myDungeonGrid[i][j].getRoomType() == RoomType.START) {
                         System.out.print("S");
-                    } else if (myDungeonGrid[x][y].getRoomType() == Room.RoomType.END) {
+                    } else if (myDungeonGrid[i][j].getRoomType() == RoomType.END) {
                         System.out.print("E");
-                    } else if (myDungeonGrid[x][y].getRoomType() == Room.RoomType.OBJECTIVE) {
+                    } else if (myDungeonGrid[i][j].getRoomType() == RoomType.OBJECTIVE) {
                         System.out.print("O");
                     } else {
                         System.out.print("R");
@@ -184,23 +198,31 @@ public class DungeonGenerator {
             }
             System.out.println();
         }
+
+        System.out.println();
     }
 
-    public void printDoors() {
-        for (Room room : myRooms) {
-            System.out.println("Room at (" + room.getX() + ", " + room.getY() + ") has doors:");
+    void printDoors() {
+        for (int i = 0; i < myDungeonWidth; i++) {
+            for (int j = 0; j < myDungeonHeight; j++) {
+                if (myDungeonGrid[i][j] == null) continue;
 
-            for (Map.Entry<String, Door> doorEntry : room.getDoors().entrySet()) {
-                String direction = doorEntry.getKey();
+                Room room = myDungeonGrid[i][j];
 
-                Room connectedRoom = room.getConnectedRooms().get(direction);
+                System.out.println("Room at (" + room.getX() + ", " + room.getY() + ") has doors:");
 
-                if (connectedRoom != null) {
-                    System.out.println("  " + direction + " -> Room at ("
-                            + connectedRoom.getX() + ", "
-                            + connectedRoom.getY() + ")");
-                } else {
-                    System.out.println("  " + direction + " -> No connected room");
+                for (Map.Entry<DoorDirection, Door> doorEntry : room.getDoors().entrySet()) {
+                    DoorDirection direction = doorEntry.getKey();
+
+                    Room connectedRoom = room.getConnectedRooms().get(direction);
+
+                    if (connectedRoom != null) {
+                        System.out.println("  " + direction + " -> Room at ("
+                                + connectedRoom.getX() + ", "
+                                + connectedRoom.getY() + ")");
+                    } else {
+                        System.out.println("  " + direction + " -> No connected room");
+                    }
                 }
             }
         }
