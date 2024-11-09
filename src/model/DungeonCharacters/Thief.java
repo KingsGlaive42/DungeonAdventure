@@ -8,9 +8,11 @@ public class Thief extends Hero {
     public Thief(final String theName) {
         this.myName = theName;
         this.myHitPoints = 75;
+        this.myMaxHitPoints = 75;
         this.myAttackSpeed = 6;
         this.myChanceToHit = 0.8;
         this.myChanceToBlock = 0.4;
+        this.myBaseChanceToBlock = 0.4;
         this.myMinDamage = 20;
         this.myMaxDamage = 40;
     }

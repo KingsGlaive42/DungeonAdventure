@@ -8,10 +8,13 @@ public class Mage extends Hero {
     public Mage(final String theName) {
         this.myName = theName;
         this.myHitPoints = 75;
+        this.myMaxHitPoints = 75;
         this.myMagicPoints =  50;
+        this.myMaxMagicPoints = 50;
         this.myAttackSpeed = 4;
         this.myChanceToHit = 0.8;
         this.myChanceToBlock = 0.3;
+        this.myBaseChanceToBlock = 0.3;
         this.myMinDamage = 25;
         this.myMaxDamage = 45;
     }
