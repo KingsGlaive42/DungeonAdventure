@@ -1,5 +1,7 @@
 package model.PlayerInventory;
 
+import model.DungeonCharacters.Hero;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +22,10 @@ public class Inventory {
         System.out.println(theItem.getName() + " removed from inventory.");
     }
 
-    public void useItem(String theItemName) {
+    public void useItem(String theItemName, Hero theHero) {
        Item item = getItem(theItemName);
        if (item != null) {
-           item.use();
+           item.use(theHero);
        } else {
            System.out.println("Item not found in inventory.");
        }

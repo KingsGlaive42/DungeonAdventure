@@ -56,6 +56,7 @@ public class MonsterDatabase {
                 return new Gremlin(theHitPoints, theMinDamage, theMaxDamage, theAttackSpeed, theChanceToHit,
                         theHealChance, theMinHeal, theMaxHeal);
             default:
+                System.out.println("Unknown monster type: " + theName);
                 return null;
         }
 

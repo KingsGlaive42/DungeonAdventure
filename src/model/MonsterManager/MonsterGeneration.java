@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MonsterGenerator {
+public class MonsterGeneration {
     private final List<Monster> monsters;
     private final Random rand;
 
-    public MonsterGenerator() {
+    public MonsterGeneration() {
         this.monsters = new ArrayList<>();
         this.rand = new Random();
         loadMonsters();
