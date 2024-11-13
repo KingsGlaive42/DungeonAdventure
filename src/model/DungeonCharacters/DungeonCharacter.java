@@ -1,7 +1,5 @@
 package model.DungeonCharacters;
 
-import model.GameObject;
-
 public abstract class DungeonCharacter {
     protected String myName;
     protected int myHitPoints;
