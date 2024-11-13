@@ -1,6 +1,8 @@
 package view;
 
 import controller.InputListener;
+import model.DungeonManager.Dungeon;
+import model.DungeonManager.Room;
 import model.Player.Player;
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +12,6 @@ public class GamePanel extends JPanel implements Runnable {
     private final double PIXEL_SCALAR = 1;
 
     private final int TILE_SIZE = (int) (ORIGINAL_TILE_SIZE * PIXEL_SCALAR);
-
     private final int MAX_SCREEN_COLUMNS = 16;
     private final int MAX_SCREEN_ROWS = 12;
     private final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COLUMNS;
@@ -20,9 +21,13 @@ public class GamePanel extends JPanel implements Runnable {
     private final int FPS = 30;
     private final double DRAW_INTERVAL = (double) NANO_IN_SECONDS / FPS;
 
+    private final int NUMBER_OF_ROOMS = 20;
+
     private final InputListener myInputListener = new InputListener();
     private Thread myGameThread; // game clock
-    private final Player player = new Player(this, myInputListener, "Warrior", "Warrior");
+    private final Player myPlayer;
+    private final Dungeon myDungeon;
+    private Room myCurrentRoom;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -30,6 +35,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(myInputListener);
         this.setFocusable(true);
+
+        myPlayer = new Player(this, myInputListener, "Warrior", "Warrior");
+        myDungeon = new Dungeon(MAX_SCREEN_COLUMNS, MAX_SCREEN_ROWS, NUMBER_OF_ROOMS);
     }
 
     public void startGameThread() {
@@ -62,7 +70,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         // update game info here
-        player.update();
+        myPlayer.update();
+        myDungeon.checkDoorCollisions(myPlayer);
     }
 
     public void paintComponent(final Graphics theGraphics) {
@@ -71,7 +80,8 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D graphics2D = (Graphics2D) theGraphics;
 
         //Draw objects here
-        player.draw(graphics2D);
+        myDungeon.getMyCurrentRoom().draw(graphics2D);
+        myPlayer.draw(graphics2D);
 
         graphics2D.dispose();
     }
