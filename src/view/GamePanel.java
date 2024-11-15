@@ -5,14 +5,8 @@ import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 import model.Player.Player;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
     private final int ORIGINAL_TILE_SIZE = 32; // original art tile size
@@ -34,15 +28,8 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread myGameThread; // game clock
     private final Player myPlayer;
     private final Dungeon myDungeon;
+    private final UI myUI;
     private Room myCurrentRoom;
-
-    private BufferedImage bagIcon;
-    private Rectangle bagBounds;
-    private boolean bagHovered = false;
-
-    private BufferedImage mapIcon;
-    private Rectangle mapBounds;
-    private boolean mapHovered;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -53,11 +40,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         myPlayer = new Player(this, myInputListener, "Warrior", "Warrior");
         myDungeon = new Dungeon(MAX_SCREEN_COLUMNS, MAX_SCREEN_ROWS, NUMBER_OF_ROOMS);
-
-        loadBagIcon();
-        loadMapIcon();
-        addMouseListener(new BagMouseAdapter());
-        addMouseMotionListener(new BagMouseAdapter());
+        myUI = new UI(this);
     }
 
     public void startGameThread() {
@@ -102,59 +85,12 @@ public class GamePanel extends JPanel implements Runnable {
         //Draw objects here
         myDungeon.getMyCurrentRoom().draw(graphics2D);
         myPlayer.draw(graphics2D);
-        drawBagIcon(graphics2D);
-        drawMapIcon(graphics2D);
-
+        myUI.draw(graphics2D);
 
         graphics2D.dispose();
     }
 
-    private void loadBagIcon() {
-        try {
-            bagIcon = ImageIO.read(new File("src/resources/assets/Potato_seeds.png"));
-            bagBounds = new Rectangle(SCREEN_WIDTH - 66, SCREEN_HEIGHT - 66, 48, 48); // Position & size
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void drawBagIcon(final Graphics2D theGraphics2D) {
-        if (bagIcon != null) {
-            float alpha = bagHovered ? 1f : 0.5f; // Adjust alpha for hover effect
-            Composite originalComposite = theGraphics2D.getComposite();
-            theGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            theGraphics2D.drawImage(bagIcon, SCREEN_WIDTH - 66, SCREEN_HEIGHT - 66, 48, 48, null);
-            theGraphics2D.setComposite(originalComposite);
-        }
-    }
-
-    private void loadMapIcon() {
-        try {
-            mapIcon = ImageIO.read(new File("src/resources/assets/map-icon.png"));
-            mapBounds = new Rectangle(SCREEN_WIDTH - 132, SCREEN_HEIGHT - 72, 60, 60); // Position & size
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void drawMapIcon(final Graphics2D theGraphics2D) {
-        if (bagIcon != null) {
-            float alpha = mapHovered ? 1f : 0.5f; // Adjust alpha for hover effect
-            Composite originalComposite = theGraphics2D.getComposite();
-            theGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            theGraphics2D.drawImage(mapIcon, SCREEN_WIDTH - 132, SCREEN_HEIGHT - 72, 60, 60, null);
-            theGraphics2D.setComposite(originalComposite);
-        }
-    }
-
-    private class BagMouseAdapter extends MouseAdapter {
-        @Override
-        public void mouseMoved(MouseEvent e) {
-            bagHovered = bagBounds.contains(e.getPoint());
-            mapHovered = mapBounds.contains(e.getPoint());
-            repaint();
-        }
-    }
 
     public int getTileSize() { return TILE_SIZE; }
 
