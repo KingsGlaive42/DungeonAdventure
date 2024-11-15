@@ -38,34 +38,22 @@ public class UI {
     public void draw(Graphics2D theGraphics2D) {
         this.myGraphics2D = theGraphics2D;
 
-        /*
-        if (myGamePanel.gameState == myGamePanel.titleState) {
+
+        if (myGamePanel.getState() == GamePanel.State.MENU_STATE) {
             drawTitleScreen();
         }
-        if (myGamePanel.gameState == myGamePanel.playState) {
-            drawMapIcon();
+        else if (myGamePanel.getState() == GamePanel.State.GAME_STATE) {
             drawBagIcon();
+            drawMapIcon();
+            if (mapOn) {
+                drawMapScreen();
+            }
+            if (bagOn) {
+                drawInventoryScreen();
+            }
         }
-        if (myGamePanel.gameState == myGamePanel.pauseState) {
+        else if (myGamePanel.getState() == GamePanel.State.PAUSE_STATE) {
             drawPauseScreen();
-        }
-        if (myGamePanel.gameState == myGamePanel.mapState) {
-            drawMapIcon();
-            drawMapScreen();
-        }
-        if (myGamePanel.gameState == myGamePanel.inventoryState) {
-            drawBagIcon();
-            drawInventoryScreen();
-        }
-         */
-
-        drawBagIcon();
-        drawMapIcon();
-        if (mapOn) {
-            drawMapScreen();
-        }
-        if (bagOn) {
-            drawInventoryScreen();
         }
     }
 
