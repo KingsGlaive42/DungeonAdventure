@@ -25,24 +25,4 @@ public abstract class Monster extends DungeonCharacter{
             System.out.println(myName + " healing failed.");
         }
     }
-
-    @Override
-    public void attack(DungeonCharacter theTarget) {
-        if (Math.random() < myChanceToHit) {
-            int damage = myMinDamage + (int) (Math.random() * (myMaxDamage - myMinDamage + 1));
-            System.out.println(myName + " hits " + theTarget.getName() + ".");
-            theTarget.takeDamage(damage);
-        } else {
-            System.out.println(myName + " attack missed " + theTarget.getName() + ".");
-        }
-    }
-
-    @Override
-    public void takeDamage(int theDamage) {
-        this.myHitPoints -= theDamage;
-        System.out.println(myName + " takes " + theDamage + " damage! Current HP: " + myHitPoints);
-        if (!isAlive()) {
-            System.out.println(myName + " was defeated!");
-        }
-    }
 }
