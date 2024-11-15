@@ -87,8 +87,13 @@ public class UI {
     }
 
     private void drawMapIcon() {
-        if (bagIcon != null) {
-            float alpha = mapHovered ? 1f : 0.5f; // Adjust alpha for hover effect
+        if (mapIcon != null) {
+            float alpha;
+            if (mapOn) {
+                alpha = mapHovered ? 0.5f : 1f;
+            } else {
+                alpha = mapHovered ? 1f : 0.5f;
+            }
             Composite originalComposite = myGraphics2D.getComposite();
             myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             myGraphics2D.drawImage(mapIcon, myGamePanel.getScreenWidth() - 132, myGamePanel.getScreenHeight() - 72, 60, 60, null);
@@ -121,7 +126,13 @@ public class UI {
 
     private void drawBagIcon() {
         if (bagIcon != null) {
-            float alpha = bagHovered ? 1f : 0.5f; // Adjust alpha for hover effect
+            float alpha;
+            if (bagOn) {
+                alpha = bagHovered ? 0.5f : 1f;
+            } else {
+                alpha = bagHovered ? 1f : 0.5f;
+            }
+
             Composite originalComposite = myGraphics2D.getComposite();
             myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             myGraphics2D.drawImage(bagIcon, myGamePanel.getScreenWidth() - 66, myGamePanel.getScreenHeight() - 66, 48, 48, null);
