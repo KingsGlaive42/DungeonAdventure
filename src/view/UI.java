@@ -1,5 +1,7 @@
 package view;
 
+import controller.InputListener;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -80,12 +82,8 @@ public class UI {
 
     private void drawMapIcon() {
         if (mapIcon != null) {
-            float alpha;
-            if (mapOn) {
-                alpha = mapHovered ? 0.5f : 1f;
-            } else {
-                alpha = mapHovered ? 1f : 0.5f;
-            }
+            float alpha = mapHovered ? 1f : 0.5f;
+
             Composite originalComposite = myGraphics2D.getComposite();
             myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             myGraphics2D.drawImage(mapIcon, myGamePanel.getScreenWidth() - 132, myGamePanel.getScreenHeight() - 72, 60, 60, null);
@@ -118,12 +116,7 @@ public class UI {
 
     private void drawBagIcon() {
         if (bagIcon != null) {
-            float alpha;
-            if (bagOn) {
-                alpha = bagHovered ? 0.5f : 1f;
-            } else {
-                alpha = bagHovered ? 1f : 0.5f;
-            }
+            float alpha = bagHovered ? 1f : 0.5f;
 
             Composite originalComposite = myGraphics2D.getComposite();
             myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
