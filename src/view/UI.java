@@ -62,7 +62,11 @@ public class UI {
     }
 
     public void drawPauseScreen() {
+        String text = "PAUSED";
+        int x = myGamePanel.getTileSize() * 8;
+        int y = myGamePanel.getScreenHeight() / 2;
 
+        myGraphics2D.drawString(text, x, y);
     }
 
     private void loadMapIcon() {
