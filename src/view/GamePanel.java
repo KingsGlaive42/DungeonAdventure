@@ -102,6 +102,14 @@ public class GamePanel extends JPanel implements Runnable {
         if (myInputListener.isPauseJustPressed()) {
             setState(State.PAUSE_STATE);
         }
+
+        if (myInputListener.isInventoryJustPressed()) {
+            myUI.toggleInventoryScreen();
+        }
+
+        if (myInputListener.isMapJustPressed()) {
+            myUI.toggleMapScreen();
+        }
     }
 
     private void updatePauseStateInfo() {
@@ -163,5 +171,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getScreenHeight() {
         return SCREEN_HEIGHT;
+    }
+
+    public InputListener getInputListener() {
+        return myInputListener;
     }
 }
