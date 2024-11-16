@@ -99,13 +99,13 @@ public class GamePanel extends JPanel implements Runnable {
     private void updateGameStateInfo() {
         myPlayer.update();
         myDungeon.checkDoorCollisions(myPlayer);
-        if (myInputListener.isPausePressed()) {
+        if (myInputListener.isPauseJustPressed()) {
             setState(State.PAUSE_STATE);
         }
     }
 
     private void updatePauseStateInfo() {
-        if (myInputListener.isPausePressed()) {
+        if (myInputListener.isPauseJustPressed()) {
             setState(State.GAME_STATE);
         }
     }

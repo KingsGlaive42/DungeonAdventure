@@ -10,7 +10,7 @@ public class InputListener implements KeyListener {
     private final int RIGHT = KeyEvent.VK_D;
 
     private boolean isUpPressed, isDownPressed, isLeftPressed, isRightPressed, isPausedPressed;
-
+    private boolean wasPausePressed = false;
     @Override
     public void keyTyped(final KeyEvent theKey) {
 
@@ -74,7 +74,14 @@ public class InputListener implements KeyListener {
         return isRightPressed;
     }
 
-    public boolean isPausePressed() {
-        return isPausedPressed;
+    public boolean isPauseJustPressed() {
+        if (isPausedPressed && !wasPausePressed) {
+            wasPausePressed = true;
+            return true;
+        }
+        if (!isPausedPressed) {
+            wasPausePressed = false;
+        }
+        return false;
     }
 }
