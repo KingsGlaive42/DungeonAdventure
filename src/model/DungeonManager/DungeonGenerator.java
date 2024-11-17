@@ -158,8 +158,7 @@ class DungeonGenerator {
 
                 for (Map.Entry<DoorDirection, Room> entry: myDungeonGrid[i][j].getConnectedRooms().entrySet()) {
                     DoorDirection direction = entry.getKey();
-                    Room adjacentRoom = entry.getValue();
-                    myDungeonGrid[i][j].addDoor(direction, adjacentRoom);
+                    myDungeonGrid[i][j].addDoor(direction);
                 }
             }
         }
@@ -200,38 +199,5 @@ class DungeonGenerator {
         }
 
         System.out.println();
-    }
-
-    void printDoors() {
-        for (int i = 0; i < myDungeonWidth; i++) {
-            for (int j = 0; j < myDungeonHeight; j++) {
-                if (myDungeonGrid[i][j] == null) continue;
-
-                Room room = myDungeonGrid[i][j];
-
-                System.out.println("Room at (" + room.getX() + ", " + room.getY() + ") has doors:");
-
-                for (Map.Entry<DoorDirection, Door> doorEntry : room.getDoors().entrySet()) {
-                    DoorDirection direction = doorEntry.getKey();
-
-                    Room connectedRoom = room.getConnectedRooms().get(direction);
-
-                    if (connectedRoom != null) {
-                        System.out.println("  " + direction + " -> Room at ("
-                                + connectedRoom.getX() + ", "
-                                + connectedRoom.getY() + ")");
-                    } else {
-                        System.out.println("  " + direction + " -> No connected room");
-                    }
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        DungeonGenerator generator = new DungeonGenerator(9, 8);
-        generator.generateDungeon(25);
-        generator.printDungeon();
-        generator.printDoors();
     }
 }

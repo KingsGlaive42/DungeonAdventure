@@ -4,7 +4,8 @@ import controller.InputListener;
 import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 import model.Player.Player;
-import javax.swing.*;
+
+import javax.swing.JPanel;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -12,8 +13,8 @@ public class GamePanel extends JPanel implements Runnable {
     private final double PIXEL_SCALAR = 1;
 
     private final int TILE_SIZE = (int) (ORIGINAL_TILE_SIZE * PIXEL_SCALAR);
-    private final int MAX_SCREEN_COLUMNS = 16;
-    private final int MAX_SCREEN_ROWS = 12;
+    private final int MAX_SCREEN_COLUMNS = 17;
+    private final int MAX_SCREEN_ROWS = 13;
     private final int SCREEN_WIDTH = TILE_SIZE * MAX_SCREEN_COLUMNS;
     private final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROWS;
 
@@ -27,7 +28,16 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread myGameThread; // game clock
     private final Player myPlayer;
     private final Dungeon myDungeon;
-    private Room myCurrentRoom;
+    private final UI myUI;
+
+    enum State {
+        GAME_STATE,
+        PAUSE_STATE,
+        MENU_STATE,
+        COMBAT_STATE
+    }
+
+    private State myState;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -38,6 +48,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         myPlayer = new Player(this, myInputListener, "Warrior", "Warrior");
         myDungeon = new Dungeon(MAX_SCREEN_COLUMNS, MAX_SCREEN_ROWS, NUMBER_OF_ROOMS);
+        myUI = new UI(this);
+        myState = State.GAME_STATE;
     }
 
     public void startGameThread() {
@@ -69,9 +81,41 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        // update game info here
+        switch (myState) {
+            case State.MENU_STATE:
+                break;
+            case State.GAME_STATE:
+                updateGameStateInfo();
+                break;
+            case State.COMBAT_STATE:
+                break;
+            case State.PAUSE_STATE:
+                updatePauseStateInfo();
+                break;
+
+        }
+    }
+
+    private void updateGameStateInfo() {
         myPlayer.update();
         myDungeon.checkDoorCollisions(myPlayer);
+        if (myInputListener.isPauseJustPressed()) {
+            setState(State.PAUSE_STATE);
+        }
+
+        if (myInputListener.isInventoryJustPressed()) {
+            myUI.toggleInventoryScreen();
+        }
+
+        if (myInputListener.isMapJustPressed()) {
+            myUI.toggleMapScreen();
+        }
+    }
+
+    private void updatePauseStateInfo() {
+        if (myInputListener.isPauseJustPressed()) {
+            setState(State.GAME_STATE);
+        }
     }
 
     public void paintComponent(final Graphics theGraphics) {
@@ -79,12 +123,37 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D graphics2D = (Graphics2D) theGraphics;
 
-        //Draw objects here
-        myDungeon.getMyCurrentRoom().draw(graphics2D);
-        myPlayer.draw(graphics2D);
+
+        switch (myState) {
+            case MENU_STATE:
+                break;
+            case GAME_STATE:
+                paintGameState(graphics2D);
+                break;
+            case COMBAT_STATE:
+                break;
+            case PAUSE_STATE:
+                paintPauseState(graphics2D);
+                break;
+
+        }
 
         graphics2D.dispose();
     }
+
+    private void paintGameState(final Graphics2D graphics2D) {
+        myDungeon.getMyCurrentRoom().draw(graphics2D);
+        myPlayer.draw(graphics2D);
+        myUI.draw(graphics2D);
+    }
+
+    private void paintPauseState(final Graphics2D graphics2D) {
+        paintGameState(graphics2D);
+        myUI.draw(graphics2D);
+    }
+
+    public void setState(final State theState) { myState = theState; }
+    public State getState() { return myState; }
 
     public int getTileSize() { return TILE_SIZE; }
 
@@ -102,5 +171,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getScreenHeight() {
         return SCREEN_HEIGHT;
+    }
+
+    public InputListener getInputListener() {
+        return myInputListener;
     }
 }

@@ -16,6 +16,11 @@ import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 
 public class Player extends GameObject {
+    private static final int MIN_X = -32;
+    private static final int MAX_X = 480;
+    private static final int MIN_Y = -32;
+    private static final int MAX_Y = 330;
+
     private final GamePanel myGamePanel;
     private final InputListener myInputListener;
     private final int TILE_SIZE;
@@ -226,8 +231,25 @@ public class Player extends GameObject {
             verticalSpeed = (int) (verticalSpeed / Math.sqrt(2) * diagonalSpeedFactor);
         }
 
-        myX += horizontalSpeed;
-        myY += verticalSpeed;
+        if (myX + horizontalSpeed < MIN_X) {
+            myX = MIN_X;
+        }
+        else if (myX + horizontalSpeed > MAX_X) {
+            myX = MAX_X;
+        }
+        else {
+            myX += horizontalSpeed;
+        }
+
+        if (myY + verticalSpeed < MIN_Y) {
+            myY = MIN_Y;
+        }
+        else if (myY + verticalSpeed > MAX_Y) {
+            myY = MAX_Y;
+        }
+        else {
+            myY += verticalSpeed;
+        }
 
         // Update facing direction based on movement
         if (horizontalSpeed < 0) {
@@ -304,20 +326,16 @@ public class Player extends GameObject {
     public void moveToOppositeDoor(final DoorDirection theDoorDirection) {
         switch (theDoorDirection) {
             case DoorDirection.DOWN:
-                this.myX = 6.5 * TILE_SIZE;
                 this.myY = 0;
                 break;
             case DoorDirection.UP:
-                this.myX = 6.5 * TILE_SIZE;
                 this.myY = 9 * TILE_SIZE;
                 break;
             case DoorDirection.RIGHT:
-                this.myX = (double) TILE_SIZE / 4;
-                this.myY = 4 * TILE_SIZE;
+                this.myX = (double) TILE_SIZE / 2;
                 break;
             case DoorDirection.LEFT:
-                this.myX = 13 * TILE_SIZE;
-                this.myY = 4 * TILE_SIZE;
+                this.myX = 14 * TILE_SIZE;
                 break;
         }
     }

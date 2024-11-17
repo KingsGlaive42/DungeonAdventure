@@ -1,6 +1,4 @@
-package model;
-
-import view.GamePanel;
+package view;
 
 import javax.swing.*;
 
