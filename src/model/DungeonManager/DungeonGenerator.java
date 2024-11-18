@@ -1,5 +1,8 @@
 package model.DungeonManager;
 
+import model.PlayerInventory.Item;
+import model.PlayerInventory.ItemType;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +12,8 @@ import java.util.Random;
 class DungeonGenerator {
     private static final int MIN_DEAD_ENDS = 6;
     private static final int MIN_DUNGEON_DIMENSION = 8;
+
+    private final String[] myPillarsNames = {"A", "E", "I", "P"};
 
     private final int myDungeonWidth;
     private final int myDungeonHeight;
@@ -84,7 +89,18 @@ class DungeonGenerator {
             myObjectiveRooms.add(objectiveRoom);
         }
 
+        assignPillars();
+
         return true;
+    }
+
+    private void assignPillars() {
+        for (int i = 0; i < 4; i++) {
+            Room objectiveRoom = myObjectiveRooms.get(i);
+            String pillar = myPillarsNames[i];
+            Item pillarItem = new Item(pillar + "Pillar", "A pillar of " + pillar, ItemType.PILLAR);
+            objectiveRoom.addItem(pillarItem);
+        }
     }
 
     private void addAvailableLocations(final int theX, final int theY) {
@@ -174,7 +190,6 @@ class DungeonGenerator {
                 generatedDungeon.put(new Point(i, j), myDungeonGrid[i][j]);
             }
         }
-
         return generatedDungeon;
     }
 
