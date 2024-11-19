@@ -6,6 +6,7 @@ import model.DungeonCharacters.Hero;
 import model.DungeonCharacters.Priestess;
 import view.CombatPanel;
 import view.GamePanel;
+import javax.swing.Timer;
 
 public class CombatController {
     private final CombatEngine combatEngine;
@@ -13,6 +14,7 @@ public class CombatController {
     private final GamePanel gamePanel;  // Reference to the GamePanel
     private final Hero hero;
     private final DungeonCharacter enemy;
+    private Timer animationTimer;
 
     public CombatController(Hero hero, DungeonCharacter enemy) {
         gamePanel = new GamePanel();
@@ -23,11 +25,6 @@ public class CombatController {
 
         updateHeroInfo();
         updateEnemyInfo();
-
-        // Check if the hero is a Priestess and show healing options if so
-        if (hero instanceof Priestess) {
-            combatPanel.showHealButtons(true);
-        }
     }
 
     public CombatPanel getCombatPanel() {
@@ -35,16 +32,47 @@ public class CombatController {
     }
 
     public void handleAttack() {
+        Timer actionTimer = new Timer(500, null);
+        final int[] state = {0};
+
+        actionTimer.addActionListener(e -> {
+            switch (state[0]) {
+                case 0: // Log the attack action
+                    combatPanel.logAction(hero.getName() + " attacks " + enemy.getName());
+                    state[0]++;
+                    break;
+
+                case 1: // Perform the attack
+                    combatEngine.attack(hero, enemy);
+                    updateEnemyInfo();
+                    if (enemy.getHitPoints() <= 0) {
+                        actionTimer.stop(); // Stop the timer as victory is handled
+                        handleVictory();
+                    } else {
+                        state[0]++;
+                    }
+                    break;
+
+                case 2: // Handle enemy counterattack
+                    handleEnemyCounterattack();
+                    actionTimer.stop(); // Stop the timer after completing the sequence
+                    break;
+            }
+        });
+        actionTimer.setRepeats(true); // Ensure the timer repeats for each state
+        actionTimer.start(); // Start the timer
+
+        /*
         combatPanel.logAction(hero.getName() + " attacks " + enemy.getName());
         combatEngine.attack(hero, enemy);
         updateEnemyInfo();
 
         if (enemy.getHitPoints() <= 0) {
-            combatPanel.logAction(enemy.getName() + " has been defeated!");
+            handleVictory();
             return;
         }
 
-        handleEnemyCounterattack();
+        handleEnemyCounterattack();*/
     }
 
     public void handleDefend() {
@@ -62,7 +90,7 @@ public class CombatController {
             updateEnemyInfo();
 
             if (enemy.getHitPoints() <= 0) {
-                combatPanel.logAction(enemy.getName() + " has been defeated!");
+                handleVictory();
             } else {
                 handleEnemyCounterattack();
             }
@@ -90,9 +118,16 @@ public class CombatController {
         // - Returning to a previous game state (like a dungeon or main menu)
     }
 
+    public void handleVictory() {
+        combatPanel.logAction(enemy.getName() + " has been slain!");
+        combatPanel.displayGameOver(enemy.getName() + " has been slain.");
+    }
+
     private void handleEnemyCounterattack() {
+
         combatPanel.logAction(enemy.getName() + " counterattacks " + hero.getName());
         combatEngine.attack(enemy, hero);
+        combatPanel.shakeImage();
         updateHeroInfo();
 
         if (hero.getHitPoints() <= 0) {
@@ -115,7 +150,8 @@ public class CombatController {
     public void switchToGamePanel() {
         // Assuming we have a way to switch to the GamePanel from wherever the CombatController is being used
         // You may need to use a JFrame or another method to handle panel switching
-        gamePanel.setVisible(true);  // Make GamePanel visible
-        combatPanel.setVisible(false);  // Hide CombatPanel
+        //gamePanel.setVisible(true);  // Make GamePanel visible
+        //combatPanel.setVisible(false);  // Hide CombatPanel
+        combatPanel.dispose();
     }
 }
