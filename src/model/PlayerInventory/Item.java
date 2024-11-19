@@ -2,14 +2,16 @@ package model.PlayerInventory;
 
 import model.DungeonCharacters.Hero;
 
-public abstract class Item {
+public class Item {
     private final String myName;
     private final String myDescription;
+    private final ItemType myType;
 
 
-    public Item(String theName, String theDescription) {
+    public Item(String theName, String theDescription, ItemType theType) {
         this.myName = theName;
         this.myDescription = theDescription;
+        this.myType = theType;
     }
 
     public String getName() {
@@ -20,5 +22,7 @@ public abstract class Item {
         return myDescription;
     }
 
-    public abstract void use(Hero theHero);
+    public ItemType getItemType() {
+        return myType;
+    }
 }

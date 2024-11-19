@@ -4,6 +4,7 @@ import controller.InputListener;
 import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 import model.Player.Player;
+import model.PlayerInventory.Inventory;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -46,9 +47,10 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(myInputListener);
         this.setFocusable(true);
 
-        myPlayer = new Player(this, myInputListener, "Warrior", "Warrior");
         myDungeon = new Dungeon(MAX_SCREEN_COLUMNS, MAX_SCREEN_ROWS, NUMBER_OF_ROOMS);
-        myUI = new UI(this);
+        Inventory myInventory = new Inventory(myDungeon);
+        myPlayer = new Player(this, myInputListener, "Warrior", "Warrior", myInventory);
+        myUI = new UI(this, myInventory);
         myState = State.GAME_STATE;
     }
 
