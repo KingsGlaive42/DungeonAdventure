@@ -7,7 +7,7 @@ import java.util.Random;
 public class Warrior extends Hero {
     public Warrior(final String theName) {
         this.myName = theName;
-        this.myHitPoints = 125;
+        this.myHitPoints = 125; //125
         this.myMaxHitPoints = 125;
         this.myAttackSpeed = 4;
         this.myChanceToHit = 0.8;

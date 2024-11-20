@@ -1,7 +1,10 @@
 package model.DungeonCharacters;
 
 public class Ogre extends Monster{
-    public Ogre() {
-        super("Ogre", 200, 30, 60, 2, 0.6, 0.1, 30, 60);
+    public Ogre(int theHitPoints, int theMinDamage,
+                int theMaxDamage, int theAttackSpeed, double theChanceToHit, double theHealChance,
+                int theMinHeal, int theMaxHeal) {
+        super("Ogre", theHitPoints, theMinDamage, theMaxDamage, theAttackSpeed, theChanceToHit,
+                theHealChance, theMinHeal, theMaxHeal);
     }
 }

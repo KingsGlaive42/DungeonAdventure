@@ -78,9 +78,4 @@ public class CombatEngine {
     public int calculateDamage(final int theMinDamage, final int theMaxDamage) {
         return theMinDamage + (int) (Math.random() * ((theMaxDamage - theMinDamage) + 1));
     }
-
-    // Check if a character has been defeated
-    public boolean isDefeated(final DungeonCharacter character) {
-        return character.getHitPoints() <= 0;
-    }
 }

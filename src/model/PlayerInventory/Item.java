@@ -1,17 +1,12 @@
 package model.PlayerInventory;
 
+import model.DungeonCharacters.Hero;
+
 public class Item {
     private final String myName;
     private final String myDescription;
     private final ItemType myType;
 
-    // will add/replace with whatever else we decide
-    public enum ItemType {
-        CONSUMABLE,
-        WEAPON,
-        KEY_ITEM,
-        ARMOR
-    }
 
     public Item(String theName, String theDescription, ItemType theType) {
         this.myName = theName;
@@ -27,9 +22,7 @@ public class Item {
         return myDescription;
     }
 
-    public ItemType getType() {
+    public ItemType getItemType() {
         return myType;
     }
-
-    // additional methods for using item/equipping.
 }

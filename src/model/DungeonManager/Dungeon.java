@@ -3,6 +3,7 @@ package model.DungeonManager;
 import model.Player.Player;
 
 import java.awt.Point;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Dungeon {
@@ -34,6 +35,7 @@ public class Dungeon {
             if (nextRoom != null) {
                 myCurrentRoom = nextRoom; // Transition to the new room
                 thePlayer.moveToOppositeDoor(doorDirection);
+                myCurrentRoom.playerEnters(thePlayer);
             }
         }
     }
@@ -47,6 +49,27 @@ public class Dungeon {
             case DoorDirection.RIGHT: pos.translate(1, 0); break;
         }
         return myRooms.get(pos);
+    }
+
+    public Map<Point, Room> getSurroundingRooms(final Room theCurrentRoom) {
+        Map<Point, Room> surroundingRooms = new HashMap<>();
+        int x = theCurrentRoom.getX();
+        int y = theCurrentRoom.getY();
+
+        // 8 neighboring rooms
+        int[][] directions = {
+                {x-1, y-1}, {x-1, y}, {x-1, y+1},
+                {x, y-1},           {x, y+1},
+                {x+1, y-1},  {x+1, y},  {x+1, y+1}
+        };
+
+        for (int[] pos : directions) {
+            Point point = new Point(pos[0], pos[1]);
+            if (myRooms.containsKey(point)) {
+                surroundingRooms.put(point, myRooms.get(point));
+            }
+        }
+        return surroundingRooms;
     }
 
     public Room getMyCurrentRoom() {

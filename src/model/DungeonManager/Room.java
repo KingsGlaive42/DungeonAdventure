@@ -2,9 +2,13 @@ package model.DungeonManager;
 
 import model.AnimationSystem.Sprite;
 import model.Player.Player;
+import model.PlayerInventory.Item;
+import model.PlayerInventory.ItemType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -17,9 +21,13 @@ public class Room {
 
     private final Sprite myFloorSpritesheet = new Sprite();
     private final Sprite myWallSpritesheet = new Sprite();
+    private final List<Item> myRoomItems = new ArrayList<>();
 
     private final int myX;
     private final int myY;
+    private boolean hasPit;
+    private boolean isVisited;
+
     private RoomType myRoomType;
     private final BufferedImage[][] myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
 
@@ -30,7 +38,8 @@ public class Room {
         myX = theX;
         myY = theY;
         myRoomType = theRoomType;
-
+        hasPit = false;
+        isVisited = false;
         loadSpriteSheets();
         initializeAnimations();
     }
@@ -107,6 +116,28 @@ public class Room {
         }
     }
 
+    public void playerEnters(final Player thePlayer) {
+        if (!isVisited) {
+            if (this.hasPit) {
+                System.out.println("Fell in pit");
+            } else {
+                for (Item item : myRoomItems) {
+                    thePlayer.getMyInventory().addItem(item);
+                }
+                myRoomItems.clear();
+            }
+            isVisited = true;
+        }
+    }
+
+    public void addItem(Item theItem) {
+        myRoomItems.add(theItem);
+    }
+
+    public List<Item> getRoomItems() {
+        return myRoomItems;
+    }
+
     int getX() {
         return myX;
     }
@@ -127,6 +158,14 @@ public class Room {
         return myRoomType;
     }
 
+    public boolean getPit() {
+        return hasPit;
+    }
+
+    public void setPit(boolean thePit) {
+        this.hasPit = thePit;
+    }
+
     public void draw(final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(myRoomType == RoomType.START ? Color.GREEN :
                             myRoomType == RoomType.END ? Color.RED :
@@ -138,6 +177,13 @@ public class Room {
 
         for (Door door : myDoors.values()) {
             door.draw(theGraphics2D);
+        }
+
+        for (Item item : myRoomItems) {
+            if (item.getItemType() == ItemType.PILLAR) {
+                theGraphics2D.setColor(Color.WHITE);
+                theGraphics2D.drawString(item.getName().substring(0, 1), 50, 50);
+            }
         }
     }
 

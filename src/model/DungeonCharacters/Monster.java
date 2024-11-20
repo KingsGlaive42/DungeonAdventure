@@ -18,7 +18,7 @@ public abstract class Monster extends DungeonCharacter{
     public void heal() {
         if (Math.random() < myHealChance) {
             int healAmount = myMinHeal + (int) (Math.random() * (myMaxHeal - myMinHeal + 1));
-            this.myHitPoints += healAmount;
+            this.myHitPoints = Math.min(myHitPoints + healAmount, getMaxHitPoints());
             System.out.println(myName + " healed by " + healAmount + " points. Current HP: " + myHitPoints);
 
         } else {

@@ -9,6 +9,8 @@ import model.DungeonCharacters.Thief;
 import model.DungeonCharacters.Warrior;
 import model.DungeonManager.DoorDirection;
 import model.GameObject;
+import model.PlayerInventory.Inventory;
+import model.PlayerInventory.Item;
 import view.GamePanel;
 
 import java.awt.*;
@@ -31,6 +33,7 @@ public class Player extends GameObject {
     private final Sprite myIdleSpritesheet = new Sprite();
 
     private DungeonCharacter myHeroClass;
+    private final Inventory myInventory;
 
     // Images for each animation
     private BufferedImage[] myWalkingDownSprites;
@@ -61,11 +64,13 @@ public class Player extends GameObject {
     private boolean wasMoving = false;
     private GameObject.FacingDirection myFacingDirection = GameObject.FacingDirection.DOWN;
 
-    public Player(final GamePanel theGamePanel, final InputListener theInputListener, final String theCharacterClass, final String thePlayerName) {
+    public Player(final GamePanel theGamePanel, final InputListener theInputListener, final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
         this.myGamePanel = theGamePanel;
         this.myInputListener = theInputListener;
         this.TILE_SIZE = myGamePanel.getTileSize();
         this.PLAYER_SIZE = TILE_SIZE * PLAYER_SCALE;
+
+        this.myInventory = theInventory;
 
         setHeroClass(theCharacterClass, thePlayerName);
 
@@ -338,6 +343,14 @@ public class Player extends GameObject {
                 this.myX = 14 * TILE_SIZE;
                 break;
         }
+    }
+
+    private void addToInventory(final Item theItem) {
+        myInventory.addItem(theItem);
+    }
+
+    public Inventory getMyInventory() {
+        return myInventory;
     }
 
     public double getX() {

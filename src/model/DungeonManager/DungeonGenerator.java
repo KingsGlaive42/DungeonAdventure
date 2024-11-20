@@ -1,5 +1,10 @@
 package model.DungeonManager;
 
+import model.PlayerInventory.HealingPotion;
+import model.PlayerInventory.Item;
+import model.PlayerInventory.ItemType;
+import model.PlayerInventory.VisionPotion;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +14,8 @@ import java.util.Random;
 class DungeonGenerator {
     private static final int MIN_DEAD_ENDS = 6;
     private static final int MIN_DUNGEON_DIMENSION = 8;
+
+    private final String[] myPillarsNames = {"Abstraction", "Encapsulation", "Inheritance", "Polymorphism"};
 
     private final int myDungeonWidth;
     private final int myDungeonHeight;
@@ -84,7 +91,49 @@ class DungeonGenerator {
             myObjectiveRooms.add(objectiveRoom);
         }
 
+        assignPillars();
+        addDungeonItems();
+        printDungeon();
+
         return true;
+    }
+
+    private void assignPillars() {
+        for (int i = 0; i < 4; i++) {
+            Room objectiveRoom = myObjectiveRooms.get(i);
+            String pillar = myPillarsNames[i];
+            Item pillarItem = new Item("'" + pillar.charAt(0) + "' pillar", "The pillar of " + pillar.toLowerCase(), ItemType.PILLAR);
+            objectiveRoom.addItem(pillarItem);
+        }
+    }
+
+    private void addDungeonItems() {
+        for (int i = 0; i < myDungeonWidth; i++) {
+            for (int k = 0; k < myDungeonHeight; k++) {
+                Room room = myDungeonGrid[i][k];
+                if (room != null && room.getRoomType() == RoomType.FILLER) {
+                    placeRandomItems(room);
+                }
+            }
+        }
+    }
+    // update chances/logic
+    private void placeRandomItems(final Room room) {
+        if (Math.random() < 0.1) {
+            room.setPit(true);
+            System.out.println("add a pit");
+        } else if (!room.getPit()){
+            if (Math.random() < 0.1) {
+                System.out.println("add healing potion");
+                HealingPotion hPotion = new HealingPotion();
+                room.addItem(hPotion);
+            }
+            if (Math.random() < 0.1) {
+                System.out.println("add vision potion");
+                VisionPotion vPotion = new VisionPotion();
+                room.addItem(vPotion);
+            }
+        }
     }
 
     private void addAvailableLocations(final int theX, final int theY) {
@@ -174,7 +223,6 @@ class DungeonGenerator {
                 generatedDungeon.put(new Point(i, j), myDungeonGrid[i][j]);
             }
         }
-
         return generatedDungeon;
     }
 
@@ -188,7 +236,21 @@ class DungeonGenerator {
                         System.out.print("E");
                     } else if (myDungeonGrid[i][j].getRoomType() == RoomType.OBJECTIVE) {
                         System.out.print("O");
-                    } else {
+                    } else if (myDungeonGrid[i][j].getPit()) {
+                        System.out.print("X");
+                    } else if (myDungeonGrid[i][j].getRoomItems().size() > 1) {
+                        System.out.print("M");
+                    } else if ((myDungeonGrid[i][j].getRoomType() == RoomType.FILLER) &&
+                            (!myDungeonGrid[i][j].getRoomItems().isEmpty())) {
+                        for (Item item : myDungeonGrid[i][j].getRoomItems()) {
+                            if (item.getItemType() == ItemType.HEALING_POTION) {
+                                System.out.print("H");
+                            } else if (item.getItemType() == ItemType.VISION_POTION) {
+                                System.out.print("V");
+                            }
+                        }
+                    }
+                    else {
                         System.out.print("R");
                     }
                 } else {

@@ -1,12 +1,15 @@
 package view;
 
 import controller.InputListener;
+import model.PlayerInventory.Inventory;
+import model.PlayerInventory.Item;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.io.File;
 import java.io.IOException;
 
@@ -24,8 +27,11 @@ public class UI {
     private boolean mapHovered;
     private boolean mapOn;
 
-    public UI(final GamePanel theGamePanel) {
+    private final Inventory myInventory;
+
+    public UI(final GamePanel theGamePanel, Inventory theInventory) {
         this.myGamePanel = theGamePanel;
+        this.myInventory = theInventory;
 
         loadBagIcon();
         bagOn = false;
@@ -132,6 +138,15 @@ public class UI {
         final int frameHeight = myGamePanel.getTileSize() * 11;
 
         drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        List<Item> items = myInventory.getItems();
+        //System.out.println("Items in Inventory " + items.size());
+        int itemY = frameY + 20;
+        for (Item item : items) {
+            myGraphics2D.drawString(item.getName(), frameX + 10, itemY);
+            myGraphics2D.drawString(item.getMyDescription(), frameX + 10, itemY + 15);
+            itemY += 40;
+        }
     }
 
     public void toggleInventoryScreen() {
