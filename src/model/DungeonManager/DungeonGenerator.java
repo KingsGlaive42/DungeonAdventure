@@ -14,21 +14,22 @@ import java.util.Random;
 class DungeonGenerator {
     private static final int MIN_DEAD_ENDS = 6;
     private static final int MIN_DUNGEON_DIMENSION = 8;
-
+    private static final int STARTING_ROOM_RADIUS = 3;
+    private static final int NUM_OBJECTIVE_ROOMS = 4;
+    private static final Random RNG = new Random();
     private final String[] myPillarsNames = {"Abstraction", "Encapsulation", "Inheritance", "Polymorphism"};
 
     private final int myDungeonWidth;
     private final int myDungeonHeight;
     private Room[][] myDungeonGrid;
     private ArrayList<Point> myAvailableRoomLocations;
-    private final Random random;
+
     private Room myStartRoom;
     private ArrayList<Room> myObjectiveRooms;
 
     DungeonGenerator(final int theDungeonWidth, final int theDungeonHeight) {
         myDungeonWidth = Math.max(theDungeonWidth, MIN_DUNGEON_DIMENSION);
         myDungeonHeight = Math.max(theDungeonHeight, MIN_DUNGEON_DIMENSION);
-        random = new Random();
     }
 
     void generateDungeon(final int theNumRooms) {
@@ -49,8 +50,8 @@ class DungeonGenerator {
     private void createRooms(final int theNumRooms) {
         int centerX = myDungeonWidth / 2;
         int centerY = myDungeonHeight / 2;
-        int startX = centerX + random.nextInt(3) - 1;
-        int startY = centerY + random.nextInt(3) - 1;
+        int startX = centerX + RNG.nextInt(STARTING_ROOM_RADIUS) - 1;
+        int startY = centerY + RNG.nextInt(STARTING_ROOM_RADIUS) - 1;
 
         myStartRoom = new Room(startX, startY, RoomType.FILLER);
         myDungeonGrid[startX][startY] = myStartRoom;
@@ -59,7 +60,7 @@ class DungeonGenerator {
         for (int i = 1; i < theNumRooms; i++) {
             if (myAvailableRoomLocations.isEmpty()) break;
 
-            Point location = myAvailableRoomLocations.remove(random.nextInt(myAvailableRoomLocations.size()));
+            Point location = myAvailableRoomLocations.remove(RNG.nextInt(myAvailableRoomLocations.size()));
             int newX = location.x;
             int newY = location.y;
             Room newRoom = new Room(newX, newY, RoomType.FILLER);
@@ -76,7 +77,7 @@ class DungeonGenerator {
             return false;
         }
 
-        myStartRoom = deadEnds.remove(random.nextInt(deadEnds.size()));
+        myStartRoom = deadEnds.remove(RNG.nextInt(deadEnds.size()));
         myStartRoom.setType(RoomType.START);
 
         Room myEndRoom = findFurthestRoom(myStartRoom, deadEnds);
@@ -85,21 +86,20 @@ class DungeonGenerator {
             deadEnds.remove(myEndRoom);
         }
 
-        for (int i = 0; i < 4; i++) {
-            Room objectiveRoom = deadEnds.remove(random.nextInt(deadEnds.size()));
+        for (int i = 0; i < NUM_OBJECTIVE_ROOMS; i++) {
+            Room objectiveRoom = deadEnds.remove(RNG.nextInt(deadEnds.size()));
             objectiveRoom.setType(RoomType.OBJECTIVE);
             myObjectiveRooms.add(objectiveRoom);
         }
 
         assignPillars();
         addDungeonItems();
-        printDungeon();
 
         return true;
     }
 
     private void assignPillars() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < NUM_OBJECTIVE_ROOMS; i++) {
             Room objectiveRoom = myObjectiveRooms.get(i);
             String pillar = myPillarsNames[i];
             Item pillarItem = new Item("'" + pillar.charAt(0) + "' pillar", "The pillar of " + pillar.toLowerCase(), ItemType.PILLAR);
@@ -117,6 +117,7 @@ class DungeonGenerator {
             }
         }
     }
+
     // update chances/logic
     private void placeRandomItems(final Room room) {
         if (Math.random() < 0.1) {

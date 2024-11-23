@@ -1,6 +1,5 @@
 package view;
 
-import controller.InputListener;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
 
@@ -17,170 +16,236 @@ public class UI {
     private final GamePanel myGamePanel;
     private Graphics2D myGraphics2D;
 
-    private BufferedImage bagIcon;
-    private Rectangle bagBounds;
-    private boolean bagHovered = false;
-    private boolean bagOn;
+    private static final int BAG_ICON_SIZE = 48;
+    private static final int BAG_ICON_OFFSET = 66;
+    private static final int MAP_ICON_SIZE = 60;
+    private static final int MAP_ICON_OFFSET_X = 132;
+    private static final int MAP_ICON_OFFSET_Y = 72;
+    private static final float BUTTON_ALPHA_HOVER = 0.5f;
+    private static final float BUTTON_ALPHA_DEFAULT = 1f;
 
-    private BufferedImage mapIcon;
-    private Rectangle mapBounds;
-    private boolean mapHovered;
-    private boolean mapOn;
+    private BufferedImage bagIcon, mapIcon, unpressedPlayButtonImage, pressedPlayButtonImage, playButtonImage;
+    private BufferedImage optionsImage, exitImage;
+    private Rectangle bagIconBounds, mapIconBounds, playButtonBounds, optionButtonBounds, exitButtonBounds;
+    private boolean isBagHovered = false, isMapHovered = false, isPlayHovered = false, isOptionsHovered = false, isExitHovered = false;
+    private boolean isBagVisible = false, isMapVisible = false;
 
     private final Inventory myInventory;
 
-    public UI(final GamePanel theGamePanel, Inventory theInventory) {
+    public UI(final GamePanel theGamePanel, final Inventory theInventory) {
         this.myGamePanel = theGamePanel;
         this.myInventory = theInventory;
 
-        loadBagIcon();
-        bagOn = false;
-
-        loadMapIcon();
-        mapOn = false;
+        loadIcons();
 
         myGamePanel.addMouseListener(new BagMouseAdapter());
         myGamePanel.addMouseMotionListener(new BagMouseAdapter());
     }
 
-    public void draw(Graphics2D theGraphics2D) {
-        this.myGraphics2D = theGraphics2D;
+    private void loadIcons() {
+        try {
+            unpressedPlayButtonImage = ImageIO.read(new File("src/resources/assets/Buttons/Royal Buttons/Gold/royal gold button (not pressed).png"));
+            pressedPlayButtonImage = ImageIO.read(new File("src/resources/assets/Buttons/Royal Buttons/Gold/royal gold button (pressed).png"));
+            playButtonImage = unpressedPlayButtonImage;
 
+            optionsImage = ImageIO.read(new File("src/resources/assets/Buttons/Colored Buttons/light orange/options.png"));
+            exitImage = ImageIO.read(new File("src/resources/assets/Buttons/Colored Buttons/light orange/exit.png"));
+
+            bagIcon = ImageIO.read(new File("src/resources/assets/Potato_seeds.png"));
+            bagIconBounds = new Rectangle(myGamePanel.getScreenWidth() - BAG_ICON_OFFSET, myGamePanel.getScreenHeight() - BAG_ICON_OFFSET, BAG_ICON_SIZE, BAG_ICON_SIZE);
+
+            mapIcon = ImageIO.read(new File("src/resources/assets/map-icon.png"));
+            mapIconBounds = new Rectangle(myGamePanel.getScreenWidth() - MAP_ICON_OFFSET_X, myGamePanel.getScreenHeight() - MAP_ICON_OFFSET_Y, MAP_ICON_SIZE, MAP_ICON_SIZE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void draw(final Graphics2D theGraphics2D) {
+        this.myGraphics2D = theGraphics2D;
 
         if (myGamePanel.getState() == GamePanel.State.MENU_STATE) {
             drawTitleScreen();
-        }
-        else if (myGamePanel.getState() == GamePanel.State.GAME_STATE) {
+        } else if (myGamePanel.getState() == GamePanel.State.GAME_STATE) {
             drawBagIcon();
             drawMapIcon();
-            if (mapOn) {
-                drawMapScreen();
-            }
-            if (bagOn) {
-                drawInventoryScreen();
-            }
-        }
-        else if (myGamePanel.getState() == GamePanel.State.PAUSE_STATE) {
+            if (isMapVisible) drawMapScreen();
+            if (isBagVisible) drawInventoryScreen();
+        } else if (myGamePanel.getState() == GamePanel.State.PAUSE_STATE) {
             drawPauseScreen();
         }
     }
 
-    public void drawTitleScreen() {
-
+    private void drawTitleScreen() {
+        drawBackground(Color.BLACK);
+        drawPlayButton();
+        drawOptionsButton();
+        drawExitButton();
     }
 
-    public void drawPauseScreen() {
-        String text = "PAUSED";
-        int x = myGamePanel.getTileSize() * 8;
-        int y = myGamePanel.getScreenHeight() / 2;
-
-        myGraphics2D.drawString(text, x, y);
+    private void drawBackground(final Color theColor) {
+        myGraphics2D.setColor(theColor);
+        myGraphics2D.fillRect(0, 0, myGamePanel.getScreenWidth(), myGamePanel.getScreenHeight());
     }
 
-    private void loadMapIcon() {
-        try {
-            mapIcon = ImageIO.read(new File("src/resources/assets/map-icon.png"));
-            mapBounds = new Rectangle(myGamePanel.getScreenWidth() - 132, myGamePanel.getScreenHeight() - 72, 60, 60); // Position & size
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void drawPlayButton() {
+        setAlphaComposite(isPlayHovered ? BUTTON_ALPHA_HOVER : BUTTON_ALPHA_DEFAULT);
+        int x = calculatePlayButtonX();
+        int y = calculatePlayButtonY();
+        playButtonBounds = new Rectangle(x, y, calculatePlayButtonWidth(), calculatePlayButtonHeight());
+        myGraphics2D.drawImage(playButtonImage, x, y, calculatePlayButtonWidth(), calculatePlayButtonHeight(), null);
+        resetComposite();
+    }
+
+    private void drawOptionsButton() {
+        setAlphaComposite(isOptionsHovered ? BUTTON_ALPHA_HOVER : BUTTON_ALPHA_DEFAULT);
+        int x = calculatePlayButtonX() + 18;
+        int y = calculatePlayButtonY() + calculatePlayButtonHeight();
+        optionButtonBounds = new Rectangle(x, y, 112, 55);
+        myGraphics2D.drawImage(optionsImage, x, y, 112, 55, null);
+        resetComposite();
+    }
+
+    private void drawExitButton() {
+        setAlphaComposite(isExitHovered ? BUTTON_ALPHA_HOVER : BUTTON_ALPHA_DEFAULT);
+        int x = calculatePlayButtonX() + 18;
+        int y = calculateOptionButtonY() + calculateOptionButtonHeight();
+        exitButtonBounds = new Rectangle(x, y, 112, 55);
+        myGraphics2D.drawImage(exitImage, x, y, 112, 55, null);
+        resetComposite();
+    }
+
+    private int calculatePlayButtonX() {
+        return (myGamePanel.getScreenWidth() - unpressedPlayButtonImage.getWidth()) / 2 - 42;
+    }
+
+    private int calculatePlayButtonY() {
+        return (myGamePanel.getScreenHeight() - unpressedPlayButtonImage.getHeight()) / 2 - 42;
+    }
+
+    private int calculatePlayButtonWidth() {
+        return unpressedPlayButtonImage.getWidth() * 2;
+    }
+
+    private int calculatePlayButtonHeight() {
+        return unpressedPlayButtonImage.getHeight() * 2;
+    }
+
+    private int calculateOptionButtonHeight() {
+        return (int) optionButtonBounds.getHeight();
+    }
+
+    private int calculateOptionButtonY() {
+        return (int) optionButtonBounds.getY();
+    }
+
+    private void drawBagIcon() {
+        if (bagIcon != null) {
+            drawIconWithHoverEffect(bagIcon, bagIconBounds, isBagHovered, myGamePanel.getScreenWidth() - BAG_ICON_OFFSET, myGamePanel.getScreenHeight() - BAG_ICON_OFFSET);
         }
     }
 
     private void drawMapIcon() {
         if (mapIcon != null) {
-            float alpha = mapHovered ? 1f : 0.5f;
-
-            Composite originalComposite = myGraphics2D.getComposite();
-            myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            myGraphics2D.drawImage(mapIcon, myGamePanel.getScreenWidth() - 132, myGamePanel.getScreenHeight() - 72, 60, 60, null);
-            myGraphics2D.setComposite(originalComposite);
+            drawIconWithHoverEffect(mapIcon, mapIconBounds, isMapHovered, myGamePanel.getScreenWidth() - MAP_ICON_OFFSET_X, myGamePanel.getScreenHeight() - MAP_ICON_OFFSET_Y);
         }
     }
 
-    public void drawMapScreen() {
-        //Create a frame
-        final int frameX = myGamePanel.getTileSize();
-        final int frameY = myGamePanel.getTileSize();
-        final int frameWidth = myGamePanel.getTileSize() * 7;
-        final int frameHeight = myGamePanel.getTileSize() * 7;
-
-        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+    private void drawIconWithHoverEffect(final BufferedImage theImage, final Rectangle theBounds, final boolean isHovered, final int theOffsetX, final int theOffsetY) {
+        setAlphaComposite(isHovered ? BUTTON_ALPHA_HOVER : BUTTON_ALPHA_DEFAULT);
+        myGraphics2D.drawImage(theImage, theOffsetX, theOffsetY, theBounds.width, theBounds.height, null);
+        resetComposite();
     }
 
-    public void toggleMapScreen() {
-        mapOn = !mapOn;
+    private void drawPauseScreen() {
+        myGraphics2D.drawString("PAUSED", myGamePanel.getTileSize() * 8, myGamePanel.getScreenHeight() / 2);
     }
 
-    private void loadBagIcon() {
-        try {
-            bagIcon = ImageIO.read(new File("src/resources/assets/Potato_seeds.png"));
-            bagBounds = new Rectangle(myGamePanel.getScreenWidth() - 66, myGamePanel.getScreenHeight() - 66, 48, 48); // Position & size
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void drawMapScreen() {
+        drawSubWindow(myGamePanel.getTileSize(), myGamePanel.getTileSize(), myGamePanel.getTileSize() * 7, myGamePanel.getTileSize() * 7);
     }
 
-    private void drawBagIcon() {
-        if (bagIcon != null) {
-            float alpha = bagHovered ? 1f : 0.5f;
-
-            Composite originalComposite = myGraphics2D.getComposite();
-            myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            myGraphics2D.drawImage(bagIcon, myGamePanel.getScreenWidth() - 66, myGamePanel.getScreenHeight() - 66, 48, 48, null);
-            myGraphics2D.setComposite(originalComposite);
-        }
-    }
-    public void drawInventoryScreen() {
-        //Create a frame
-        final int frameX = myGamePanel.getTileSize() * 8;
-        final int frameY = myGamePanel.getTileSize();
-        final int frameWidth = myGamePanel.getTileSize() * 5;
-        final int frameHeight = myGamePanel.getTileSize() * 11;
-
-        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-
+    private void drawInventoryScreen() {
+        drawSubWindow(myGamePanel.getTileSize() * 8, myGamePanel.getTileSize(), myGamePanel.getTileSize() * 5, myGamePanel.getTileSize() * 11);
         List<Item> items = myInventory.getItems();
-        //System.out.println("Items in Inventory " + items.size());
-        int itemY = frameY + 20;
+        int itemY = myGamePanel.getTileSize() + 20;
         for (Item item : items) {
-            myGraphics2D.drawString(item.getName(), frameX + 10, itemY);
-            myGraphics2D.drawString(item.getMyDescription(), frameX + 10, itemY + 15);
+            myGraphics2D.drawString(item.getName(), myGamePanel.getTileSize() * 8 + 10, itemY);
+            myGraphics2D.drawString(item.getMyDescription(), myGamePanel.getTileSize() * 8 + 10, itemY + 15);
             itemY += 40;
         }
     }
 
     public void toggleInventoryScreen() {
-        bagOn = !bagOn;
+        isBagVisible = !isBagVisible;
+    }
+
+    public void toggleMapScreen() {
+        isMapVisible = !isMapVisible;
+    }
+
+    private void drawSubWindow(final int theX, final int theY, final int theWidth, final int theHeight) {
+        myGraphics2D.setColor(new Color(0, 0, 0, 210));
+        myGraphics2D.fillRoundRect(theX, theY, theWidth, theHeight, 35, 35);
+        myGraphics2D.setColor(Color.WHITE);
+        myGraphics2D.setStroke(new BasicStroke(5));
+        myGraphics2D.drawRoundRect(theX + 5, theY + 5, theWidth - 10, theHeight - 10, 25, 25);
+    }
+
+    private void setAlphaComposite(final float theAlpha) {
+        myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, theAlpha));
+    }
+
+    private void resetComposite() {
+        myGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, BUTTON_ALPHA_DEFAULT));
     }
 
     private class BagMouseAdapter extends MouseAdapter {
         @Override
         public void mouseMoved(MouseEvent e) {
-            bagHovered = bagBounds.contains(e.getPoint());
-            mapHovered = mapBounds.contains(e.getPoint());
+            updateHoverStates(e.getPoint());
             myGamePanel.repaint();
         }
 
         @Override
-        public void mouseClicked(MouseEvent e) {
-            if (mapHovered) {
-                toggleMapScreen();
+        public void mouseClicked(final MouseEvent theEvent) {
+            if (myGamePanel.getState() == GamePanel.State.MENU_STATE) {
+                handleMenuStateClick(theEvent.getPoint());
             }
-            if (bagHovered) {
-                toggleInventoryScreen();
+            if (isMapHovered) toggleMapScreen();
+            if (isBagHovered) toggleInventoryScreen();
+        }
+
+        @Override
+        public void mouseReleased(final MouseEvent theEvent) {
+            if (myGamePanel.getState() == GamePanel.State.MENU_STATE) {
+                if (playButtonBounds.contains(theEvent.getPoint())) {
+                    playButtonImage = unpressedPlayButtonImage;
+                    myGamePanel.setState(GamePanel.State.GAME_STATE);
+                } else {
+                    playButtonImage = unpressedPlayButtonImage;
+                }
+                myGamePanel.repaint();
             }
         }
-    }
 
-    public void drawSubWindow(final int theX, final int theY, final int theWidth, final int theHeight) {
-        Color color = new Color(0, 0, 0, 210);
-        myGraphics2D.setColor(color);
-        myGraphics2D.fillRoundRect(theX, theY, theWidth, theHeight, 35, 35);
+        private void updateHoverStates(final Point theMousePoint) {
+            isBagHovered = bagIconBounds.contains(theMousePoint);
+            isMapHovered = mapIconBounds.contains(theMousePoint);
+            isPlayHovered = playButtonBounds.contains(theMousePoint);
+            isOptionsHovered = optionButtonBounds.contains(theMousePoint);
+            isExitHovered = exitButtonBounds.contains(theMousePoint);
+        }
 
-        color = new Color(255, 255, 255);
-        myGraphics2D.setColor(color);
-        myGraphics2D.setStroke(new BasicStroke(5));
-        myGraphics2D.drawRoundRect(theX + 5, theY + 5, theWidth - 10, theHeight - 10, 25, 25);
-
+        private void handleMenuStateClick(final Point theClickPoint) {
+            if (playButtonBounds.contains(theClickPoint)) {
+                playButtonImage = pressedPlayButtonImage;
+                myGamePanel.repaint();
+            } else if (optionButtonBounds.contains(theClickPoint)) {
+                myGamePanel.setState(GamePanel.State.OPTION_STATE);
+            } else if (exitButtonBounds.contains(theClickPoint)) {
+                System.exit(0);
+            }
+        }
     }
 }

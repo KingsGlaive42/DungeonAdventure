@@ -278,6 +278,7 @@ public class CombatPanel extends JFrame {
     }
 
 
+    /*
     public static void main(String[] args) {
         Hero theHero = new Priestess("Tera");
         DungeonCharacter enemy = new Ogre();
@@ -289,4 +290,6 @@ public class CombatPanel extends JFrame {
             screen.setVisible(true);
         });
     }
+
+     */
 }

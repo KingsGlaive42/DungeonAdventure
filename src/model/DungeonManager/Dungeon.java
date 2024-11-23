@@ -59,8 +59,8 @@ public class Dungeon {
         // 8 neighboring rooms
         int[][] directions = {
                 {x-1, y-1}, {x-1, y}, {x-1, y+1},
-                {x, y-1},           {x, y+1},
-                {x+1, y-1},  {x+1, y},  {x+1, y+1}
+                {x, y-1},             {x, y+1},
+                {x+1, y-1}, {x+1, y}, {x+1, y+1}
         };
 
         for (int[] pos : directions) {
