@@ -4,7 +4,6 @@ import model.DungeonCharacters.DungeonCharacter;
 import model.DungeonCharacters.Hero;
 
 import java.util.Random;
-
 public class CombatEngine {
     private Random rand;
 

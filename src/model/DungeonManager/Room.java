@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Random;
 
 public class Room {
+    private static final String FLOOR_SS_PATH = "src/resources/assets/Terrain/dungeon_floor.png";
+    private static final String WALL_SS_PATH = "src/resources/assets/Terrain/dungeon_sprite_sheet.png";
     private final static int ROOM_WIDTH = 17;
     private final static int ROOM_HEIGHT = 13;
     private static final int TILE_SIZE = 32;
@@ -45,8 +47,8 @@ public class Room {
     }
 
     private void loadSpriteSheets() {
-        myFloorSpritesheet.loadSprite("src/resources/assets/Terrain/dungeon_floor.png");
-        myWallSpritesheet.loadSprite("src/resources/assets/Terrain/dungeon_sprite_sheet.png");
+        myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
+        myWallSpritesheet.loadSprite(WALL_SS_PATH);
     }
 
     private void initializeAnimations() {

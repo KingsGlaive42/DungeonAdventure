@@ -11,6 +11,7 @@ import model.DungeonManager.DoorDirection;
 import model.GameObject;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
+import utilities.SoundManagement.SoundManager;
 import view.GamePanel;
 
 import java.awt.*;
@@ -34,6 +35,7 @@ public class Player extends GameObject {
 
     private DungeonCharacter myHeroClass;
     private final Inventory myInventory;
+    private final SoundManager mySoundManager = SoundManager.getInstance();
 
     // Images for each animation
     private BufferedImage[] myWalkingDownSprites;
@@ -64,6 +66,9 @@ public class Player extends GameObject {
     private boolean wasMoving = false;
     private GameObject.FacingDirection myFacingDirection = GameObject.FacingDirection.DOWN;
 
+    private long lastStepTime = 0;
+    private static final int STEP_DELAY = 300;
+
     public Player(final GamePanel theGamePanel, final InputListener theInputListener, final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
         this.myGamePanel = theGamePanel;
         this.myInputListener = theInputListener;
@@ -76,6 +81,8 @@ public class Player extends GameObject {
 
         loadSpriteSheets();
         initializeAnimations();
+
+        loadSoundEffects();
 
         setDefaultValues();
     }
@@ -94,6 +101,10 @@ public class Player extends GameObject {
             default:
                 throw new IllegalArgumentException("Invalid character class selected.");
         }
+    }
+
+    private void loadSoundEffects() {
+        mySoundManager.loadSoundEffect("step1", "src/resources/sounds/step.wav");
     }
 
     private void loadSpriteSheets() {
@@ -265,6 +276,15 @@ public class Player extends GameObject {
             myFacingDirection = FacingDirection.UP;
         } else if (verticalSpeed > 0) {
             myFacingDirection = FacingDirection.DOWN;
+        }
+
+        playWalkSounds();
+    }
+
+    private void playWalkSounds() {
+        if (isMoving && System.currentTimeMillis() - lastStepTime > STEP_DELAY) {
+            mySoundManager.playSoundEffect("step1");
+            lastStepTime = System.currentTimeMillis();
         }
     }
 

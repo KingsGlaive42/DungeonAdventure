@@ -18,6 +18,6 @@ public class Main {
         window.setLocationRelativeTo(null); //display at center of screen
         window.setVisible(true);
 
-        gamePanel.startGameThread();
+        gamePanel.startGame();
     }
 }
