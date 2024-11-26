@@ -11,8 +11,8 @@ import model.DungeonManager.DoorDirection;
 import model.GameObject;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
-import utilities.SoundManagement.SoundManager;
-import view.GamePanel;
+import utilities.SoundManager;
+import utilities.GameConfig;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -24,7 +24,6 @@ public class Player extends GameObject {
     private static final int MIN_Y = -32;
     private static final int MAX_Y = 330;
 
-    private final GamePanel myGamePanel;
     private final InputListener myInputListener;
     private final int TILE_SIZE;
     private final int PLAYER_SCALE = 3;
@@ -69,10 +68,9 @@ public class Player extends GameObject {
     private long lastStepTime = 0;
     private static final int STEP_DELAY = 300;
 
-    public Player(final GamePanel theGamePanel, final InputListener theInputListener, final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
-        this.myGamePanel = theGamePanel;
-        this.myInputListener = theInputListener;
-        this.TILE_SIZE = myGamePanel.getTileSize();
+    public Player(final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
+        myInputListener = InputListener.getInstance();
+        this.TILE_SIZE = GameConfig.TILE_SIZE;
         this.PLAYER_SIZE = TILE_SIZE * PLAYER_SCALE;
 
         this.myInventory = theInventory;
