@@ -1,10 +1,10 @@
 package view;
 
 import controller.GameStateManager;
-import controller.InputListener;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
 import utilities.GameConfig;
+import utilities.SoundManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -27,6 +27,7 @@ public class UI {
 
     private final GameStateManager myGameStateManager;
     private Graphics2D myGraphics2D;
+    private final SoundManager mySoundManager;
 
     private BufferedImage bagIcon, mapIcon, playButtonImage;
     private BufferedImage optionsImage, exitImage;
@@ -34,11 +35,18 @@ public class UI {
     private boolean isBagHovered = false, isMapHovered = false, isPlayHovered = false, isOptionsHovered = false, isExitHovered = false;
     private boolean isBagVisible = false, isMapVisible = false;
 
+    private static final int SLIDER_WIDTH = 200;
+    private static final int SLIDER_HEIGHT = 10;
+    private int myBackgroundMusicVolume = 50;
+    private int mySFXVolume = 50;
+    private Rectangle myBgmSliderBounds, mySfxSliderBounds;
+
     private final Inventory myInventory;
 
     public UI(final GameStateManager theGameStateManager, final Inventory theInventory) {
         this.myGameStateManager = theGameStateManager;
         this.myInventory = theInventory;
+        this.mySoundManager = SoundManager.getInstance();
 
         loadAssets();
     }
@@ -147,8 +155,36 @@ public class UI {
 
         theGraphics2D.setColor(Color.WHITE);
         theGraphics2D.setFont(new Font("Arial", Font.BOLD, 48));
-        theGraphics2D.drawString("PAUSED", SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
+        theGraphics2D.drawString("PAUSED", SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 100);
 
+        drawVolumeOptions();
+    }
+
+
+    private void drawVolumeOptions() {
+        int x = SCREEN_WIDTH / 2 - SLIDER_WIDTH / 2;
+        int y = SCREEN_HEIGHT / 2;
+
+        drawSlider(x, y, SLIDER_WIDTH, SLIDER_HEIGHT, myBackgroundMusicVolume, "BGM Volume");
+        myBgmSliderBounds = new Rectangle(x, y, SLIDER_WIDTH, SLIDER_HEIGHT);
+
+        int sfxY = y + 60;
+        drawSlider(x, sfxY, SLIDER_WIDTH, SLIDER_HEIGHT, mySFXVolume, "SFX Volume");
+        mySfxSliderBounds = new Rectangle(x, sfxY, SLIDER_WIDTH, SLIDER_HEIGHT);
+
+    }
+
+    private void drawSlider(final int theX, final int theY, final int theWidth, final int theHeight, final int theVolume, final String theLabel) {
+        myGraphics2D.setColor(Color.DARK_GRAY);
+        myGraphics2D.fillRect(theX, theY, theWidth, theHeight);
+
+        int knobX = theX + (theWidth * theVolume / 100) - 5;
+        myGraphics2D.setColor(Color.WHITE);
+        myGraphics2D.fillOval(knobX, theY - 5, 10, theHeight + 10);
+
+        myGraphics2D.setFont(new Font("Arial", Font.PLAIN, 18));
+        myGraphics2D.setColor(Color.WHITE);
+        myGraphics2D.drawString(theLabel + ": " + theVolume + "%", theX, theY - 20);
     }
 
     public void drawHUD(final Graphics2D theGraphics2D) {
@@ -209,21 +245,41 @@ public class UI {
     }
 
     public void handleMenuStateClick(final Point theClickPoint) {
-        if (playButtonBounds.contains(theClickPoint)) {
-            myGameStateManager.setState(GameStateManager.State.GAME);
-        } else if (optionButtonBounds.contains(theClickPoint)) {
-            myGameStateManager.setState(GameStateManager.State.OPTION);
-        } else if (exitButtonBounds.contains(theClickPoint)) {
+        if (myGameStateManager.getCurrentState() == GameStateManager.State.MENU) {
+            if (playButtonBounds.contains(theClickPoint)) {
+                myGameStateManager.setState(GameStateManager.State.GAME);
+            } else if (optionButtonBounds.contains(theClickPoint)) {
+                myGameStateManager.setState(GameStateManager.State.OPTION);
+            } else if (exitButtonBounds.contains(theClickPoint)) {
                 System.exit(0);
+            }
         }
     }
 
     public void handleGameStateClick(final Point theClickPoint) {
-        if (mapIconBounds.contains(theClickPoint)) {
-            toggleMapScreen();
+        if (myGameStateManager.getCurrentState() == GameStateManager.State.GAME) {
+            if (mapIconBounds.contains(theClickPoint)) {
+                toggleMapScreen();
+            }
+            if (bagIconBounds.contains(theClickPoint)) {
+                toggleInventoryScreen();
+            }
         }
-        if (bagIconBounds.contains(theClickPoint)) {
-            toggleInventoryScreen();
+    }
+
+    public void handlePauseMenuClick(final Point theClickPoint) {
+        if (myGameStateManager.getCurrentState() == GameStateManager.State.PAUSE) {
+            if (myBgmSliderBounds.contains(theClickPoint)) {
+                int relativeX = theClickPoint.x - myBgmSliderBounds.x;
+                myBackgroundMusicVolume = Math.min(100, Math.max(0, (relativeX * 100) / myBgmSliderBounds.width));
+                mySoundManager.setBackgroundVolume(myBackgroundMusicVolume);
+            }
+
+            if (mySfxSliderBounds.contains(theClickPoint)) {
+                int relativeX = theClickPoint.x - mySfxSliderBounds.x;
+                mySFXVolume = Math.min(100, Math.max(0, (relativeX * 100) / mySfxSliderBounds.width));
+                mySoundManager.setEffectsVolume(mySFXVolume);
+            }
         }
     }
 }
