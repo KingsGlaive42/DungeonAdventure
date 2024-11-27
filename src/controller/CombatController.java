@@ -11,13 +11,13 @@ import javax.swing.Timer;
 public class CombatController {
     private final CombatEngine combatEngine;
     private final CombatPanel combatPanel;
-    private final GamePanel gamePanel;  // Reference to the GamePanel
+    //private final GamePanel gamePanel;  // Reference to the GamePanel
     private final Hero hero;
     private final DungeonCharacter enemy;
     private Timer animationTimer;
 
     public CombatController(Hero hero, DungeonCharacter enemy) {
-        gamePanel = new GamePanel();
+        //gamePanel = new GamePanel();
         this.hero = hero;
         this.enemy = enemy;
         this.combatEngine = new CombatEngine();

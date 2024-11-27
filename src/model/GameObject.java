@@ -6,4 +6,9 @@ public class GameObject {
     }
     public double myX, myY;
     public int mySpeed;
+
+    public void setPosition(final double theX, final double theY) {
+        this.myX = theX;
+        this.myY = theY;
+    }
 }

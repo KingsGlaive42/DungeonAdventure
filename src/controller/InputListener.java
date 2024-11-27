@@ -1,5 +1,7 @@
 package controller;
 
+import utilities.SoundManager;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -16,6 +18,18 @@ public class InputListener implements KeyListener {
     private boolean wasPausePressed = false;
     private boolean wasInventoryPressed = false;
     private boolean wasMapPressed = false;
+
+    private static InputListener myInstance;
+
+    public static InputListener getInstance() {
+        if (myInstance == null) {
+            myInstance = new InputListener();
+        }
+
+        return myInstance;
+    }
+
+
     @Override
     public void keyTyped(final KeyEvent theKey) {
 

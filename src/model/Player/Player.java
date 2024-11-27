@@ -11,7 +11,8 @@ import model.DungeonManager.DoorDirection;
 import model.GameObject;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
-import view.GamePanel;
+import utilities.SoundManager;
+import utilities.GameConfig;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -23,7 +24,6 @@ public class Player extends GameObject {
     private static final int MIN_Y = -32;
     private static final int MAX_Y = 330;
 
-    private final GamePanel myGamePanel;
     private final InputListener myInputListener;
     private final int TILE_SIZE;
     private final int PLAYER_SCALE = 3;
@@ -34,6 +34,7 @@ public class Player extends GameObject {
 
     private DungeonCharacter myHeroClass;
     private final Inventory myInventory;
+    private final SoundManager mySoundManager = SoundManager.getInstance();
 
     // Images for each animation
     private BufferedImage[] myWalkingDownSprites;
@@ -64,10 +65,12 @@ public class Player extends GameObject {
     private boolean wasMoving = false;
     private GameObject.FacingDirection myFacingDirection = GameObject.FacingDirection.DOWN;
 
-    public Player(final GamePanel theGamePanel, final InputListener theInputListener, final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
-        this.myGamePanel = theGamePanel;
-        this.myInputListener = theInputListener;
-        this.TILE_SIZE = myGamePanel.getTileSize();
+    private long lastStepTime = 0;
+    private static final int STEP_DELAY = 300;
+
+    public Player(final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
+        myInputListener = InputListener.getInstance();
+        this.TILE_SIZE = GameConfig.TILE_SIZE;
         this.PLAYER_SIZE = TILE_SIZE * PLAYER_SCALE;
 
         this.myInventory = theInventory;
@@ -76,6 +79,8 @@ public class Player extends GameObject {
 
         loadSpriteSheets();
         initializeAnimations();
+
+        loadSoundEffects();
 
         setDefaultValues();
     }
@@ -94,6 +99,10 @@ public class Player extends GameObject {
             default:
                 throw new IllegalArgumentException("Invalid character class selected.");
         }
+    }
+
+    private void loadSoundEffects() {
+        mySoundManager.loadSoundEffect("step1", "src/resources/sounds/step.wav");
     }
 
     private void loadSpriteSheets() {
@@ -265,6 +274,15 @@ public class Player extends GameObject {
             myFacingDirection = FacingDirection.UP;
         } else if (verticalSpeed > 0) {
             myFacingDirection = FacingDirection.DOWN;
+        }
+
+        playWalkSounds();
+    }
+
+    private void playWalkSounds() {
+        if (isMoving && System.currentTimeMillis() - lastStepTime > STEP_DELAY) {
+            mySoundManager.playSoundEffect("step1");
+            lastStepTime = System.currentTimeMillis();
         }
     }
 
