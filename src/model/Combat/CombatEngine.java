@@ -4,11 +4,17 @@ import model.DungeonCharacters.DungeonCharacter;
 import model.DungeonCharacters.Hero;
 
 import java.util.Random;
+
+
 public class CombatEngine {
     private Random rand;
+    private Boolean isDefend;
+    private Boolean successfulDefend;
 
     public CombatEngine() {
         this.rand = new Random();
+        isDefend = false;
+        successfulDefend = false;
     }
 
     public void attack(final DungeonCharacter theAttacker, final DungeonCharacter theDefender) {
@@ -40,22 +46,32 @@ public class CombatEngine {
 
     public void takeDamage(final DungeonCharacter theTarget, final int theDamage) {
         if (rand.nextInt(10) + 1 <= (int) theTarget.getChanceToBlock() * 10) {
+            successfulDefend = true;
             System.out.println(theTarget.getName() + " BLOCKED THE ATTACK!");
         } else {
+            successfulDefend = false;
             int newHitPoints = theTarget.getHitPoints() - theDamage;
             // Ensure HP does not go below zero
             theTarget.setHitPoints(Math.max(newHitPoints, 0));
         }
+        if(isDefend && theTarget instanceof Hero) {
+            isDefend = false;
+            resetDefend((Hero) theTarget);
+        }
     }
 
-    public void handleDefend(Hero hero) {
+    public boolean didDefend() {
+        return successfulDefend;
+    }
+
+    public void handleDefend(final Hero hero) {
         // Increase chance to block or reduce damage taken temporarily
-        hero.setChanceToBlock(hero.getChanceToBlock() + 0.2); // Example of a temporary defense boost
+        isDefend = true;
+        hero.setChanceToBlock(1.0); // set to 100% temporarily for testing
         System.out.println(hero.getName() + " is defending, increasing block chance temporarily.");
     }
 
-    // Optional: Reset the chance to block after defense round if needed
-    public void resetDefend(Hero hero) {
+    public void resetDefend(final Hero hero) {
         hero.setChanceToBlock(hero.getBaseChanceToBlock()); // Reset to the original block chance
     }
 
