@@ -15,6 +15,8 @@ public class Inventory {
     private final Map<ItemType, Integer> myItemCounts;
     private final Dungeon myDungeon;
 
+    private static final int MAX_ITEMS = 21;
+
     public Inventory(Dungeon theDungeon) {
         myItems = new ArrayList<>();
         myItemCounts = new HashMap<>();
@@ -22,18 +24,21 @@ public class Inventory {
     }
 
     public void addItem(Item theItem) {
-        myItems.add(theItem);
-        myItemCounts.put(theItem.getItemType(), myItemCounts.getOrDefault(theItem.getItemType(), 0) + 1);
+        if (myItems.size() < MAX_ITEMS ) {
+            myItems.add(theItem);
+            myItemCounts.put(theItem.getItemType(), myItemCounts.getOrDefault(theItem.getItemType(), 0) + 1);
 
-        System.out.println(theItem.getName() + " added to inventory.");
+            System.out.println(theItem.getName() + " added to inventory.");
 
-        displayInventory();
 
-        // show surrounding rooms when vision potion is added for testing purposes
-        if (theItem instanceof VisionPotion visionPotion) {
-            visionPotion.use(myDungeon);
+            displayInventory();
 
-            myItemCounts.put(theItem.getItemType(), myItemCounts.get(theItem.getItemType()) - 1);
+            // show surrounding rooms when vision potion is added for testing purposes
+            if (theItem instanceof VisionPotion visionPotion) {
+                visionPotion.use(myDungeon);
+
+                myItemCounts.put(theItem.getItemType(), myItemCounts.get(theItem.getItemType()) - 1);
+            }
         }
     }
 

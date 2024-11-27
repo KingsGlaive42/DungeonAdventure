@@ -2,7 +2,9 @@ package model.PlayerInventory;
 
 import model.DungeonCharacters.Hero;
 
-public class Item {
+import java.awt.image.BufferedImage;
+
+public abstract class Item {
     private final String myName;
     private final String myDescription;
     private final ItemType myType;
@@ -25,4 +27,6 @@ public class Item {
     public ItemType getItemType() {
         return myType;
     }
+
+    public abstract BufferedImage getImage();
 }
