@@ -3,6 +3,7 @@ package view;
 import controller.GameStateManager;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
+import model.PlayerInventory.ItemType;
 import utilities.GameConfig;
 
 import javax.imageio.ImageIO;
@@ -161,11 +162,29 @@ public class UI {
     private void drawInventoryScreen() {
         drawSubWindow(TILE_SIZE * 8, TILE_SIZE, TILE_SIZE * 5, TILE_SIZE * 11);
         List<Item> items = myInventory.getItems();
-        int itemY = TILE_SIZE + 20;
-        for (Item item : items) {
-            myGraphics2D.drawString(item.getName(), TILE_SIZE * 8 + 10, itemY);
-            myGraphics2D.drawString(item.getMyDescription(), TILE_SIZE * 8 + 10, itemY + 15);
-            itemY += 40;
+
+        int slotSize = 39;
+        int padding = 7;
+        int xStart = TILE_SIZE * 8 + 15;
+        int yStart = TILE_SIZE + 19;
+
+        int rowItems = 3;
+        int itemIndex = 0;
+
+        for (int i = yStart; itemIndex < items.size(); i += slotSize + padding) {
+            for (int k = xStart; k < xStart + rowItems * (slotSize + padding) && itemIndex < items.size(); k += slotSize + padding) {
+                Item item = items.get(itemIndex++);
+                drawItemSlot(k, i, slotSize, slotSize, item);
+            }
+        }
+    }
+
+    private void drawItemSlot(int theX, int theY, int theWidth, int theHeight, Item theItem) {
+        myGraphics2D.setColor(Color.DARK_GRAY);
+        myGraphics2D.fillRect(theX, theY, theWidth, theHeight);
+
+        if (theItem != null && theItem.getImage() != null) {
+            myGraphics2D.drawImage(theItem.getImage(), theX, theY, theWidth, theHeight, null);
         }
     }
 

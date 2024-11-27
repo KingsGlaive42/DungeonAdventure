@@ -1,17 +1,15 @@
 package model.DungeonManager;
 
 import model.AnimationSystem.Sprite;
+import model.DungeonCharacters.Monster;
 import model.Player.Player;
 import model.PlayerInventory.Item;
 import model.PlayerInventory.ItemType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 public class Room {
     private static final String FLOOR_SS_PATH = "src/resources/assets/Terrain/dungeon_floor.png";
@@ -24,6 +22,7 @@ public class Room {
     private final Sprite myFloorSpritesheet = new Sprite();
     private final Sprite myWallSpritesheet = new Sprite();
     private final List<Item> myRoomItems = new ArrayList<>();
+    private final List<Monster> myRoomMonsters = new ArrayList<>();
 
     private final int myX;
     private final int myY;
@@ -62,25 +61,25 @@ public class Room {
                 int rng = myRandom.nextInt(100);
 
                 if (rng < 70) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 0);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 0, TILE_SIZE);
                 }
                 else if (rng < 77) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 0);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 0, TILE_SIZE);
                 }
                 else if (rng < 84) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(3, 0);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(3, 0, TILE_SIZE);
                 }
                 else if (rng < 91) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 0);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 0, TILE_SIZE);
                 }
                 else if (rng < 94) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 1);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 1, TILE_SIZE);
                 }
                 else if (rng < 96) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 1);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 1, TILE_SIZE);
                 }
                 else {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 2);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 2, TILE_SIZE);
                 }
 
             }
@@ -127,6 +126,7 @@ public class Room {
                     thePlayer.getMyInventory().addItem(item);
                 }
                 myRoomItems.clear();
+                placeMonsters();
             }
             isVisited = true;
         }
@@ -136,8 +136,16 @@ public class Room {
         myRoomItems.add(theItem);
     }
 
+    public void addMonster(Monster theMonster) {
+        myRoomMonsters.add(theMonster);
+    }
+
     public List<Item> getRoomItems() {
         return myRoomItems;
+    }
+
+    public List<Monster> getMyRoomMonsters() {
+        return myRoomMonsters;
     }
 
     int getX() {
@@ -187,6 +195,7 @@ public class Room {
                 theGraphics2D.drawString(item.getName().substring(0, 1), 50, 50);
             }
         }
+        drawMonsters(theGraphics2D);
     }
 
     private void drawFloor(final Graphics2D theGraphics2D) {
@@ -199,13 +208,51 @@ public class Room {
 
     private void drawWalls(final Graphics2D theGraphics2D) {
         for (int i = 0; i < ROOM_WIDTH; i++) {
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(4, 1), i * 32, 0, 32, 32, null);
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(2, 0 ), i * 32, 384, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(4, 1, 32), i * 32, 0, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(2, 0, 32), i * 32, 384, 32, 32, null);
         }
 
         for (int j = 0; j < ROOM_HEIGHT; j++) {
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5), 0, j * 32, 32, 32, null);
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5), 512, j * 32, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5, 32), 0, j * 32, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5, 32), 512, j * 32, 32, 32, null);
+        }
+    }
+
+    private void drawMonsters(final Graphics2D theGraphics2D) {
+        int scaleWidth = 64;
+        int scaleHeight = 64;
+        for (Monster monster: myRoomMonsters) {
+            BufferedImage monsterSprite = monster.getSprite();
+            if (monsterSprite != null) {
+                int monsterX = monster.getMonsterX();
+                int monsterY = monster.getMonsterY();
+                theGraphics2D.drawImage(monsterSprite, monsterX, monsterY,
+                        scaleWidth, scaleHeight, null);
+            }
+        }
+    }
+
+    private void placeMonsters() {
+        int monsterCount = myRoomMonsters.size();
+        List<Point> availablePositions = new ArrayList<>();
+        int startX = 1;
+        int startY = 1;
+        int endX = ROOM_WIDTH - 1;
+        int endY = ROOM_HEIGHT - 1;
+        for (int i = startX; i < endX; i++) {
+            for (int j = startY; j < endY; j++) {
+                availablePositions.add(new Point(i * TILE_SIZE, j *TILE_SIZE));
+            }
+        }
+        // shuffle list randomizing positions
+        Collections.shuffle(availablePositions);
+
+        for (int i = 0; i < monsterCount; i++) {
+            if (i < availablePositions.size()) {
+                Point pos = availablePositions.get(i);
+                Monster monster = myRoomMonsters.get(i);
+                monster.setPosition(pos.x, pos.y);
+            }
         }
     }
 }

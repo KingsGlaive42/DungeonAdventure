@@ -20,7 +20,7 @@ public class MonsterGeneration {
         MonsterDatabase dataB = new MonsterDatabase();
         List<Monster> loadedMonsters = dataB.loadMonsters();
         this.monsters.addAll(loadedMonsters);
-        System.out.println("Loaded " + loadedMonsters.size() + " monsters into the generator/");
+        //System.out.println("Loaded " + loadedMonsters.size() + " monsters into the generator/");
     }
 
     public List<Monster> generateMonsters(int theNumOfMonsters) {
@@ -29,7 +29,7 @@ public class MonsterGeneration {
         for (int i = 0; i < theNumOfMonsters; i++) {
             Monster monster = monsters.get(rand.nextInt(monsters.size()));
             generatedMonsters.add(monster);
-            System.out.println("Generated monster: " + monster.getName());
+            //System.out.println("Generated monster: " + monster.getName());
         }
         return generatedMonsters;
     }

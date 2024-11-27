@@ -112,94 +112,94 @@ public class Player extends GameObject {
 
     private void initializeAnimations() {
         myWalkingDownSprites = new BufferedImage[]{
-                myWalkingSpritesheet.getSprite(0, 0),
-                myWalkingSpritesheet.getSprite(1, 0),
-                myWalkingSpritesheet.getSprite(2, 0),
-                myWalkingSpritesheet.getSprite(3, 0),
-                myWalkingSpritesheet.getSprite(4, 0),
-                myWalkingSpritesheet.getSprite(5, 0),
+                myWalkingSpritesheet.getSprite(0, 0, 32),
+                myWalkingSpritesheet.getSprite(1, 0, 32),
+                myWalkingSpritesheet.getSprite(2, 0, 32),
+                myWalkingSpritesheet.getSprite(3, 0, 32),
+                myWalkingSpritesheet.getSprite(4, 0, 32),
+                myWalkingSpritesheet.getSprite(5, 0, 32),
         };
 
         myWalkingUpSprites = new BufferedImage[]{
-                myWalkingSpritesheet.getSprite(0, 1),
-                myWalkingSpritesheet.getSprite(1, 1),
-                myWalkingSpritesheet.getSprite(2, 1),
-                myWalkingSpritesheet.getSprite(3, 1),
-                myWalkingSpritesheet.getSprite(4, 1),
-                myWalkingSpritesheet.getSprite(5, 1)
+                myWalkingSpritesheet.getSprite(0, 1, 32),
+                myWalkingSpritesheet.getSprite(1, 1, 32),
+                myWalkingSpritesheet.getSprite(2, 1, 32),
+                myWalkingSpritesheet.getSprite(3, 1, 32),
+                myWalkingSpritesheet.getSprite(4, 1, 32),
+                myWalkingSpritesheet.getSprite(5, 1, 32)
         };
         myWalkingLeftSprites = new BufferedImage[]{
-                myWalkingSpritesheet.getSprite(0, 2),
-                myWalkingSpritesheet.getSprite(1, 2),
-                myWalkingSpritesheet.getSprite(2, 2),
-                myWalkingSpritesheet.getSprite(3, 2),
-                myWalkingSpritesheet.getSprite(4, 2),
-                myWalkingSpritesheet.getSprite(5, 2)
+                myWalkingSpritesheet.getSprite(0, 2, 32),
+                myWalkingSpritesheet.getSprite(1, 2, 32),
+                myWalkingSpritesheet.getSprite(2, 2, 32),
+                myWalkingSpritesheet.getSprite(3, 2, 32),
+                myWalkingSpritesheet.getSprite(4, 2, 32),
+                myWalkingSpritesheet.getSprite(5, 2, 32)
         };
         myWalkingRightSprites = new BufferedImage[]{
-                myWalkingSpritesheet.getSprite(0, 3),
-                myWalkingSpritesheet.getSprite(1, 3),
-                myWalkingSpritesheet.getSprite(2, 3),
-                myWalkingSpritesheet.getSprite(3, 3),
-                myWalkingSpritesheet.getSprite(4, 3),
-                myWalkingSpritesheet.getSprite(5, 3)
+                myWalkingSpritesheet.getSprite(0, 3, 32),
+                myWalkingSpritesheet.getSprite(1, 3, 32),
+                myWalkingSpritesheet.getSprite(2, 3, 32),
+                myWalkingSpritesheet.getSprite(3, 3, 32),
+                myWalkingSpritesheet.getSprite(4, 3, 32),
+                myWalkingSpritesheet.getSprite(5, 3, 32)
         };
 
         myIdleDownSprites = new BufferedImage[]{
-                myIdleSpritesheet.getSprite(0, 0),
-                myIdleSpritesheet.getSprite(1, 0),
-                myIdleSpritesheet.getSprite(2, 0),
-                myIdleSpritesheet.getSprite(3, 0),
-                myIdleSpritesheet.getSprite(4, 0),
-                myIdleSpritesheet.getSprite(5, 0),
-                myIdleSpritesheet.getSprite(6, 0),
-                myIdleSpritesheet.getSprite(7, 0),
-                myIdleSpritesheet.getSprite(8, 0),
-                myIdleSpritesheet.getSprite(9, 0),
-                myIdleSpritesheet.getSprite(10, 0),
-                myIdleSpritesheet.getSprite(11, 0)
+                myIdleSpritesheet.getSprite(0, 0, 32),
+                myIdleSpritesheet.getSprite(1, 0, 32),
+                myIdleSpritesheet.getSprite(2, 0, 32),
+                myIdleSpritesheet.getSprite(3, 0, 32),
+                myIdleSpritesheet.getSprite(4, 0, 32),
+                myIdleSpritesheet.getSprite(5, 0, 32),
+                myIdleSpritesheet.getSprite(6, 0, 32),
+                myIdleSpritesheet.getSprite(7, 0, 32),
+                myIdleSpritesheet.getSprite(8, 0, 32),
+                myIdleSpritesheet.getSprite(9, 0, 32),
+                myIdleSpritesheet.getSprite(10, 0, 32),
+                myIdleSpritesheet.getSprite(11, 0, 32)
         };
         myIdleUpSprites = new BufferedImage[]{
-                myIdleSpritesheet.getSprite(0, 1),
-                myIdleSpritesheet.getSprite(1, 1),
-                myIdleSpritesheet.getSprite(2, 1),
-                myIdleSpritesheet.getSprite(3, 1),
-                myIdleSpritesheet.getSprite(4, 1),
-                myIdleSpritesheet.getSprite(5, 1),
-                myIdleSpritesheet.getSprite(6, 1),
-                myIdleSpritesheet.getSprite(7, 1),
-                myIdleSpritesheet.getSprite(8, 1),
-                myIdleSpritesheet.getSprite(9, 1),
-                myIdleSpritesheet.getSprite(10, 1),
-                myIdleSpritesheet.getSprite(11, 1)
+                myIdleSpritesheet.getSprite(0, 1, 32),
+                myIdleSpritesheet.getSprite(1, 1, 32),
+                myIdleSpritesheet.getSprite(2, 1, 32),
+                myIdleSpritesheet.getSprite(3, 1, 32),
+                myIdleSpritesheet.getSprite(4, 1, 32),
+                myIdleSpritesheet.getSprite(5, 1, 32),
+                myIdleSpritesheet.getSprite(6, 1, 32),
+                myIdleSpritesheet.getSprite(7, 1, 32),
+                myIdleSpritesheet.getSprite(8, 1, 32),
+                myIdleSpritesheet.getSprite(9, 1, 32),
+                myIdleSpritesheet.getSprite(10, 1, 32),
+                myIdleSpritesheet.getSprite(11, 1, 32)
         };
         myIdleLeftSprites = new BufferedImage[]{
-                myIdleSpritesheet.getSprite(0, 2),
-                myIdleSpritesheet.getSprite(1, 2),
-                myIdleSpritesheet.getSprite(2, 2),
-                myIdleSpritesheet.getSprite(3, 2),
-                myIdleSpritesheet.getSprite(4, 2),
-                myIdleSpritesheet.getSprite(5, 2),
-                myIdleSpritesheet.getSprite(6, 2),
-                myIdleSpritesheet.getSprite(7, 2),
-                myIdleSpritesheet.getSprite(8, 2),
-                myIdleSpritesheet.getSprite(9, 2),
-                myIdleSpritesheet.getSprite(10, 2),
-                myIdleSpritesheet.getSprite(11, 2)
+                myIdleSpritesheet.getSprite(0, 2, 32),
+                myIdleSpritesheet.getSprite(1, 2, 32),
+                myIdleSpritesheet.getSprite(2, 2, 32),
+                myIdleSpritesheet.getSprite(3, 2, 32),
+                myIdleSpritesheet.getSprite(4, 2, 32),
+                myIdleSpritesheet.getSprite(5, 2, 32),
+                myIdleSpritesheet.getSprite(6, 2, 32),
+                myIdleSpritesheet.getSprite(7, 2, 32),
+                myIdleSpritesheet.getSprite(8, 2, 32),
+                myIdleSpritesheet.getSprite(9, 2, 32),
+                myIdleSpritesheet.getSprite(10, 2, 32),
+                myIdleSpritesheet.getSprite(11, 2, 32)
         };
         myIdleRightSprites = new BufferedImage[]{
-                myIdleSpritesheet.getSprite(0, 3),
-                myIdleSpritesheet.getSprite(1, 3),
-                myIdleSpritesheet.getSprite(2, 3),
-                myIdleSpritesheet.getSprite(3, 3),
-                myIdleSpritesheet.getSprite(4, 3),
-                myIdleSpritesheet.getSprite(5, 3),
-                myIdleSpritesheet.getSprite(6, 3),
-                myIdleSpritesheet.getSprite(7, 3),
-                myIdleSpritesheet.getSprite(8, 3),
-                myIdleSpritesheet.getSprite(9, 3),
-                myIdleSpritesheet.getSprite(10, 3),
-                myIdleSpritesheet.getSprite(11, 3)
+                myIdleSpritesheet.getSprite(0, 3, 32),
+                myIdleSpritesheet.getSprite(1, 3, 32),
+                myIdleSpritesheet.getSprite(2, 3, 32),
+                myIdleSpritesheet.getSprite(3, 3, 32),
+                myIdleSpritesheet.getSprite(4, 3, 32),
+                myIdleSpritesheet.getSprite(5, 3, 32),
+                myIdleSpritesheet.getSprite(6, 3, 32),
+                myIdleSpritesheet.getSprite(7, 3, 32),
+                myIdleSpritesheet.getSprite(8, 3, 32),
+                myIdleSpritesheet.getSprite(9, 3, 32),
+                myIdleSpritesheet.getSprite(10, 3, 32),
+                myIdleSpritesheet.getSprite(11, 3, 32)
         };
 
         myWalkUpAnimation = new Animation(myWalkingUpSprites, 5);

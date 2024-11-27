@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Sprite {
     private BufferedImage mySpriteSheet;
-    public static final int TILE_SIZE = 32;
+    //public static final int TILE_SIZE = 32;
 
     public void loadSprite(final String theFile) {
         mySpriteSheet = null;
@@ -19,11 +19,11 @@ public class Sprite {
         }
     }
 
-    public BufferedImage getSprite(final int theXGrid, final int theYGrid) {
+    public BufferedImage getSprite(final int theXGrid, final int theYGrid, final int theTileSize) {
         if (mySpriteSheet == null) {
             loadSprite("src/resources/assets/player/player_idle.png");
         }
 
-        return mySpriteSheet.getSubimage(theXGrid * TILE_SIZE, theYGrid * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        return mySpriteSheet.getSubimage(theXGrid * theTileSize, theYGrid * theTileSize, theTileSize, theTileSize);
     }
 }
