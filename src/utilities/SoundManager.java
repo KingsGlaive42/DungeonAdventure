@@ -14,6 +14,8 @@ public class SoundManager {
 
     private SoundManager() {
         mySoundEffects = new HashMap<>();
+        myBackgroundVolume = 50.0f;
+        myEffectsVolume = 50.0f;
     }
 
     public static SoundManager getInstance() {
@@ -68,22 +70,25 @@ public class SoundManager {
         }
     }
 
-    private void setVolume(final Clip theClip, final float theVolume) {
+    private void setVolume(final Clip theClip, final float theVolumePercentage) {
         if (theClip != null) {
             FloatControl volumeControl = (FloatControl) theClip.getControl(FloatControl.Type.MASTER_GAIN);
-            volumeControl.setValue(theVolume);
+            float min = volumeControl.getMinimum();
+            float max = volumeControl.getMaximum();
+            float volume = min + (max - min) * (theVolumePercentage / 100.0f);
+            volumeControl.setValue(volume);
         }
     }
 
-    public void setBackgroundVolume(final float theVolume) {
-        myBackgroundVolume = theVolume;
+    public void setBackgroundVolume(final float theVolumePercentage) {
+        myBackgroundVolume = theVolumePercentage;
         if (myBackgroundMusic != null) {
             setVolume(myBackgroundMusic, myBackgroundVolume);
         }
     }
 
-    public void setEffectsVolume(final float theVolume) {
-        myEffectsVolume = theVolume;
+    public void setEffectsVolume(final float theVolumePercentage) {
+        myEffectsVolume = theVolumePercentage;
         for (Clip clip : mySoundEffects.values()) {
             setVolume(clip, myEffectsVolume);
         }

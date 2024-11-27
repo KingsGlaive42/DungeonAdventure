@@ -1,10 +1,14 @@
 package model.DungeonManager;
 
 import model.Player.Player;
+import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.awt.Graphics2D;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class Door {
     private final DoorDirection myDirection;
@@ -64,17 +68,5 @@ class Door {
         Rectangle2D.Double playerBounds = new Rectangle2D.Double(thePlayer.getX() + thePlayer.getTileSize(), thePlayer.getY() + thePlayer.getTileSize(), thePlayer.getTileSize(), thePlayer.getTileSize() * 2);
 
         return playerBounds.intersects(myRect);
-    }
-
-    public double getX() {
-        return myX;
-    }
-
-    public double getY() {
-        return myY;
-    }
-
-    public Rectangle2D.Double getRect() {
-        return new Rectangle2D.Double(myRect.getX(), myRect.getY(), myRect.getWidth(), myRect.getHeight());
     }
 }
