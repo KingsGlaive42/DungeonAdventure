@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameStateManager;
+import controller.InputListener;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
 import utilities.GameConfig;
@@ -141,7 +142,13 @@ public class UI {
 
     public void drawPauseScreen(final Graphics2D theGraphics2D) {
         this.myGraphics2D = theGraphics2D;
-        myGraphics2D.drawString("PAUSED", TILE_SIZE * 8, SCREEN_HEIGHT / 2);
+        theGraphics2D.setColor(new Color(0, 0, 0, 150));
+        theGraphics2D.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+        theGraphics2D.setColor(Color.WHITE);
+        theGraphics2D.setFont(new Font("Arial", Font.BOLD, 48));
+        theGraphics2D.drawString("PAUSED", SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2);
+
     }
 
     public void drawHUD(final Graphics2D theGraphics2D) {

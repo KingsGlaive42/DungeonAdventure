@@ -3,6 +3,7 @@ package model.DungeonManager;
 import model.Player.Player;
 
 import java.awt.Point;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,10 @@ public class Dungeon {
     private final DungeonGenerator generator;
 
     public Dungeon(final int theWidth, final int theHeight, final int theNumRooms) {
+        if (theWidth <= 0 || theHeight <= 0 || theNumRooms <= 0) {
+            throw new IllegalArgumentException("Width, height, and number of rooms must be greater than 0.");
+        }
+
         generator = new DungeonGenerator(theWidth, theHeight);
         generator.generateDungeon(theNumRooms);
         myRooms = generator.getGeneratedDungeon();
@@ -41,12 +46,17 @@ public class Dungeon {
     }
 
     private Room getRoomInDirection(final Room theRoom, final DoorDirection theDirection) {
+        if (theRoom == null || theDirection == null) {
+            throw new IllegalArgumentException("Room and direction must not be null.");
+        }
+
         Point pos = new Point(theRoom.getX(), theRoom.getY());
         switch (theDirection) {
             case DoorDirection.UP: pos.translate(0, -1); break;
             case DoorDirection.DOWN: pos.translate(0, 1); break;
             case DoorDirection.LEFT: pos.translate(-1, 0); break;
             case DoorDirection.RIGHT: pos.translate(1, 0); break;
+            default: throw new IllegalArgumentException("Invalid DoorDirection: " + theDirection);
         }
         return myRooms.get(pos);
     }
@@ -69,7 +79,7 @@ public class Dungeon {
                 surroundingRooms.put(point, myRooms.get(point));
             }
         }
-        return surroundingRooms;
+        return Collections.unmodifiableMap(surroundingRooms);
     }
 
     public Room getMyCurrentRoom() {

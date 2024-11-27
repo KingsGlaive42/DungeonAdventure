@@ -6,10 +6,7 @@ import model.PlayerInventory.ItemType;
 import model.PlayerInventory.VisionPotion;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 class DungeonGenerator {
     private static final int MIN_DEAD_ENDS = 6;
@@ -33,6 +30,10 @@ class DungeonGenerator {
     }
 
     void generateDungeon(final int theNumRooms) {
+        if (theNumRooms <= 8) {
+            throw new IllegalArgumentException("Number of rooms must be at least 8.");
+        }
+
         do {
             initializeDungeon();
             createRooms(theNumRooms);
@@ -180,6 +181,10 @@ class DungeonGenerator {
     }
 
     private Room findFurthestRoom(final Room theStartRoom, final ArrayList<Room> theDeadEnds) {
+        if (theStartRoom == null || theDeadEnds == null || theDeadEnds.isEmpty()) {
+            throw new IllegalArgumentException("Start room and dead-end list must not be null or empty.");
+        }
+
         Room furthestRoom = null;
         int maxDistance = -1;
 
@@ -224,7 +229,7 @@ class DungeonGenerator {
                 generatedDungeon.put(new Point(i, j), myDungeonGrid[i][j]);
             }
         }
-        return generatedDungeon;
+        return Collections.unmodifiableMap(generatedDungeon);
     }
 
     void printDungeon() {

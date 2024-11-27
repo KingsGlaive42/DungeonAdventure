@@ -7,11 +7,8 @@ import model.PlayerInventory.ItemType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 public class Room {
     private static final String FLOOR_SS_PATH = "src/resources/assets/Terrain/dungeon_floor.png";
@@ -47,8 +44,13 @@ public class Room {
     }
 
     private void loadSpriteSheets() {
-        myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
-        myWallSpritesheet.loadSprite(WALL_SS_PATH);
+        try {
+            myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
+            myWallSpritesheet.loadSprite(WALL_SS_PATH);
+        } catch (final Exception theException) {
+            throw new RuntimeException("Failed to load sprite sheets", theException);
+        }
+
     }
 
     private void initializeAnimations() {
@@ -88,10 +90,16 @@ public class Room {
     }
 
     void connectRoom(final int theAdjX, final int theAdjY, final Room theRoom) {
+        if (theRoom == null) {
+            throw new IllegalArgumentException("Room cannot be null.");
+        }
+
         DoorDirection direction = getDirection(theAdjX, theAdjY);
         if (direction != null) {
             myConnectedRooms.put(direction, theRoom);
             myDoors.put(direction, new Door(direction));
+        } else {
+            throw new IllegalArgumentException("Invalid adjacent coordinates: " + theAdjX + ", " + theAdjY);
         }
     }
 
@@ -113,6 +121,10 @@ public class Room {
     }
 
     void addDoor(final DoorDirection theDirection) {
+        if (theDirection == null) {
+            throw new IllegalArgumentException("DoorDirection cannot be null");
+        }
+
         if (!myDoors.containsKey(theDirection)) {
             myDoors.put(theDirection, new Door(theDirection));
         }
@@ -137,7 +149,7 @@ public class Room {
     }
 
     public List<Item> getRoomItems() {
-        return myRoomItems;
+        return Collections.unmodifiableList(myRoomItems);
     }
 
     int getX() {
@@ -149,7 +161,7 @@ public class Room {
     }
 
     Map<DoorDirection, Room> getConnectedRooms() {
-        return myConnectedRooms;
+        return Collections.unmodifiableMap(myConnectedRooms);
     }
 
     void setType(final RoomType theRoomType) {
