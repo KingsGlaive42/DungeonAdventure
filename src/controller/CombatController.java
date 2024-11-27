@@ -44,6 +44,7 @@ public class CombatController {
 
                 case 1: // Perform the attack
                     combatEngine.attack(hero, enemy);
+                    combatPanel.attackAnimation(true);
                     updateEnemyInfo();
                     if (enemy.getHitPoints() <= 0) {
                         actionTimer.stop(); // Stop the timer as victory is handled
@@ -61,18 +62,6 @@ public class CombatController {
         });
         actionTimer.setRepeats(true); // Ensure the timer repeats for each state
         actionTimer.start(); // Start the timer
-
-        /*
-        combatPanel.logAction(hero.getName() + " attacks " + enemy.getName());
-        combatEngine.attack(hero, enemy);
-        updateEnemyInfo();
-
-        if (enemy.getHitPoints() <= 0) {
-            handleVictory();
-            return;
-        }
-
-        handleEnemyCounterattack();*/
     }
 
     public void handleDefend() {
@@ -100,6 +89,7 @@ public class CombatController {
     public void handleHeal(int healRange) {
         if (hero instanceof Priestess) {
             ((Priestess) hero).useSpecialSkill(hero, combatEngine, healRange);
+            combatPanel.logAction(hero.getName() + " uses heal");
         } else {
             combatPanel.logAction("Healing is only available to the Priestess.");
         }
@@ -120,18 +110,22 @@ public class CombatController {
 
     public void handleVictory() {
         combatPanel.logAction(enemy.getName() + " has been slain!");
+        combatPanel.deathAnimation(false);
         combatPanel.displayGameOver(enemy.getName() + " has been slain.");
     }
 
     private void handleEnemyCounterattack() {
-
         combatPanel.logAction(enemy.getName() + " counterattacks " + hero.getName());
         combatEngine.attack(enemy, hero);
-        combatPanel.shakeImage();
+        combatPanel.attackAnimation(false);
+        if (combatEngine.didDefend()) {
+            combatPanel.logAction(hero.getName() + " blocked the attack");
+        }
         updateHeroInfo();
 
         if (hero.getHitPoints() <= 0) {
             combatPanel.displayGameOver(hero.getName() + " has been defeated!");
+            combatPanel.deathAnimation(true);
         }
     }
 
