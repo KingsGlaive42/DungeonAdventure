@@ -24,6 +24,10 @@ class Door {
     private Rectangle2D.Double myRect;
 
     Door(final DoorDirection theDirection) {
+        if (theDirection == null) {
+            throw new IllegalArgumentException("DoorDirection must not be null");
+        }
+
         myDirection = theDirection;
         switch (myDirection) {
             case DoorDirection.UP:
@@ -46,6 +50,8 @@ class Door {
                 myY = EAST_DOOR_Y_OFFSET * TILE_DIMENSION;
                 myRect = new Rectangle2D.Double(myX, myY, QUARTER_TILE, TILE_DIMENSION);
                 break;
+            default:
+                throw new IllegalArgumentException("Unsupported DoorDirection: " + theDirection);
         }
     }
 
@@ -69,6 +75,6 @@ class Door {
     }
 
     public Rectangle2D.Double getRect() {
-        return myRect;
+        return new Rectangle2D.Double(myRect.getX(), myRect.getY(), myRect.getWidth(), myRect.getHeight());
     }
 }

@@ -86,6 +86,10 @@ public class Player extends GameObject {
     }
 
     private void setHeroClass(final String theCharacterClass, final String thePlayerName) {
+        if (thePlayerName == null || thePlayerName.isEmpty()) {
+            throw new IllegalArgumentException("Player name cannot be null or empty.");
+        }
+
         switch (theCharacterClass.toLowerCase()) {
             case "warrior":
                 this.myHeroClass = new Warrior(thePlayerName);
@@ -360,6 +364,8 @@ public class Player extends GameObject {
             case DoorDirection.LEFT:
                 this.myX = 14 * TILE_SIZE;
                 break;
+            default:
+                throw new IllegalArgumentException("Invalid DoorDirection: " + theDoorDirection);
         }
     }
 

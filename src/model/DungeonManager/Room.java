@@ -46,8 +46,13 @@ public class Room {
     }
 
     private void loadSpriteSheets() {
-        myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
-        myWallSpritesheet.loadSprite(WALL_SS_PATH);
+        try {
+            myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
+            myWallSpritesheet.loadSprite(WALL_SS_PATH);
+        } catch (final Exception theException) {
+            throw new RuntimeException("Failed to load sprite sheets", theException);
+        }
+
     }
 
     private void initializeAnimations() {
@@ -87,10 +92,16 @@ public class Room {
     }
 
     void connectRoom(final int theAdjX, final int theAdjY, final Room theRoom) {
+        if (theRoom == null) {
+            throw new IllegalArgumentException("Room cannot be null.");
+        }
+
         DoorDirection direction = getDirection(theAdjX, theAdjY);
         if (direction != null) {
             myConnectedRooms.put(direction, theRoom);
             myDoors.put(direction, new Door(direction));
+        } else {
+            throw new IllegalArgumentException("Invalid adjacent coordinates: " + theAdjX + ", " + theAdjY);
         }
     }
 
@@ -112,6 +123,10 @@ public class Room {
     }
 
     void addDoor(final DoorDirection theDirection) {
+        if (theDirection == null) {
+            throw new IllegalArgumentException("DoorDirection cannot be null");
+        }
+
         if (!myDoors.containsKey(theDirection)) {
             myDoors.put(theDirection, new Door(theDirection));
         }
@@ -141,7 +156,7 @@ public class Room {
     }
 
     public List<Item> getRoomItems() {
-        return myRoomItems;
+        return Collections.unmodifiableList(myRoomItems);
     }
 
     public List<Monster> getMyRoomMonsters() {
@@ -157,7 +172,7 @@ public class Room {
     }
 
     Map<DoorDirection, Room> getConnectedRooms() {
-        return myConnectedRooms;
+        return Collections.unmodifiableMap(myConnectedRooms);
     }
 
     void setType(final RoomType theRoomType) {
@@ -208,13 +223,13 @@ public class Room {
 
     private void drawWalls(final Graphics2D theGraphics2D) {
         for (int i = 0; i < ROOM_WIDTH; i++) {
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(4, 1, 32), i * 32, 0, 32, 32, null);
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(2, 0, 32), i * 32, 384, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(4, 1, TILE_SIZE), i * 32, 0, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(2, 0, TILE_SIZE), i * 32, 384, 32, 32, null);
         }
 
         for (int j = 0; j < ROOM_HEIGHT; j++) {
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5, 32), 0, j * 32, 32, 32, null);
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5, 32), 512, j * 32, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5, TILE_SIZE), 0, j * 32, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5, TILE_SIZE), 512, j * 32, 32, 32, null);
         }
     }
 
