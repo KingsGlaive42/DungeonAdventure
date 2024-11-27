@@ -77,7 +77,7 @@ public class CombatPanel extends JFrame {
         buttonPanel.add(specialSkillButton);
         buttonPanel.add(defendButton);
         buttonPanel.add(retreatButton);
-        buttonPanel.add(returnButton);  // Add the return button
+        buttonPanel.add(returnButton);
         buttonPanel.add(heal1Button);
         buttonPanel.add(heal2Button);
         buttonPanel.add(heal3Button);
@@ -295,7 +295,7 @@ public class CombatPanel extends JFrame {
             public void actionPerformed(final ActionEvent e) {
                 // Move the sprite step by step towards the target position
                 if ((moveDistance < 0 && currentX > targetX) || (moveDistance > 0 && currentX < targetX)) {
-                    currentX += animationStep * Math.signum(moveDistance); // Adjust X position
+                    currentX += (int) (animationStep * Math.signum(moveDistance)); // Adjust X position
                     if (theHero) {
                         heroImageLabel.setLocation(currentX, originalPosition.y); // Update position
                     } else {

@@ -64,15 +64,14 @@ public class CombatEngine {
         return successfulDefend;
     }
 
-    public void handleDefend(Hero hero) {
+    public void handleDefend(final Hero hero) {
         // Increase chance to block or reduce damage taken temporarily
         isDefend = true;
-        hero.setChanceToBlock(1.0); // Example of a temporary defense boost
+        hero.setChanceToBlock(1.0); // set to 100% temporarily for testing
         System.out.println(hero.getName() + " is defending, increasing block chance temporarily.");
     }
 
-    // Optional: Reset the chance to block after defense round if needed
-    public void resetDefend(Hero hero) {
+    public void resetDefend(final Hero hero) {
         hero.setChanceToBlock(hero.getBaseChanceToBlock()); // Reset to the original block chance
     }
 
