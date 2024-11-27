@@ -15,6 +15,7 @@ public class GameConfig {
     public static final int NANO_IN_SECONDS = 1_000_000_000;
     public static final double DRAW_INTERVAL = (double) NANO_IN_SECONDS / FPS;
 
+    //SOUNDS
     public static final String MENU_THEME = "src/resources/sounds/MenuTheme.wav";
     public static final String GAME_THEME = "src/resources/sounds/GameTheme.wav";
     public static final String COMBAT_THEME = "src/resources/sounds/CombatTheme.wav";
