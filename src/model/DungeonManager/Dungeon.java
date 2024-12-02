@@ -3,11 +3,16 @@ package model.DungeonManager;
 import model.Player.Player;
 
 import java.awt.Point;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Dungeon {
+public class Dungeon implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final Map<Point, Room> myRooms;
     private Room myCurrentRoom;
     private final DungeonGenerator generator;

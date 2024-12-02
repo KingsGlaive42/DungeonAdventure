@@ -7,10 +7,17 @@ import model.PlayerInventory.ItemType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
-public class Room {
+public class Room implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final String FLOOR_SS_PATH = "src/resources/assets/Terrain/dungeon_floor.png";
     private static final String WALL_SS_PATH = "src/resources/assets/Terrain/dungeon_sprite_sheet.png";
     private final static int ROOM_WIDTH = 17;
@@ -28,7 +35,7 @@ public class Room {
     private boolean isVisited;
 
     private RoomType myRoomType;
-    private final BufferedImage[][] myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
+    private transient BufferedImage[][] myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
 
     private final Map<DoorDirection, Room> myConnectedRooms = new HashMap<>();
     private final Map<DoorDirection, Door> myDoors = new HashMap<>();
@@ -55,7 +62,10 @@ public class Room {
 
     private void initializeAnimations() {
         initializeMyTiles();
+    }
 
+    private void initializeMyTilesArray() {
+        myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
     }
 
     private void initializeMyTiles() {
@@ -202,6 +212,11 @@ public class Room {
     }
 
     private void drawFloor(final Graphics2D theGraphics2D) {
+        if (myFloorTiles == null) {
+            System.err.println("myFloorTiles in Room is null. Skipping floor rendering.");
+            return;
+        }
+
         for (int i = 0; i < ROOM_WIDTH; i++) {
             for (int j = 0; j < ROOM_HEIGHT; j++) {
                 theGraphics2D.drawImage(myFloorTiles[i][j], i * 32, j * 32, 32, 32, null);
@@ -219,5 +234,20 @@ public class Room {
             theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5), 0, j * 32, 32, 32, null);
             theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5), 512, j * 32, 32, 32, null);
         }
+    }
+
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        initializeMyTilesArray();
+        //System.out.println("Reinitialized myFloorTiles.");
+
+        loadSpriteSheets();
+        //System.out.println("Reloaded sprite sheets.");
+
+        initializeAnimations();
+        //System.out.println("Initialized animations.");
     }
 }

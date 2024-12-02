@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//NOTE: Monster factory
 public class MonsterDatabase {
     private static final String db = "jdbc:sqlite:data/monster.db";
 

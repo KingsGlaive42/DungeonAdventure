@@ -5,7 +5,7 @@ import utilities.SoundManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class InputListener implements KeyListener {
+public class InputListener implements KeyListener{
     private final int UP = KeyEvent.VK_W;
     private final int DOWN = KeyEvent.VK_S;
     private final int LEFT = KeyEvent.VK_A;
