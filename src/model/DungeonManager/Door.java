@@ -6,11 +6,16 @@ import org.junit.jupiter.api.Test;
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.awt.Graphics2D;
+import java.io.Serial;
+import java.io.Serializable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class Door {
+class Door implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final DoorDirection myDirection;
     private double myX, myY;
     private static final int TILE_DIMENSION = 32;

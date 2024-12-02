@@ -1,11 +1,12 @@
 package model.AnimationSystem;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Animation {
+public class Animation implements Serializable {
 
     private int myFrameCount;
     private final int myFrameDelay;

@@ -2,7 +2,14 @@ package model.DungeonCharacters;
 
 import model.Combat.CombatEngine;
 
-public class Priestess extends Hero {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Priestess extends Hero implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    //TODO: Do not directly access fields, use a super() call for initialization
     public Priestess(final String theName) {
         this.myName = theName;
         this.myHitPoints = 75;

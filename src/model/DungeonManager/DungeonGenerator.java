@@ -6,9 +6,14 @@ import model.PlayerInventory.ItemType;
 import model.PlayerInventory.VisionPotion;
 
 import java.awt.Point;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-class DungeonGenerator {
+class DungeonGenerator implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final int MIN_DEAD_ENDS = 6;
     private static final int MIN_DUNGEON_DIMENSION = 8;
     private static final int STARTING_ROOM_RADIUS = 3;
@@ -119,7 +124,6 @@ class DungeonGenerator {
         }
     }
 
-    // update chances/logic
     private void placeRandomItems(final Room room) {
         if (Math.random() < 0.1) {
             room.setPit(true);

@@ -1,10 +1,14 @@
 package model.AnimationSystem;
 
 import java.awt.image.BufferedImage;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Frame {
+public class Frame implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private BufferedImage myFrame;
+    private transient BufferedImage myFrame;
     private int myDuration;
 
     public Frame(final BufferedImage theFrame, final int theDuration) {

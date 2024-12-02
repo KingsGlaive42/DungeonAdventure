@@ -17,14 +17,21 @@ import utilities.GameConfig;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final int MIN_X = -32;
     private static final int MAX_X = 480;
     private static final int MIN_Y = -32;
     private static final int MAX_Y = 330;
 
-    private final InputListener myInputListener;
+    private transient InputListener myInputListener;
     private final int TILE_SIZE;
     private final int PLAYER_SCALE = 3;
     private final int PLAYER_SIZE;
@@ -34,18 +41,18 @@ public class Player extends GameObject {
 
     private DungeonCharacter myHeroClass;
     private final Inventory myInventory;
-    private final SoundManager mySoundManager = SoundManager.getInstance();
+    private transient SoundManager mySoundManager = SoundManager.getInstance();
 
     // Images for each animation
-    private BufferedImage[] myWalkingDownSprites;
-    private BufferedImage[] myWalkingUpSprites;
-    private BufferedImage[] myWalkingLeftSprites;
-    private BufferedImage[] myWalkingRightSprites;
+    private transient BufferedImage[] myWalkingDownSprites;
+    private transient BufferedImage[] myWalkingUpSprites;
+    private transient BufferedImage[] myWalkingLeftSprites;
+    private transient BufferedImage[] myWalkingRightSprites;
 
-    private BufferedImage[] myIdleDownSprites;
-    private BufferedImage[] myIdleUpSprites;
-    private BufferedImage[] myIdleLeftSprites;
-    private BufferedImage[] myIdleRightSprites;
+    private transient BufferedImage[] myIdleDownSprites;
+    private transient BufferedImage[] myIdleUpSprites;
+    private transient BufferedImage[] myIdleLeftSprites;
+    private transient BufferedImage[] myIdleRightSprites;
 
     // These are animation states
     private Animation myWalkUpAnimation;
@@ -393,6 +400,10 @@ public class Player extends GameObject {
         return TILE_SIZE;
     }
 
+    public String getName() {
+        return myHeroClass.getName();
+    }
+
     public void draw(Graphics2D graphics2D) {
         graphics2D.setColor(Color.PINK);
 
@@ -406,5 +417,22 @@ public class Player extends GameObject {
         // Draw the image with the transform applied
         graphics2D.drawImage(myAnimation.getSprite(), transform, null);
         //graphics2D.fillRect(myX + TILE_SIZE, myY + TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        setDefaultValues();
+
+        this.myInputListener = InputListener.getInstance();
+        this.mySoundManager = SoundManager.getInstance();
+
+        loadSpriteSheets();
+        //System.out.println("Reloaded sprite sheets.");
+
+        initializeAnimations();
+        //System.out.println("Initialized animations.");
     }
 }
