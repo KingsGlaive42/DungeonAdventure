@@ -13,7 +13,8 @@ public class GameStateManager {
         PAUSE,
         COMBAT,
         OPTION,
-        LOAD
+        LOAD,
+        SAVE
     }
 
     private final GameController myGameController;
@@ -49,6 +50,8 @@ public class GameStateManager {
                 break;
             case LOAD:
                 break;
+            case SAVE:
+                break;
             case PAUSE:
                 break;
             case COMBAT:
@@ -69,6 +72,8 @@ public class GameStateManager {
             case GAME:
                 break;
             case LOAD:
+                break;
+            case SAVE:
                 break;
             case PAUSE:
                 break;
@@ -104,6 +109,9 @@ public class GameStateManager {
                 break;
             case LOAD:
                 myUI.drawLoadScreen(theGraphics2D);
+                break;
+            case SAVE:
+                myUI.drawSaveScreen(theGraphics2D);
                 break;
             case GAME:
                 myGameController.draw(theGraphics2D);

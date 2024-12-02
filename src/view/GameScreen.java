@@ -1,6 +1,5 @@
 package view;
 
-import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
@@ -11,7 +10,7 @@ import java.util.List;
 import static utilities.GameConfig.TILE_SIZE;
 
 public class GameScreen {
-    private Inventory myInventory;
+    private final Inventory myInventory;
 
     private final UIButton myMapButton;
     private final UIButton myInventoryButton;

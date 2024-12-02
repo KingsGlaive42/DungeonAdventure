@@ -1,6 +1,7 @@
 package view;
 
 import controller.GameStateManager;
+import model.AnimationSystem.AssetManager;
 import utilities.SoundManager;
 
 import java.awt.*;
@@ -14,6 +15,13 @@ public class PauseScreen {
     private int myBackgroundMusicVolume = 50;
     private int mySFXVolume = 50;
     private Rectangle myBgmSliderBounds, mySfxSliderBounds;
+    private final UIButton mySaveButton;
+    private final GameStateManager myGameStateManager;
+
+    public PauseScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager) {
+        this.myGameStateManager = theGameStateManager;
+        mySaveButton = new UIButton(theAssetManager.getAsset("playButton"), new Rectangle(10, 10, 50, 50));
+    }
 
     public void draw(final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 150));
@@ -24,6 +32,8 @@ public class PauseScreen {
         theGraphics2D.drawString("PAUSED", SCREEN_WIDTH / 2 - 100, SCREEN_HEIGHT / 2 - 100);
 
         drawVolumeOptions(theGraphics2D);
+
+        mySaveButton.draw(theGraphics2D);
     }
 
     public void handleClick(final Point theClickPoint) {
@@ -38,6 +48,14 @@ public class PauseScreen {
             mySFXVolume = Math.min(100, Math.max(0, (relativeX * 100) / mySfxSliderBounds.width));
             SoundManager.getInstance().setEffectsVolume(mySFXVolume);
         }
+
+        if (mySaveButton.contains(theClickPoint)) {
+            myGameStateManager.setState(GameStateManager.State.SAVE);
+        }
+    }
+
+    public void handleHoverUpdate(final Point theMousePoint) {
+        mySaveButton.setHovered(mySaveButton.contains(theMousePoint));
     }
 
     private void drawVolumeOptions(final Graphics2D theGraphics2D) {

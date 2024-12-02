@@ -4,6 +4,7 @@ import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
 import model.SaveGame.GameLoader;
+import model.SaveGame.GameSaver;
 import model.SaveGame.GameState;
 import model.SaveGame.SaveFileManager;
 import utilities.GameConfig;
@@ -11,7 +12,7 @@ import utilities.GameConfig;
 import java.awt.*;
 import java.io.File;
 
-public class LoadGameScreen {
+public class SaveGameScreen {
     private final GameStateManager myGameStateManager;
     private final SaveFileManager mySaveFileManager;
     private final GameController myGameController;
@@ -21,7 +22,7 @@ public class LoadGameScreen {
     private final String[] saveSlotDetails;
 
 
-    public LoadGameScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
+    public SaveGameScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
         this.myGameStateManager = theGameStateManager;
         this.mySaveFileManager = theSaveFileManager;
         this.myGameController = theGameController;
@@ -93,30 +94,29 @@ public class LoadGameScreen {
     public void handleClick(final Point theClickPoint) {
         for (int i = 0; i < saveSlotButtons.length; i++) {
             if (saveSlotButtons[i].contains(theClickPoint)) {
-                loadGame(i + 1);
+                saveGame(i + 1);
                 return;
             }
         }
 
         if (myBackButton.contains(theClickPoint)) {
-            myGameStateManager.setState(GameStateManager.State.MENU);
+            myGameStateManager.setState(GameStateManager.State.PAUSE);
         }
     }
 
-    private void loadGame(final int theSlotNumber) {
+    private void saveGame(final int theSlotNumber) {
         File saveFile = mySaveFileManager.getSaveFile(theSlotNumber);
-        if (saveFile.exists()) {
-            GameState loadedState = GameLoader.loadGame(saveFile.getPath());
-            if (loadedState != null) {
-                myGameController.setMyPlayer(loadedState.getMyPlayer());
-                myGameController.setMyDungeon(loadedState.getMyDungeon());
-                //myGameController.setMyInventory(loadedState.getMyInventory());
-                myGameStateManager.setState(GameStateManager.State.GAME);
-            } else {
-                System.err.println("Failed to load save file: " + saveFile.getName());
-            }
-        } else {
-            System.out.println("Save file does not exist for slot " + theSlotNumber);
+
+        try {
+            GameState currentState = new GameState();
+            currentState.setMyPlayer(myGameController.getPlayer());
+            currentState.setMyDungeon(myGameController.getDungeon());
+            //currentState.setMyInventory();
+
+            GameSaver.saveGame(currentState, saveFile.getPath());
+            System.out.println("Game successfully saved to slot " + theSlotNumber);
+        } catch (final Exception theException) {
+            throw new RuntimeException("Error occured while saving the game: " + theException);
         }
     }
 
