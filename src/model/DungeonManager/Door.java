@@ -1,16 +1,12 @@
 package model.DungeonManager;
 
 import model.Player.Player;
-import org.junit.jupiter.api.Test;
 
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.awt.Graphics2D;
 import java.io.Serial;
 import java.io.Serializable;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class Door implements Serializable {
     @Serial

@@ -33,7 +33,6 @@ public class Player extends GameObject implements Serializable {
 
     private transient InputListener myInputListener;
     private final int TILE_SIZE;
-    private final int PLAYER_SCALE = 3;
     private final int PLAYER_SIZE;
 
     private final Sprite myWalkingSpritesheet = new Sprite();
@@ -42,17 +41,6 @@ public class Player extends GameObject implements Serializable {
     private DungeonCharacter myHeroClass;
     private final Inventory myInventory;
     private transient SoundManager mySoundManager = SoundManager.getInstance();
-
-    // Images for each animation
-    private transient BufferedImage[] myWalkingDownSprites;
-    private transient BufferedImage[] myWalkingUpSprites;
-    private transient BufferedImage[] myWalkingLeftSprites;
-    private transient BufferedImage[] myWalkingRightSprites;
-
-    private transient BufferedImage[] myIdleDownSprites;
-    private transient BufferedImage[] myIdleUpSprites;
-    private transient BufferedImage[] myIdleLeftSprites;
-    private transient BufferedImage[] myIdleRightSprites;
 
     // These are animation states
     private Animation myWalkUpAnimation;
@@ -78,6 +66,7 @@ public class Player extends GameObject implements Serializable {
     public Player(final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
         myInputListener = InputListener.getInstance();
         this.TILE_SIZE = GameConfig.TILE_SIZE;
+        int PLAYER_SCALE = 3;
         this.PLAYER_SIZE = TILE_SIZE * PLAYER_SCALE;
 
         this.myInventory = theInventory;
@@ -122,7 +111,8 @@ public class Player extends GameObject implements Serializable {
     }
 
     private void initializeAnimations() {
-        myWalkingDownSprites = new BufferedImage[]{
+        // Images for each animation
+        BufferedImage[] myWalkingDownSprites = new BufferedImage[]{
                 myWalkingSpritesheet.getSprite(0, 0),
                 myWalkingSpritesheet.getSprite(1, 0),
                 myWalkingSpritesheet.getSprite(2, 0),
@@ -131,7 +121,7 @@ public class Player extends GameObject implements Serializable {
                 myWalkingSpritesheet.getSprite(5, 0),
         };
 
-        myWalkingUpSprites = new BufferedImage[]{
+        BufferedImage[] myWalkingUpSprites = new BufferedImage[]{
                 myWalkingSpritesheet.getSprite(0, 1),
                 myWalkingSpritesheet.getSprite(1, 1),
                 myWalkingSpritesheet.getSprite(2, 1),
@@ -139,7 +129,7 @@ public class Player extends GameObject implements Serializable {
                 myWalkingSpritesheet.getSprite(4, 1),
                 myWalkingSpritesheet.getSprite(5, 1)
         };
-        myWalkingLeftSprites = new BufferedImage[]{
+        BufferedImage[] myWalkingLeftSprites = new BufferedImage[]{
                 myWalkingSpritesheet.getSprite(0, 2),
                 myWalkingSpritesheet.getSprite(1, 2),
                 myWalkingSpritesheet.getSprite(2, 2),
@@ -147,7 +137,7 @@ public class Player extends GameObject implements Serializable {
                 myWalkingSpritesheet.getSprite(4, 2),
                 myWalkingSpritesheet.getSprite(5, 2)
         };
-        myWalkingRightSprites = new BufferedImage[]{
+        BufferedImage[] myWalkingRightSprites = new BufferedImage[]{
                 myWalkingSpritesheet.getSprite(0, 3),
                 myWalkingSpritesheet.getSprite(1, 3),
                 myWalkingSpritesheet.getSprite(2, 3),
@@ -156,7 +146,7 @@ public class Player extends GameObject implements Serializable {
                 myWalkingSpritesheet.getSprite(5, 3)
         };
 
-        myIdleDownSprites = new BufferedImage[]{
+        BufferedImage[] myIdleDownSprites = new BufferedImage[]{
                 myIdleSpritesheet.getSprite(0, 0),
                 myIdleSpritesheet.getSprite(1, 0),
                 myIdleSpritesheet.getSprite(2, 0),
@@ -170,7 +160,7 @@ public class Player extends GameObject implements Serializable {
                 myIdleSpritesheet.getSprite(10, 0),
                 myIdleSpritesheet.getSprite(11, 0)
         };
-        myIdleUpSprites = new BufferedImage[]{
+        BufferedImage[] myIdleUpSprites = new BufferedImage[]{
                 myIdleSpritesheet.getSprite(0, 1),
                 myIdleSpritesheet.getSprite(1, 1),
                 myIdleSpritesheet.getSprite(2, 1),
@@ -184,7 +174,7 @@ public class Player extends GameObject implements Serializable {
                 myIdleSpritesheet.getSprite(10, 1),
                 myIdleSpritesheet.getSprite(11, 1)
         };
-        myIdleLeftSprites = new BufferedImage[]{
+        BufferedImage[] myIdleLeftSprites = new BufferedImage[]{
                 myIdleSpritesheet.getSprite(0, 2),
                 myIdleSpritesheet.getSprite(1, 2),
                 myIdleSpritesheet.getSprite(2, 2),
@@ -198,7 +188,7 @@ public class Player extends GameObject implements Serializable {
                 myIdleSpritesheet.getSprite(10, 2),
                 myIdleSpritesheet.getSprite(11, 2)
         };
-        myIdleRightSprites = new BufferedImage[]{
+        BufferedImage[] myIdleRightSprites = new BufferedImage[]{
                 myIdleSpritesheet.getSprite(0, 3),
                 myIdleSpritesheet.getSprite(1, 3),
                 myIdleSpritesheet.getSprite(2, 3),
@@ -390,10 +380,6 @@ public class Player extends GameObject implements Serializable {
 
     public double getY() {
         return myY;
-    }
-
-    public int getSize() {
-        return PLAYER_SIZE;
     }
 
     public int getTileSize() {

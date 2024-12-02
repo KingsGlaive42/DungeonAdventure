@@ -38,4 +38,12 @@ public class GameController {
     public void setMyDungeon(final Dungeon theDungeon) {
         this.myDungeon = theDungeon;
     }
+
+    public Player getPlayer() {
+        return myPlayer;
+    }
+
+    public Dungeon getDungeon() {
+        return myDungeon;
+    }
 }
