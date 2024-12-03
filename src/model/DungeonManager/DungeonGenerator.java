@@ -29,12 +29,12 @@ class DungeonGenerator implements Serializable {
     private Room myStartRoom;
     private ArrayList<Room> myObjectiveRooms;
 
-    DungeonGenerator(final int theDungeonWidth, final int theDungeonHeight) {
+    public DungeonGenerator(final int theDungeonWidth, final int theDungeonHeight) {
         myDungeonWidth = Math.max(theDungeonWidth, MIN_DUNGEON_DIMENSION);
         myDungeonHeight = Math.max(theDungeonHeight, MIN_DUNGEON_DIMENSION);
     }
 
-    void generateDungeon(final int theNumRooms) {
+    public void generateDungeon(final int theNumRooms) {
         if (theNumRooms <= 8) {
             throw new IllegalArgumentException("Number of rooms must be at least 8.");
         }

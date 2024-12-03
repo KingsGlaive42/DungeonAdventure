@@ -64,7 +64,7 @@ public class Room implements Serializable {
      * @param theRoomType The type of the room.
      * @throws IllegalArgumentException if theRoomType is null.
      */
-    Room(final int theX, final int theY, final RoomType theRoomType) {
+    public Room(final int theX, final int theY, final RoomType theRoomType) {
         if (theRoomType == null) {
             throw new IllegalArgumentException("Room type cannot be null");
         }
@@ -147,7 +147,7 @@ public class Room implements Serializable {
      * @param theRoom The adjacent room to connect.
      * @throws IllegalArgumentException if theRoom is null or if the adjacent coordinates are invalid.
      */
-    void connectRoom(final int theAdjX, final int theAdjY, final Room theRoom) {
+    public void connectRoom(final int theAdjX, final int theAdjY, final Room theRoom) {
         if (theRoom == null) {
             throw new IllegalArgumentException("Room cannot be null.");
         }
@@ -184,7 +184,7 @@ public class Room implements Serializable {
      * @return The direction of the door the player is colliding with, or null if none.
      * @throws IllegalArgumentException if thePlayer is null.
      */
-    DoorDirection checkPlayerCollisionWithDoor(final Player thePlayer) {
+    public DoorDirection checkPlayerCollisionWithDoor(final Player thePlayer) {
         if (thePlayer == null) {
             throw new IllegalArgumentException("Player cannot be null");
         }
@@ -203,7 +203,7 @@ public class Room implements Serializable {
      * @param theDirection The direction in which to add the door.
      * @throws IllegalArgumentException if theDirection is null.
      */
-    void addDoor(final DoorDirection theDirection) {
+    public void addDoor(final DoorDirection theDirection) {
         if (theDirection == null) {
             throw new IllegalArgumentException("DoorDirection cannot be null");
         }
@@ -264,7 +264,7 @@ public class Room implements Serializable {
      *
      * @return The X coordinate of the room.
      */
-    int getX() {
+    public int getX() {
         return myX;
     }
 
@@ -273,7 +273,7 @@ public class Room implements Serializable {
      *
      * @return The Y coordinate of the room.
      */
-    int getY() {
+    public int getY() {
         return myY;
     }
 
@@ -282,7 +282,7 @@ public class Room implements Serializable {
      *
      * @return An unmodifiable map of connected rooms.
      */
-    Map<DoorDirection, Room> getConnectedRooms() {
+    public Map<DoorDirection, Room> getConnectedRooms() {
         return Collections.unmodifiableMap(myConnectedRooms);
     }
 
@@ -292,7 +292,7 @@ public class Room implements Serializable {
      * @param theRoomType The type of the room.
      * @throws IllegalArgumentException if theRoomType is null.
      */
-    void setType(final RoomType theRoomType) {
+    public void setType(final RoomType theRoomType) {
         if (theRoomType == null) {
             throw new IllegalArgumentException("Room type cannot be null");
         }
@@ -304,7 +304,7 @@ public class Room implements Serializable {
      *
      * @return The type of the room.
      */
-    RoomType getRoomType() {
+    public RoomType getRoomType() {
         return myRoomType;
     }
 

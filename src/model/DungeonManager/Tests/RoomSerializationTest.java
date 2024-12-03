@@ -1,4 +1,7 @@
-package model.DungeonManager;
+package model.DungeonManager.Tests;
+
+import model.DungeonManager.Room;
+import model.DungeonManager.RoomType;
 
 import java.io.*;
 

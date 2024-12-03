@@ -9,7 +9,6 @@ import model.DungeonCharacters.Thief;
 import model.DungeonCharacters.Warrior;
 import model.DungeonManager.DoorDirection;
 import model.GameObject;
-import model.PlayerInventory.Inventory;
 import utilities.SoundManager;
 import utilities.GameConfig;
 
@@ -458,6 +457,24 @@ public class Player extends GameObject implements Serializable {
      */
     public double getY() {
         return myY;
+    }
+
+    /**
+     * Sets the x position of the player.
+     *
+     * @param theX The wanted X-position of player.
+     */
+    public void setX(final double theX) {
+        this.myX = theX;
+    }
+
+    /**
+     * Sets the Y position of the player.
+     *
+     * @param theY The wanted Y-position of player.
+     */
+    public void setY(final double theY) {
+        this.myY = theY;
     }
 
     /**

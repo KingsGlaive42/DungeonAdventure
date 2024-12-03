@@ -1,6 +1,9 @@
-package model.DungeonManager;
+package model.DungeonManager.Tests;
 
 import controller.GameController;
+import model.DungeonManager.DoorDirection;
+import model.DungeonManager.Room;
+import model.DungeonManager.RoomType;
 import model.Player.Player;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
