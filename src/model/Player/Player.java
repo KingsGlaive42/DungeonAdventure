@@ -46,9 +46,8 @@ public class Player extends GameObject implements Serializable {
     private final Sprite myWalkingSpritesheet = new Sprite();
     private final Sprite myIdleSpritesheet = new Sprite();
 
-    // Hero and Inventory
+    // Hero
     private DungeonCharacter myHeroClass;
-    private Inventory myInventory;
 
     // Animations
     private Animation myWalkUpAnimation;
@@ -74,9 +73,8 @@ public class Player extends GameObject implements Serializable {
      *
      * @param theCharacterClass The character class of the player (e.g., "Warrior", "Thief", "Priestess").
      * @param thePlayerName The name of the player character.
-     * @param theInventory the inventory assigned to the player.
      */
-    public Player(final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
+    public Player(final String theCharacterClass, final String thePlayerName) {
         validateInput(theCharacterClass, "Character class");
         validateInput(thePlayerName, "Player name");
 
@@ -86,7 +84,6 @@ public class Player extends GameObject implements Serializable {
         TILE_SIZE = GameConfig.TILE_SIZE;
         PLAYER_SIZE = TILE_SIZE * 3; // Default Scale
 
-        myInventory = theInventory;
         setHeroClass(theCharacterClass, thePlayerName);
         loadSpriteSheets();
         initializeAnimations();
@@ -446,24 +443,6 @@ public class Player extends GameObject implements Serializable {
     }
 
     /**
-     * Sets the player's inventory.
-     *
-     * @param theInventory The inventory to set.
-     */
-    public void setInventory(final Inventory theInventory) {
-        this.myInventory = theInventory;
-    }
-
-    /**
-     * Gets the player's inventory.
-     *
-     * @return The player's inventory.
-     */
-    public Inventory getMyInventory() {
-        return myInventory;
-    }
-
-    /**
      * Gets the player's x-coordinate.
      *
      * @return The x-coordinate of the player.
@@ -523,6 +502,8 @@ public class Player extends GameObject implements Serializable {
 
         this.myInputListener = InputListener.getInstance();
         this.mySoundManager = SoundManager.getInstance();
+
+        loadSoundEffects();
 
         loadSpriteSheets();
         //System.out.println("Reloaded sprite sheets.");

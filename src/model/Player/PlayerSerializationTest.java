@@ -7,7 +7,7 @@ import java.io.*;
 
 public class PlayerSerializationTest {
     public static void main(String[] args) {
-        Player player = new Player("warrior", "warrior", null);
+        Player player = new Player("warrior", "warrior");
 
         // Save the room to a file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("room.ser"))) {

@@ -1,8 +1,13 @@
 package model.DungeonManager;
 
+import controller.GameController;
+import controller.InputListener;
 import model.Player.Player;
+import utilities.SoundManager;
 
 import java.awt.Point;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
@@ -16,6 +21,7 @@ public class Dungeon implements Serializable {
     private final Map<Point, Room> myRooms;
     private Room myCurrentRoom;
     private final DungeonGenerator generator;
+    private transient SoundManager mySoundManager;
 
     public Dungeon(final int theWidth, final int theHeight, final int theNumRooms) {
         if (theWidth <= 0 || theHeight <= 0 || theNumRooms <= 0) {
@@ -26,6 +32,8 @@ public class Dungeon implements Serializable {
         generator.generateDungeon(theNumRooms);
         myRooms = generator.getGeneratedDungeon();
         myCurrentRoom = findStartRoom();
+        mySoundManager = SoundManager.getInstance();
+        mySoundManager.loadSoundEffect("doorOpening", "src/resources/sounds/doorOpening.wav");
     }
 
     private Room findStartRoom() {
@@ -37,15 +45,16 @@ public class Dungeon implements Serializable {
         throw new IllegalStateException("No start room found in dungeon layout. " + generator.getGeneratedDungeon().toString());
     }
 
-    public void checkDoorCollisions(final Player thePlayer) {
+    public void checkDoorCollisions(final Player thePlayer, final GameController theGameController) {
         DoorDirection doorDirection = myCurrentRoom.checkPlayerCollisionWithDoor(thePlayer);
 
         if (doorDirection != null) {
+            mySoundManager.playSoundEffect("doorOpening");
             Room nextRoom = getRoomInDirection(myCurrentRoom, doorDirection);
             if (nextRoom != null) {
                 myCurrentRoom = nextRoom; // Transition to the new room
                 thePlayer.moveToOppositeDoor(doorDirection);
-                myCurrentRoom.playerEnters(thePlayer);
+                myCurrentRoom.playerEnters(theGameController);
             }
         }
     }
@@ -89,5 +98,21 @@ public class Dungeon implements Serializable {
 
     public Room getMyCurrentRoom() {
         return myCurrentRoom;
+    }
+
+    /**
+     * Custom deserialization method to restore transient fields.
+     *
+     * @param in The ObjectInputStream used to read the object.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the class cannot be found.
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        this.mySoundManager = SoundManager.getInstance();
+        this.mySoundManager.loadSoundEffect("doorOpening", "src/resources/sounds/doorOpening.wav");
     }
 }

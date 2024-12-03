@@ -9,13 +9,13 @@ public class SoundManager {
     private static SoundManager myInstance;
     private Clip myBackgroundMusic;
     private final HashMap<String, Clip> mySoundEffects;
-    private float myBackgroundVolume = 0.0f;
-    private float myEffectsVolume = 0.0f;
+    private float myBackgroundVolume;
+    private float myEffectsVolume;
 
     private SoundManager() {
         mySoundEffects = new HashMap<>();
-        myBackgroundVolume = 50.0f;
-        myEffectsVolume = 50.0f;
+        myBackgroundVolume = 60.0f;
+        myEffectsVolume = 75.0f;
     }
 
     public static SoundManager getInstance() {

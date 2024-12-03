@@ -111,7 +111,7 @@ public class SaveGameScreen {
             GameState currentState = new GameState();
             currentState.setMyPlayer(myGameController.getPlayer());
             currentState.setMyDungeon(myGameController.getDungeon());
-            currentState.setMyInventory(myGameController.getPlayer().getMyInventory());
+            currentState.setMyInventory(myGameController.getInventory());
 
             GameSaver.saveGame(currentState, saveFile.getPath());
             System.out.println("Game successfully saved to slot " + theSlotNumber);
