@@ -455,6 +455,14 @@ public class Player extends GameObject implements Serializable {
     }
 
     /**
+     * Gets the player speed
+     * @return the current speed of the player.
+     */
+    public double getSpeed() {
+        return mySpeed;
+    }
+
+    /**
      * Gets the tile size used for the player.
      *
      * @return The tile size.

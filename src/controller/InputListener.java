@@ -97,4 +97,8 @@ public class InputListener implements KeyListener{
         }
         return false;
     }
+
+    public void setLeftPressed(final boolean isLeftPressed) {
+        this.isLeftPressed = isLeftPressed;
+    }
 }
