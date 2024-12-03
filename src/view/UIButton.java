@@ -24,6 +24,10 @@ public class UIButton {
         this.isHovered = isHovered;
     }
 
+    public boolean isHovered() {
+        return isHovered;
+    }
+
     public boolean contains(final Point theClickPoint) {
         return myBounds.contains(theClickPoint);
     }

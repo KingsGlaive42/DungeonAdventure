@@ -22,7 +22,7 @@ public class UI {
         this.myGameStateManager = theGameStateManager;
 
         this.myTitleScreen = new TitleScreen(theAssetManager, theGameStateManager);
-        this.myGameScreen = new GameScreen(theAssetManager, theInventory);
+        this.myGameScreen = new GameScreen(theAssetManager, theGameController);
         this.myPauseScreen = new PauseScreen(theAssetManager, theGameStateManager);
         this.myLoadGameScreen = new LoadGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
         this.mySaveGameScreen = new SaveGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);

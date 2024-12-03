@@ -1,5 +1,6 @@
 package view;
 
+import controller.GameController;
 import model.AnimationSystem.AssetManager;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
@@ -10,7 +11,7 @@ import java.util.List;
 import static utilities.GameConfig.TILE_SIZE;
 
 public class GameScreen {
-    private final Inventory myInventory;
+    private final GameController myGameController;
 
     private final UIButton myMapButton;
     private final UIButton myInventoryButton;
@@ -18,8 +19,8 @@ public class GameScreen {
     private boolean isMapVisible;
     private boolean isInventoryVisible;
 
-    public GameScreen(final AssetManager theAssetManager, final Inventory theInventory) {
-        this.myInventory = theInventory;
+    public GameScreen(final AssetManager theAssetManager, final GameController theGameController) {
+        this.myGameController = theGameController;
 
         myMapButton = new UIButton(theAssetManager.getAsset("mapButton"), new Rectangle(412, 344, 60, 60));
         myInventoryButton = new UIButton(theAssetManager.getAsset("inventoryButton"), new Rectangle(478, 350, 48, 48));
@@ -56,7 +57,7 @@ public class GameScreen {
 
     private void drawInventoryScreen(final Graphics2D theGraphics2D) {
         drawSubWindow(TILE_SIZE * 8, TILE_SIZE * 5, TILE_SIZE * 11, theGraphics2D);
-        List<Item> items = myInventory.getItems();
+        List<Item> items = myGameController.getPlayer().getMyInventory().getItems();
         int itemY = TILE_SIZE + 20;
         for (Item item : items) {
             theGraphics2D.drawString(item.getName(), TILE_SIZE * 8 + 10, itemY);

@@ -20,7 +20,6 @@ public class LoadGameScreen {
     private final UIButton[] saveSlotButtons;
     private final String[] saveSlotDetails;
 
-
     public LoadGameScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
         this.myGameStateManager = theGameStateManager;
         this.mySaveFileManager = theSaveFileManager;
@@ -71,7 +70,7 @@ public class LoadGameScreen {
 
         int slotY = 50;
         for (int i = 0; i < saveSlotButtons.length; i++) {
-            drawSubWindow(slotY, theGraphics2D);
+            drawSubWindow(slotY, i, theGraphics2D);
 
             theGraphics2D.setColor(Color.WHITE);
             theGraphics2D.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -110,7 +109,7 @@ public class LoadGameScreen {
             if (loadedState != null) {
                 myGameController.setMyPlayer(loadedState.getMyPlayer());
                 myGameController.setMyDungeon(loadedState.getMyDungeon());
-                //myGameController.setMyInventory(loadedState.getMyInventory());
+                myGameController.getPlayer().setInventory(loadedState.getMyInventory());
                 myGameStateManager.setState(GameStateManager.State.GAME);
             } else {
                 System.err.println("Failed to load save file: " + saveFile.getName());
@@ -120,10 +119,14 @@ public class LoadGameScreen {
         }
     }
 
-    private void drawSubWindow(final int theY, final Graphics2D theGraphics2D) {
+    private void drawSubWindow(final int theY, final int theSlotIndex, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 210));
         theGraphics2D.fillRoundRect(100, theY, 300, 75, 35, 35);
-        theGraphics2D.setColor(Color.WHITE);
+        if (saveSlotButtons[theSlotIndex].isHovered()) {
+            theGraphics2D.setColor(Color.MAGENTA);
+        } else {
+            theGraphics2D.setColor(Color.WHITE);
+        }
         theGraphics2D.setStroke(new BasicStroke(5));
         theGraphics2D.drawRoundRect(100 + 5, theY + 5, 300 - 10, 75 - 10, 25, 25);
     }
