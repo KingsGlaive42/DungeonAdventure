@@ -1,9 +1,8 @@
 package model.DungeonManager;
 
 import controller.GameController;
-import controller.InputListener;
 import model.Player.Player;
-import utilities.SoundManager;
+import controller.SoundManager;
 
 import java.awt.Point;
 import java.io.IOException;

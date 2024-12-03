@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static utilities.GameConfig.TILE_SIZE;
+import static model.GameConfig.TILE_SIZE;
 
 class RoomTest {
   private Room room;

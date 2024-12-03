@@ -1,4 +1,4 @@
-package utilities;
+package model;
 
 public class GameConfig {
     //GAME SIZES

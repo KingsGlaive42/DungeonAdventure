@@ -9,8 +9,8 @@ import model.DungeonCharacters.Thief;
 import model.DungeonCharacters.Warrior;
 import model.DungeonManager.DoorDirection;
 import model.GameObject;
-import utilities.SoundManager;
-import utilities.GameConfig;
+import controller.SoundManager;
+import model.GameConfig;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

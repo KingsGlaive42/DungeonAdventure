@@ -2,7 +2,7 @@ package view;
 
 import controller.GameStateManager;
 import controller.InputListener;
-import utilities.GameConfig;
+import model.GameConfig;
 
 import javax.swing.JPanel;
 import java.awt.*;

@@ -6,7 +6,7 @@ import model.AnimationSystem.AssetManager;
 import model.SaveGame.GameLoader;
 import model.SaveGame.GameState;
 import model.SaveGame.SaveFileManager;
-import utilities.GameConfig;
+import model.GameConfig;
 
 import java.awt.*;
 import java.io.File;
