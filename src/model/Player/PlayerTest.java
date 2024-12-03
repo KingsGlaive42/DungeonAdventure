@@ -6,7 +6,6 @@ import model.DungeonManager.Dungeon;
 import model.PlayerInventory.Inventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import utilities.SoundManager;
 
 import static org.junit.jupiter.api.Assertions.*;

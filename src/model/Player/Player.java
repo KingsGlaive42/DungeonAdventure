@@ -355,34 +355,61 @@ public class Player extends GameObject implements Serializable {
     private void applyMovementAnimations() {
         if (isMoving) {
             switch (myFacingDirection) {
-                case LEFT -> setAnimation(myWalkLeftAnimation);
-                case RIGHT -> setAnimation(myWalkRightAnimation);
-                case UP -> setAnimation(myWalkUpAnimation);
-                case DOWN -> setAnimation(myWalkDownAnimation);
+                case LEFT:
+                    if (myAnimation != myWalkLeftAnimation || !wasMoving) {
+                        myAnimation = myWalkLeftAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
+                case RIGHT:
+                    if (myAnimation != myWalkRightAnimation || !wasMoving) {
+                        myAnimation = myWalkRightAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
+                case UP:
+                    if (myAnimation != myWalkUpAnimation || !wasMoving) {
+                        myAnimation = myWalkUpAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
+                case DOWN:
+                    if (myAnimation != myWalkDownAnimation || !wasMoving) {
+                        myAnimation = myWalkDownAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
             }
         } else {
             switch (myFacingDirection) {
-                case LEFT -> setAnimation(myIdleLeftAnimation);
-                case RIGHT -> setAnimation(myIdleRightAnimation);
-                case UP -> setAnimation(myIdleUpAnimation);
-                case DOWN -> setAnimation(myIdleDownAnimation);
+                case LEFT:
+                    if (myAnimation != myIdleLeftAnimation) {
+                        myAnimation = myIdleLeftAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
+                case RIGHT:
+                    if (myAnimation != myIdleRightAnimation) {
+                        myAnimation = myIdleRightAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
+                case UP:
+                    if (myAnimation != myIdleUpAnimation) {
+                        myAnimation = myIdleUpAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
+                case DOWN:
+                    if (myAnimation != myIdleDownAnimation) {
+                        myAnimation = myIdleDownAnimation;
+                        myAnimation.restart();
+                    }
+                    break;
             }
         }
 
-        myAnimation.restart();
         myAnimation.update();
-    }
-
-    /**
-     * Sets the current animation to the given animation and restarts it.
-     *
-     * @param newAnimation The animation to be set as current.
-     */
-    private void setAnimation(Animation newAnimation) {
-        if (myAnimation != newAnimation || !wasMoving) {
-            myAnimation = newAnimation;
-            myAnimation.restart();
-        }
     }
 
     /**
