@@ -7,7 +7,7 @@ import model.PlayerInventory.Item;
 import java.awt.*;
 import java.util.List;
 
-import static utilities.GameConfig.TILE_SIZE;
+import static model.GameConfig.TILE_SIZE;
 
 public class GameScreen {
     private final GameController myGameController;

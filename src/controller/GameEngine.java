@@ -1,6 +1,6 @@
 package controller;
 
-import utilities.GameConfig;
+import model.GameConfig;
 import view.GamePanel;
 
 public class GameEngine implements Runnable {

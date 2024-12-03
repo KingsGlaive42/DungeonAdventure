@@ -1,6 +1,6 @@
 package model.AnimationSystem;
 
-import utilities.GameConfig;
+import model.GameConfig;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

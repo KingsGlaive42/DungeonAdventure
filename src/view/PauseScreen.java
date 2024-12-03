@@ -2,12 +2,12 @@ package view;
 
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
-import utilities.SoundManager;
+import controller.SoundManager;
 
 import java.awt.*;
 
-import static utilities.GameConfig.SCREEN_HEIGHT;
-import static utilities.GameConfig.SCREEN_WIDTH;
+import static model.GameConfig.SCREEN_HEIGHT;
+import static model.GameConfig.SCREEN_WIDTH;
 
 public class PauseScreen {
     private static final int SLIDER_WIDTH = 200;
