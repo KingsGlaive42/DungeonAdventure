@@ -236,7 +236,7 @@ class DungeonGenerator implements Serializable {
         return Collections.unmodifiableMap(generatedDungeon);
     }
 
-    void printDungeon() {
+    public void printDungeon() {
         for (int i = 0; i < myDungeonWidth; i++) {
             for (int j = 0; j < myDungeonHeight; j++) {
                 if (myDungeonGrid[i][j] != null) {

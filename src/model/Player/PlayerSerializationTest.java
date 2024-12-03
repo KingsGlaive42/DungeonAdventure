@@ -1,6 +1,8 @@
 package model.Player;
 
 
+import model.PlayerInventory.Inventory;
+
 import java.io.*;
 
 public class PlayerSerializationTest {

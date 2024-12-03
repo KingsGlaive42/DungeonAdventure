@@ -116,7 +116,7 @@ public class SaveGameScreen {
             GameSaver.saveGame(currentState, saveFile.getPath());
             System.out.println("Game successfully saved to slot " + theSlotNumber);
         } catch (final Exception theException) {
-            throw new RuntimeException("Error occured while saving the game: " + theException);
+            throw new RuntimeException("Error occurred while saving the game: " + theException);
         }
     }
 
