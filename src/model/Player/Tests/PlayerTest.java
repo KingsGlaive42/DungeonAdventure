@@ -1,12 +1,10 @@
-package model.Player;
+package model.Player.Tests;
 
 import controller.InputListener;
 import model.DungeonManager.DoorDirection;
-import model.DungeonManager.Dungeon;
-import model.PlayerInventory.Inventory;
+import model.Player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utilities.SoundManager;
 
 import static org.junit.jupiter.api.Assertions.*;
 

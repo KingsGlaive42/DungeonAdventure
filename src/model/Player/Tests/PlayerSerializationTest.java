@@ -1,7 +1,7 @@
-package model.Player;
+package model.Player.Tests;
 
 
-import model.PlayerInventory.Inventory;
+import model.Player.Player;
 
 import java.io.*;
 
