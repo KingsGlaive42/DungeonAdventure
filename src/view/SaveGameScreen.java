@@ -72,7 +72,7 @@ public class SaveGameScreen {
 
         int slotY = 50;
         for (int i = 0; i < saveSlotButtons.length; i++) {
-            drawSubWindow(slotY, theGraphics2D);
+            drawSubWindow(slotY, i, theGraphics2D);
 
             theGraphics2D.setColor(Color.WHITE);
             theGraphics2D.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -111,7 +111,7 @@ public class SaveGameScreen {
             GameState currentState = new GameState();
             currentState.setMyPlayer(myGameController.getPlayer());
             currentState.setMyDungeon(myGameController.getDungeon());
-            //currentState.setMyInventory();
+            currentState.setMyInventory(myGameController.getPlayer().getMyInventory());
 
             GameSaver.saveGame(currentState, saveFile.getPath());
             System.out.println("Game successfully saved to slot " + theSlotNumber);
@@ -120,10 +120,14 @@ public class SaveGameScreen {
         }
     }
 
-    private void drawSubWindow(final int theY, final Graphics2D theGraphics2D) {
+    private void drawSubWindow(final int theY, final int theSlotIndex, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 210));
         theGraphics2D.fillRoundRect(100, theY, 300, 75, 35, 35);
-        theGraphics2D.setColor(Color.WHITE);
+        if (saveSlotButtons[theSlotIndex].isHovered()) {
+            theGraphics2D.setColor(Color.MAGENTA);
+        } else {
+            theGraphics2D.setColor(Color.WHITE);
+        }
         theGraphics2D.setStroke(new BasicStroke(5));
         theGraphics2D.drawRoundRect(100 + 5, theY + 5, 300 - 10, 75 - 10, 25, 25);
     }

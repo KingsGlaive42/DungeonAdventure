@@ -39,7 +39,7 @@ public class Player extends GameObject implements Serializable {
     private final Sprite myIdleSpritesheet = new Sprite();
 
     private DungeonCharacter myHeroClass;
-    private final Inventory myInventory;
+    private Inventory myInventory;
     private transient SoundManager mySoundManager = SoundManager.getInstance();
 
     // These are animation states
@@ -368,6 +368,10 @@ public class Player extends GameObject implements Serializable {
 
     private void addToInventory(final Item theItem) {
         myInventory.addItem(theItem);
+    }
+
+    public void setInventory(final Inventory theInventory) {
+        this.myInventory = theInventory;
     }
 
     public Inventory getMyInventory() {
