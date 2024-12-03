@@ -47,7 +47,7 @@ public class GameEngine implements Runnable {
 
             if (deltaTime >= 1) {
                 update();
-                myGamePanel.repaint(); // Triggers GamePanel's paintComponent
+                myGamePanel.repaint();
                 deltaTime--;
             }
         }

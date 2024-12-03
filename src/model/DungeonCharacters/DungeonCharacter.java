@@ -1,6 +1,12 @@
 package model.DungeonCharacters;
 
-public abstract class DungeonCharacter {
+import java.io.Serial;
+import java.io.Serializable;
+
+public abstract class DungeonCharacter implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     protected String myName;
     protected int myHitPoints;
     protected int myMagicPoints;

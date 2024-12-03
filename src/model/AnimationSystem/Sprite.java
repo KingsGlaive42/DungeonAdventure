@@ -6,9 +6,14 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Sprite {
-    private BufferedImage mySpriteSheet;
+public class Sprite implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private transient BufferedImage mySpriteSheet;
     public static final int TILE_SIZE = GameConfig.TILE_SIZE;
     private static final String DEFAULT_SPRITE_PATH = "src/resources/assets/player/player_idle.png";
 

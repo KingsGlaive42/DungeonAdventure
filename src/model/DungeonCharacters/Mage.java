@@ -2,9 +2,14 @@ package model.DungeonCharacters;
 
 import model.Combat.CombatEngine;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Mage extends Hero {
+public class Mage extends Hero implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     public Mage(final String theName) {
         this.myName = theName;
         this.myHitPoints = 75;

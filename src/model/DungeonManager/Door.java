@@ -5,8 +5,13 @@ import model.Player.Player;
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.awt.Graphics2D;
+import java.io.Serial;
+import java.io.Serializable;
 
-class Door {
+class Door implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final DoorDirection myDirection;
     private double myX, myY;
     private static final int TILE_DIMENSION = 32;
@@ -64,17 +69,5 @@ class Door {
         Rectangle2D.Double playerBounds = new Rectangle2D.Double(thePlayer.getX() + thePlayer.getTileSize(), thePlayer.getY() + thePlayer.getTileSize(), thePlayer.getTileSize(), thePlayer.getTileSize() * 2);
 
         return playerBounds.intersects(myRect);
-    }
-
-    public double getX() {
-        return myX;
-    }
-
-    public double getY() {
-        return myY;
-    }
-
-    public Rectangle2D.Double getRect() {
-        return new Rectangle2D.Double(myRect.getX(), myRect.getY(), myRect.getWidth(), myRect.getHeight());
     }
 }

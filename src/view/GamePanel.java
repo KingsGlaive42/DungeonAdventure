@@ -48,8 +48,7 @@ public class GamePanel extends JPanel {
 
         @Override
         public void mouseClicked(final MouseEvent theMouseEvent) {
-            myUI.handleMenuStateClick(theMouseEvent.getPoint());
-            myUI.handleGameStateClick(theMouseEvent.getPoint());
+            myUI.handleClicks(theMouseEvent.getPoint());
             repaint();
         }
     }

@@ -1,13 +1,19 @@
 package model.DungeonManager;
 
-import model.DungeonCharacters.Monster;
-import model.MonsterManager.MonsterGeneration;
-import model.PlayerInventory.*;
+import model.PlayerInventory.HealingPotion;
+import model.PlayerInventory.Item;
+import model.PlayerInventory.ItemType;
+import model.PlayerInventory.VisionPotion;
 
 import java.awt.Point;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
-class DungeonGenerator {
+class DungeonGenerator implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final int MIN_DEAD_ENDS = 6;
     private static final int MIN_DUNGEON_DIMENSION = 8;
     private static final int STARTING_ROOM_RADIUS = 3;
@@ -93,7 +99,7 @@ class DungeonGenerator {
         }
 
         assignPillars();
-        addDungeonItemsAndMonsters();
+        addDungeonItems();
 
         return true;
     }
@@ -102,58 +108,36 @@ class DungeonGenerator {
         for (int i = 0; i < NUM_OBJECTIVE_ROOMS; i++) {
             Room objectiveRoom = myObjectiveRooms.get(i);
             String pillar = myPillarsNames[i];
-            Pillar pillarItem = new Pillar(pillar);
+            Item pillarItem = new Item("'" + pillar.charAt(0) + "' pillar", "The pillar of " + pillar.toLowerCase(), ItemType.PILLAR);
             objectiveRoom.addItem(pillarItem);
         }
     }
 
-    private void addDungeonItemsAndMonsters() {
-        MonsterGeneration monsters = new MonsterGeneration();
-        List<Monster> randomMonsters = monsters.generateMonsters(24);
-        int monsterIndex =  0;
+    private void addDungeonItems() {
         for (int i = 0; i < myDungeonWidth; i++) {
             for (int k = 0; k < myDungeonHeight; k++) {
                 Room room = myDungeonGrid[i][k];
-                if (room == null) {
-                    continue;
-                }
-                if (room.getRoomType() == RoomType.FILLER) {
+                if (room != null && room.getRoomType() == RoomType.FILLER) {
                     placeRandomItems(room);
-                }
-                if (room.getRoomType() == RoomType.OBJECTIVE) {
-                    for (int j = 0; j < 2; j++) {
-                        room.addMonster(randomMonsters.get(monsterIndex));
-                        monsterIndex++;
-                    }
-                } else if (room.getRoomType() == RoomType.END) {
-                    for (int j = 0; j < 4; j++) {
-                        room.addMonster(randomMonsters.get(monsterIndex));
-                        monsterIndex++;
-                    }
-                } else if (monsterIndex < randomMonsters.size() && Math.random() < 0.2 &&
-                        room.getRoomType() == RoomType.FILLER) {
-                    room.addMonster(randomMonsters.get(monsterIndex));
-                    monsterIndex++;
                 }
             }
         }
     }
 
-    // update chances/logic
-    private void placeRandomItems(final Room theRoom) {
+    private void placeRandomItems(final Room room) {
         if (Math.random() < 0.1) {
-            theRoom.setPit(true);
+            room.setPit(true);
             System.out.println("add a pit");
-        } else if (!theRoom.getPit()){
+        } else if (!room.getPit()){
             if (Math.random() < 0.1) {
                 System.out.println("add healing potion");
                 HealingPotion hPotion = new HealingPotion();
-                theRoom.addItem(hPotion);
+                room.addItem(hPotion);
             }
             if (Math.random() < 0.1) {
                 System.out.println("add vision potion");
                 VisionPotion vPotion = new VisionPotion();
-                theRoom.addItem(vPotion);
+                room.addItem(vPotion);
             }
         }
     }

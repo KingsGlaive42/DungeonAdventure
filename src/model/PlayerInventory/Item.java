@@ -2,9 +2,13 @@ package model.PlayerInventory;
 
 import model.DungeonCharacters.Hero;
 
-import java.awt.image.BufferedImage;
+import java.io.Serial;
+import java.io.Serializable;
 
-public abstract class Item {
+public class Item implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final String myName;
     private final String myDescription;
     private final ItemType myType;
@@ -27,6 +31,4 @@ public abstract class Item {
     public ItemType getItemType() {
         return myType;
     }
-
-    public abstract BufferedImage getImage();
 }
