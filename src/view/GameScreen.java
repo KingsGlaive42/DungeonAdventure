@@ -2,7 +2,6 @@ package view;
 
 import controller.GameController;
 import model.AnimationSystem.AssetManager;
-import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
 
 import java.awt.*;

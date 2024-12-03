@@ -13,7 +13,8 @@ class Door implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final DoorDirection myDirection;
-    private double myX, myY;
+    private final double myX;
+    private final double myY;
     private static final int TILE_DIMENSION = 32;
     private static final int HALF_TILE = 16;
     private static final int QUARTER_TILE = 8;
@@ -26,7 +27,7 @@ class Door implements Serializable {
     private static final int EAST_DOOR_Y_OFFSET = 6;
     private static final Color DOOR_COLOR = new Color(0x421d00);
 
-    private Rectangle2D.Double myRect;
+    private final Rectangle2D.Double myRect;
 
     Door(final DoorDirection theDirection) {
         if (theDirection == null) {
