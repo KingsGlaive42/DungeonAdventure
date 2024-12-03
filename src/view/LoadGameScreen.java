@@ -109,7 +109,7 @@ public class LoadGameScreen {
             if (loadedState != null) {
                 myGameController.setMyPlayer(loadedState.getMyPlayer());
                 myGameController.setMyDungeon(loadedState.getMyDungeon());
-                myGameController.getPlayer().setInventory(loadedState.getMyInventory());
+                myGameController.setMyInventory(loadedState.getMyInventory());
                 myGameStateManager.setState(GameStateManager.State.GAME);
             } else {
                 System.err.println("Failed to load save file: " + saveFile.getName());

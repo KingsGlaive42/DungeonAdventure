@@ -56,7 +56,7 @@ public class GameScreen {
 
     private void drawInventoryScreen(final Graphics2D theGraphics2D) {
         drawSubWindow(TILE_SIZE * 8, TILE_SIZE * 5, TILE_SIZE * 11, theGraphics2D);
-        List<Item> items = myGameController.getPlayer().getMyInventory().getItems();
+        List<Item> items = myGameController.getInventory().getItems();
         int itemY = TILE_SIZE + 20;
         for (Item item : items) {
             theGraphics2D.drawString(item.getName(), TILE_SIZE * 8 + 10, itemY);
