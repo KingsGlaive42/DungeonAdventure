@@ -1,9 +1,6 @@
 package model.SaveGame;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 public class SaveFileManager {
     private static final String SAVE_DIR = "saves";
@@ -13,7 +10,7 @@ public class SaveFileManager {
     }
 
     public File getSaveFile(final int theSlotNumber) {
-        if (!checkSlotNumberBounds(theSlotNumber)) {
+        if (checkSlotNumberBounds(theSlotNumber)) {
             throw new IllegalArgumentException("Slot number must be 1, 2, or 3. Input: " + theSlotNumber);
         }
 
@@ -32,7 +29,7 @@ public class SaveFileManager {
     }
 
     public boolean saveFileExists(final int theSlotNumber) {
-        if (!checkSlotNumberBounds(theSlotNumber)) {
+        if (checkSlotNumberBounds(theSlotNumber)) {
             throw new IllegalArgumentException("Slot number must be 1, 2, or 3. Input: " + theSlotNumber);
         }
         File saveFile = getSaveFile(theSlotNumber);
@@ -40,7 +37,7 @@ public class SaveFileManager {
     }
 
     public boolean deleteSaveFile(final int theSlotNumber) {
-        if (!checkSlotNumberBounds(theSlotNumber)) {
+        if (checkSlotNumberBounds(theSlotNumber)) {
             throw new IllegalArgumentException("Slot number must be 1, 2, or 3. Input: " + theSlotNumber);
         }
 
@@ -55,6 +52,6 @@ public class SaveFileManager {
     }
 
     private boolean checkSlotNumberBounds(final int theSlotNumber) {
-        return theSlotNumber == 1 || theSlotNumber == 2 || theSlotNumber == 3;
+        return theSlotNumber != 1 && theSlotNumber != 2 && theSlotNumber != 3;
     }
 }
