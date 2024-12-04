@@ -98,7 +98,7 @@ public class LoadGameScreen {
         }
 
         if (myBackButton.contains(theClickPoint)) {
-            myGameStateManager.setState(GameStateManager.State.MENU);
+            myGameStateManager.setState(GameStateManager.getPreviousState());
         }
     }
 

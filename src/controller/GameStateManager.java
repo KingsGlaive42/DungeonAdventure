@@ -13,20 +13,22 @@ public class GameStateManager {
         COMBAT,
         OPTION,
         LOAD,
-        SAVE
+        SAVE,
     }
 
     private final GameController myGameController;
     private final transient SoundManager mySoundManager;
     private UI myUI;
 
-    private State myCurrentState;
+    private static State myCurrentState;
+    private static State myPreviousState;
 
     public GameStateManager(final GameController theGameController) {
         myGameController = theGameController;
         mySoundManager = SoundManager.getInstance();
         myCurrentState = State.MENU;
         onEnterState(State.MENU);
+        myPreviousState = State.MENU;
     }
 
     public State getCurrentState() { return myCurrentState; }
@@ -34,6 +36,7 @@ public class GameStateManager {
     public void setState(final State theNewState) {
         if (theNewState != myCurrentState) {
             onExitState(myCurrentState);
+            myPreviousState = myCurrentState;
             myCurrentState = theNewState;
             onEnterState(theNewState);
         }
@@ -63,10 +66,9 @@ public class GameStateManager {
     }
 
     private void onExitState(final State theState) {
-        mySoundManager.stopBackgroundMusic();
-
         switch (theState) {
             case MENU:
+                mySoundManager.stopBackgroundMusic();
                 break;
             case GAME:
                 break;
@@ -77,6 +79,7 @@ public class GameStateManager {
             case PAUSE:
                 break;
             case COMBAT:
+                mySoundManager.stopBackgroundMusic();
                 break;
             case OPTION:
                 break;
@@ -102,6 +105,10 @@ public class GameStateManager {
     }
 
     public void paint(final Graphics2D theGraphics2D) {
+        if (myUI == null) {
+            throw new IllegalStateException("UI not initialized");
+        }
+
         switch (myCurrentState) {
             case MENU:
                 myUI.drawTitleScreen(theGraphics2D);
@@ -138,5 +145,9 @@ public class GameStateManager {
 
     public void setUI(final UI theUI) {
         myUI = theUI;
+    }
+
+    public static State getPreviousState() {
+        return myPreviousState;
     }
 }
