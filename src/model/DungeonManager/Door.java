@@ -26,22 +26,22 @@ class Door {
     Door(final DoorDirection theDirection) {
         myDirection = theDirection;
         switch (myDirection) {
-            case DoorDirection.UP:
+            case UP:
                 myX = NORTH_DOOR_X_OFFSET * TILE_DIMENSION; // Centered on top
                 myY = 0;
                 myRect = new Rectangle2D.Double(myX , myY, TILE_DIMENSION, TILE_DIMENSION);
                 break;
-            case DoorDirection.DOWN:
+            case DOWN:
                 myX = SOUTH_DOOR_X_OFFSET * TILE_DIMENSION;
                 myY = SOUTH_DOOR_Y_OFFSET * TILE_DIMENSION;
                 myRect = new Rectangle2D.Double(myX, myY, TILE_DIMENSION, HALF_TILE);
                 break;
-            case DoorDirection.LEFT:
+            case LEFT:
                 myX = 0;
                 myY = WEST_DOOR_Y_OFFSET * TILE_DIMENSION;
                 myRect = new Rectangle2D.Double(myX, myY, QUARTER_TILE, TILE_DIMENSION);
                 break;
-            case DoorDirection.RIGHT:
+            case RIGHT:
                 myX = EAST_DOOR_X_OFFSET * TILE_DIMENSION;
                 myY = EAST_DOOR_Y_OFFSET * TILE_DIMENSION;
                 myRect = new Rectangle2D.Double(myX, myY, QUARTER_TILE, TILE_DIMENSION);

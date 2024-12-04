@@ -43,10 +43,10 @@ public class Dungeon {
     private Room getRoomInDirection(final Room theRoom, final DoorDirection theDirection) {
         Point pos = new Point(theRoom.getX(), theRoom.getY());
         switch (theDirection) {
-            case DoorDirection.UP: pos.translate(0, -1); break;
-            case DoorDirection.DOWN: pos.translate(0, 1); break;
-            case DoorDirection.LEFT: pos.translate(-1, 0); break;
-            case DoorDirection.RIGHT: pos.translate(1, 0); break;
+            case UP: pos.translate(0, -1); break;
+            case DOWN: pos.translate(0, 1); break;
+            case LEFT: pos.translate(-1, 0); break;
+            case RIGHT: pos.translate(1, 0); break;
         }
         return myRooms.get(pos);
     }

@@ -1,32 +1,24 @@
 package model.DungeonCharacters;
 
-import model.Combat.CombatEngine;
+import model.Combat.AttackResult;
 
 import java.util.Random;
 
 public class Warrior extends Hero {
     public Warrior(final String theName) {
-        this.myName = theName;
-        this.myHitPoints = 125; //125
-        this.myMaxHitPoints = 125;
-        this.myAttackSpeed = 4;
-        this.myChanceToHit = 0.8;
-        this.myChanceToBlock = 0.2;
-        this.myBaseChanceToBlock = 0.2;
-        this.myMinDamage = 35;
-        this.myMaxDamage = 60;
+        super(theName, 125, 35, 60, 4, 0.8, 0.2);
     }
 
-    @Override
-    public void useSpecialSkill(final DungeonCharacter theTarget, final CombatEngine theEngine) {
-        System.out.println(myName + " used Crushing Blow!"); //Replace with however we'll announce it
+    public AttackResult useSpecialSkill(final DungeonCharacter theTarget) {
+        //System.out.println(myName + " used Crushing Blow!"); //Replace with however we'll announce it
         Random rand = new Random();
         if (rand.nextInt(10) + 1 <= 4) {
-            System.out.println(theTarget.myName + " was crushed!"); //Replace with however we'll announce it
-            int damage = theEngine.calculateDamage(75, 175);
-            theEngine.takeDamage(theTarget, damage);
+            //System.out.println(theTarget.myName + " was crushed!"); //Replace with however we'll announce it
+            int damage = calculateDamage(getMinDamage(), getMaxDamage());
+            return theTarget.takeDamage(damage);
         } else {
             System.out.println("Crushing Blow Missed!"); //Replace with however we'll announce it missed
+            return AttackResult.MISS;
         }
     }
 }

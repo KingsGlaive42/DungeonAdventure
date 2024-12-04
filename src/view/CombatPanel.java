@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import controller.CombatController;
+import model.Combat.AttackResult;
 import model.DungeonCharacters.*;
 
 public class CombatPanel extends JFrame {
@@ -227,12 +228,12 @@ public class CombatPanel extends JFrame {
         returnButton.setVisible(false);  // Hide the 'Return' button when in action mode
     }
 
-    public void shakeHero(){
-        shakeImage(heroImageLabel);
-    }
-
-    public void shakeEnemy(){
-        shakeImage(enemyImageLabel);
+    private void shakeImage(final boolean isHero){
+        if (isHero) {
+            shakeImage(heroImageLabel);
+        } else {
+            shakeImage(enemyImageLabel);
+        }
     }
 
     // Add this method to handle the shake effect
@@ -272,7 +273,7 @@ public class CombatPanel extends JFrame {
     }
 
     // Add this method to handle the attack animation
-    public void attackAnimation(final boolean theHero) {
+    public void attackAnimation(final boolean theHero, final AttackResult theResult) {
         final int animationSpeed = 10; // How fast the sprite moves (lower value = faster)
         final int animationStep = 50;  // How far the sprite moves in each step
 
@@ -309,20 +310,22 @@ public class CombatPanel extends JFrame {
                         enemyImageLabel.setLocation(originalPosition);
                     }
                     ((Timer) e.getSource()).stop();
+                    switch(theResult) {
+                        case HIT, BONK, HALF_HIT:
+                            shakeImage(!theHero);
+                            break;
+                    }
+                    if(!theHero) {
+                        reactivateButtons();
+                    }
                 }
             }
         });
 
         // Start the animation
         attackTimer.start();
-
-        if (theHero) { //Need to change so that doesn't shake when blocked
-            shakeEnemy();
-        } else {
-            shakeHero();
-        }
-        reactivateButtons();
     }
+
 
     public static void deathAnimation(final boolean theHero) {
         JLabel label;
@@ -358,7 +361,7 @@ public class CombatPanel extends JFrame {
         timer.start(); // Start the animation
     }
 
-    public static ImageIcon createTransparentIcon(final ImageIcon icon, final float alpha) {
+    private static ImageIcon createTransparentIcon(final ImageIcon icon, final float alpha) {
         // Get the original image from the ImageIcon
         Image originalImage = icon.getImage();
 
@@ -386,7 +389,7 @@ public class CombatPanel extends JFrame {
         retreatButton.setEnabled(false);
     }
 
-    private void reactivateButtons() {
+    public void reactivateButtons() {
         attackButton.setEnabled(true);
         specialSkillButton.setEnabled(true);
         defendButton.setEnabled(true);
@@ -395,8 +398,8 @@ public class CombatPanel extends JFrame {
 
     //For testing
     public static void main(String[] args) {
-        Hero theHero = new Berserker("Terra");
-        DungeonCharacter enemy = new Ogre(100, 15, 25, 5, 0.6,
+        Hero theHero = new Priestess("Terra");
+        DungeonCharacter enemy = new Ogre(100, 15, 25, 10, 0.6,
                 0.4, 10, 20); //temp
 
         CombatController combatController = new CombatController(theHero, enemy);

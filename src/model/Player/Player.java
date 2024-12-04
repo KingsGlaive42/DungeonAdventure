@@ -348,16 +348,16 @@ public class Player extends GameObject {
 
     public void moveToOppositeDoor(final DoorDirection theDoorDirection) {
         switch (theDoorDirection) {
-            case DoorDirection.DOWN:
+            case DOWN:
                 this.myY = 0;
                 break;
-            case DoorDirection.UP:
+            case UP:
                 this.myY = 9 * TILE_SIZE;
                 break;
-            case DoorDirection.RIGHT:
+            case RIGHT:
                 this.myX = (double) TILE_SIZE / 2;
                 break;
-            case DoorDirection.LEFT:
+            case LEFT:
                 this.myX = 14 * TILE_SIZE;
                 break;
         }

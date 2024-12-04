@@ -1,8 +1,10 @@
 package controller;
 
+import model.Combat.AttackResult;
 import model.Combat.CombatEngine;
 import model.DungeonCharacters.DungeonCharacter;
 import model.DungeonCharacters.Hero;
+import model.DungeonCharacters.Mage;
 import model.DungeonCharacters.Priestess;
 import view.CombatPanel;
 import javax.swing.Timer;
@@ -21,6 +23,7 @@ public class CombatController {
 
         updateHeroInfo();
         updateEnemyInfo();
+        resetTurns();
     }
 
     public CombatPanel getCombatPanel() {
@@ -39,19 +42,45 @@ public class CombatController {
                     break;
 
                 case 1: // Perform the attack
-                    combatEngine.attack(hero, enemy);
-                    combatPanel.attackAnimation(true);
+                    AttackResult myResult = combatEngine.attack(hero, enemy);
+                    combatPanel.attackAnimation(true, myResult);
+                    updateHeroInfo();
                     updateEnemyInfo();
+                    switch(myResult) {
+                        case MISS:
+                            combatPanel.logAction("Attack Missed!!");
+                            break;
+                        case BLOCK:
+                            combatPanel.logAction("Attack was Blocked!!");
+                            break;
+                        case BONK:
+                            combatPanel.logAction("LOW MP!");
+                            combatPanel.logAction(hero.getName() + " bonks " + enemy.getName());
+                            break;
+                        case HIT:
+                            combatPanel.logAction("Attack Landed!!");
+                            break;
+                    }
                     if (enemy.getHitPoints() <= 0) {
                         actionTimer.stop(); // Stop the timer as victory is handled
                         handleVictory();
                     } else {
-                        state[0]++;
+                        if (combatEngine.getNumberOfTurns() > 0 && combatEngine.isHeroFaster()) {
+                            // Hero gets another turn
+                            combatPanel.logAction(hero.getName() + " gets another turn!");
+                            actionTimer.stop(); // Stop the timer after completing the sequence
+                            //combatPanel.reactivateButtons();
+                        } else {
+                            state[0]++; // Proceed to enemy counterattack
+                        }
                     }
                     break;
 
                 case 2: // Handle enemy counterattack
-                    handleEnemyCounterattack();
+                    while (combatEngine.getNumberOfTurns() > 0 && !combatEngine.isHeroFaster()) {
+                        handleEnemyCounterattack();
+                    }
+                    resetTurns();
                     actionTimer.stop(); // Stop the timer after completing the sequence
                     break;
             }
@@ -64,6 +93,20 @@ public class CombatController {
         combatPanel.logAction(hero.getName() + " is defending.");
         combatEngine.handleDefend(hero);  // Call the defend logic
         handleEnemyCounterattack();
+        combatEngine.resetDefend(hero);
+    }
+
+    private void resetTurns() {
+        int numberOfTurns;
+        if (enemy.getAttackSpeed() > hero.getAttackSpeed()) {
+            numberOfTurns = enemy.getAttackSpeed() / hero.getAttackSpeed();
+            combatEngine.setHeroFaster(false);
+            combatEngine.setNumberOfTurns(numberOfTurns, false);
+        } else {
+            numberOfTurns = hero.getAttackSpeed() / enemy.getAttackSpeed();
+            combatEngine.setHeroFaster(true);
+            combatEngine.setNumberOfTurns(numberOfTurns, true);
+        }
     }
 
     public void handleSpecialSkill() {
@@ -108,22 +151,39 @@ public class CombatController {
 
     private void handleEnemyCounterattack() {
         combatPanel.logAction(enemy.getName() + " counterattacks " + hero.getName());
-        combatEngine.attack(enemy, hero);
-        combatPanel.attackAnimation(false);
-        if (combatEngine.didDefend()) {
-            combatPanel.logAction(hero.getName() + " blocked the attack");
+        AttackResult myResult = combatEngine.attack(enemy, hero);
+        combatPanel.attackAnimation(false, myResult);
+        switch(myResult) {
+            case MISS:
+                combatPanel.logAction("Attack Missed!!");
+                break;
+            case BLOCK:
+                combatPanel.logAction("Attack was Blocked!!");
+                break;
+            case HIT:
+                combatPanel.logAction("Attack Landed!!");
+                break;
         }
         updateHeroInfo();
 
         if (hero.getHitPoints() <= 0) {
-            combatPanel.displayGameOver(hero.getName() + " has been defeated!");
             combatPanel.deathAnimation(true);
+            combatPanel.displayGameOver(hero.getName() + " has been defeated!");
         }
     }
 
     private void updateHeroInfo() {
-        String heroInfo = hero.getName() + " - HP: " + hero.getHitPoints() + "/" + hero.getMaxHitPoints() +
-                ", MP: " + hero.getMagicPoints() + "/" + hero.getMaxMagicPoints();
+        String heroInfo;
+        if (hero instanceof Mage mageHero){
+            heroInfo = mageHero.getName() + " - HP: " + mageHero.getHitPoints() + "/" + mageHero.getMaxHitPoints() +
+                    ", MP: " + mageHero.getMagicPoints() + "/" + mageHero.getMaxMagicPoints();
+        } else if (hero instanceof Priestess priestessHero){
+            heroInfo = priestessHero.getName() + " - HP: " + priestessHero.getHitPoints() + "/" + priestessHero.getMaxHitPoints() +
+                    ", MP: " + priestessHero.getMagicPoints() + "/" + priestessHero.getMaxMagicPoints();
+        } else {
+            heroInfo = hero.getName() + " - HP: " + hero.getHitPoints() + "/" + hero.getMaxHitPoints() +
+                    ", MP: " + 0 + "/" + 0;
+        }
         combatPanel.updateHeroInfo(heroInfo);
     }
 
