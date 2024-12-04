@@ -2,7 +2,13 @@ package model.PlayerInventory;
 
 import model.DungeonCharacters.Hero;
 
-public class Item {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Item implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final String myName;
     private final String myDescription;
     private final ItemType myType;

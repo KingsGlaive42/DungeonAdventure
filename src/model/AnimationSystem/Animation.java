@@ -1,13 +1,15 @@
 package model.AnimationSystem;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class Animation {
+public class Animation implements Serializable {
 
     private int myFrameCount;
-    private int myFrameDelay;
+    private final int myFrameDelay;
     private int myCurrentFrame;
     private final int myAnimationDirection;
     private final int myTotalFrames;
@@ -17,6 +19,13 @@ public class Animation {
     private final List<Frame> myFrames = new ArrayList<>();
 
     public Animation(final BufferedImage[] theFrames, final int theFrameDelay) {
+        if (theFrames == null || theFrames.length == 0) {
+            throw new IllegalArgumentException("Frame Array must not be null or empty.");
+        }
+        if (theFrameDelay <= 0) {
+            throw new IllegalArgumentException("Frame delay must be greater than 0.");
+        }
+
         this.myFrameDelay = theFrameDelay;
         this.isStopped = true;
 
@@ -25,14 +34,13 @@ public class Animation {
         }
 
         this.myFrameCount = 0;
-        this.myFrameDelay = theFrameDelay;
         this.myCurrentFrame = 0;
         this.myAnimationDirection = 1;
         this.myTotalFrames = this.myFrames.size();
 
     }
 
-    public void start() {
+    public synchronized void start() {
         if (!isStopped) {
             return;
         }
@@ -44,7 +52,7 @@ public class Animation {
         isStopped = false;
     }
 
-    public void stop() {
+    public synchronized void stop() {
         if (myFrames.isEmpty()) {
             return;
         }
@@ -52,7 +60,7 @@ public class Animation {
         isStopped = true;
     }
 
-    public void restart() {
+    public synchronized void restart() {
         if (myFrames.isEmpty()) {
             return;
         }
@@ -61,7 +69,7 @@ public class Animation {
         myCurrentFrame = 0;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         this.isStopped = true;
         this.myFrameCount = 0;
         this.myCurrentFrame = 0;
@@ -69,19 +77,18 @@ public class Animation {
 
     private void addFrame(final BufferedImage theFrame, final int theDuration) {
         if (theDuration <= 0) {
-            System.err.println("Invalid duration: " + theDuration);
-            throw new RuntimeException("Invalid duration: " + theDuration);
+            throw new IllegalArgumentException("Invalid duration: " + theDuration +". Must be greater than zero.");
         }
 
         myFrames.add(new Frame(theFrame, theDuration));
         myCurrentFrame = 0;
     }
 
-    public BufferedImage getSprite() {
+    public synchronized BufferedImage getSprite() {
         return myFrames.get(myCurrentFrame).getFrame();
     }
 
-    public void update() {
+    public synchronized void update() {
         if (!isStopped) {
             myFrameCount++;
 
@@ -98,6 +105,10 @@ public class Animation {
             }
         }
 
+    }
+
+    public List<Frame> getFrames() {
+        return Collections.unmodifiableList(myFrames);
     }
 
 }

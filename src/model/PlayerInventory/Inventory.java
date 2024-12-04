@@ -3,14 +3,17 @@ package model.PlayerInventory;
 import model.DungeonCharacters.Hero;
 import model.DungeonManager.Dungeon;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-import static model.PlayerInventory.ItemType.*;
+public class Inventory implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-public class Inventory {
     private final List<Item> myItems;
     private final Map<ItemType, Integer> myItemCounts;
     private final Dungeon myDungeon;

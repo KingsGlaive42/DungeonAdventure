@@ -1,5 +1,6 @@
 package model.DungeonManager;
 
+import controller.GameController;
 import model.AnimationSystem.Sprite;
 import model.Player.Player;
 import model.PlayerInventory.Item;
@@ -7,36 +8,67 @@ import model.PlayerInventory.ItemType;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.*;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
-public class Room {
+/**
+ * Represents a room in the dungeon.
+ * A Room can contain items, connect to other rooms, have doors, and be entered by players.
+ */
+public class Room implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    // File paths for loading assets
     private static final String FLOOR_SS_PATH = "src/resources/assets/Terrain/dungeon_floor.png";
     private static final String WALL_SS_PATH = "src/resources/assets/Terrain/dungeon_sprite_sheet.png";
+
+    // Room dimensions and constants
     private final static int ROOM_WIDTH = 17;
     private final static int ROOM_HEIGHT = 13;
     private static final int TILE_SIZE = 32;
+
     private static final Random myRandom = new Random();
 
+    // Sprites for the floor and wall textures
     private final Sprite myFloorSpritesheet = new Sprite();
     private final Sprite myWallSpritesheet = new Sprite();
+
+    // List of items in the room
     private final List<Item> myRoomItems = new ArrayList<>();
 
+    // Room coordinates
     private final int myX;
     private final int myY;
+
+    // Room properties
     private boolean hasPit;
     private boolean isVisited;
 
     private RoomType myRoomType;
-    private final BufferedImage[][] myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
+    private transient BufferedImage[][] myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
 
+    // Maps for storing connected room sand doors
     private final Map<DoorDirection, Room> myConnectedRooms = new HashMap<>();
     private final Map<DoorDirection, Door> myDoors = new HashMap<>();
 
-    Room(final int theX, final int theY, final RoomType theRoomType) {
+    /**
+     * Constructs a Room with specified coordinates and type.
+     *
+     * @param theX The X coordinate of the room.
+     * @param theY The Y coordinate of the room.
+     * @param theRoomType The type of the room.
+     * @throws IllegalArgumentException if theRoomType is null.
+     */
+    public Room(final int theX, final int theY, final RoomType theRoomType) {
+        if (theRoomType == null) {
+            throw new IllegalArgumentException("Room type cannot be null");
+        }
+
         myX = theX;
         myY = theY;
         myRoomType = theRoomType;
@@ -46,16 +78,36 @@ public class Room {
         initializeAnimations();
     }
 
+    /**
+     * Loads the sprite sheets for the floor and wall textures.
+     */
     private void loadSpriteSheets() {
-        myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
-        myWallSpritesheet.loadSprite(WALL_SS_PATH);
+        try {
+            myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
+            myWallSpritesheet.loadSprite(WALL_SS_PATH);
+        } catch (final Exception theException) {
+            throw new RuntimeException("Failed to load sprite sheets", theException);
+        }
+
     }
 
+    /**
+     * Initializes the floor tiles with random textures.
+     */
     private void initializeAnimations() {
         initializeMyTiles();
-
     }
 
+    /**
+     * Initializes the floor tiles array.
+     */
+    private void initializeMyTilesArray() {
+        myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
+    }
+
+    /**
+     * Randomly assigns a floor tile texture to each tile in the room.
+     */
     private void initializeMyTiles() {
         for (int i = 0; i < ROOM_WIDTH; i++) {
             for (int j = 0; j < ROOM_HEIGHT; j++) {
@@ -87,14 +139,36 @@ public class Room {
         }
     }
 
-    void connectRoom(final int theAdjX, final int theAdjY, final Room theRoom) {
-        DoorDirection direction = getDirection(theAdjX, theAdjY);
-        if (direction != null) {
-            myConnectedRooms.put(direction, theRoom);
-            myDoors.put(direction, new Door(direction));
+    /**
+     * Connects this room to an adjacent room.
+     *
+     * @param theAdjX The X coordinate difference to the adjacent room.
+     * @param theAdjY The Y coordinate difference to the adjacent room.
+     * @param theRoom The adjacent room to connect.
+     * @throws IllegalArgumentException if theRoom is null or if the adjacent coordinates are invalid.
+     */
+    public void connectRoom(final int theAdjX, final int theAdjY, final Room theRoom) {
+        if (theRoom == null) {
+            throw new IllegalArgumentException("Room cannot be null.");
         }
+
+        DoorDirection direction = getDirection(theAdjX, theAdjY);
+
+        if (direction == null) {
+            throw new IllegalArgumentException("Invalid adjacent coordinates: " + theAdjX + ", " + theAdjY);
+        }
+
+        myConnectedRooms.put(direction, theRoom);
+        myDoors.put(direction, new Door(direction));
     }
 
+    /**
+     * Determines the direction to the adjacent room based on the coordinate difference.
+     *
+     * @param dx The X coordinate difference.
+     * @param dy The Y coordinate difference.
+     * @return The DoorDirection to the adjacent room, or null if invalid.
+     */
     private DoorDirection getDirection(final int dx, final int dy) {
         if (dx == 1) return DoorDirection.RIGHT;
         if (dx == -1) return DoorDirection.LEFT;
@@ -103,28 +177,59 @@ public class Room {
         return null;
     }
 
-    DoorDirection checkPlayerCollisionWithDoor(final Player thePlayer) {
+    /**
+     * Checks if the player collides with any of the doors in this room.
+     *
+     * @param thePlayer The player to check for collisions.
+     * @return The direction of the door the player is colliding with, or null if none.
+     * @throws IllegalArgumentException if thePlayer is null.
+     */
+    public DoorDirection checkPlayerCollisionWithDoor(final Player thePlayer) {
+        if (thePlayer == null) {
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+
         for (Map.Entry<DoorDirection, Door> entry : myDoors.entrySet()) {
             if (entry.getValue().isPlayerColliding(thePlayer)) {
-                return entry.getKey(); // Return the direction of the door
+                return entry.getKey();
             }
         }
-        return null; // No collision
+        return null;
     }
 
-    void addDoor(final DoorDirection theDirection) {
+    /**
+     * Adds a door in the specified direction.
+     *
+     * @param theDirection The direction in which to add the door.
+     * @throws IllegalArgumentException if theDirection is null.
+     */
+    public void addDoor(final DoorDirection theDirection) {
+        if (theDirection == null) {
+            throw new IllegalArgumentException("DoorDirection cannot be null");
+        }
+
         if (!myDoors.containsKey(theDirection)) {
             myDoors.put(theDirection, new Door(theDirection));
         }
     }
 
-    public void playerEnters(final Player thePlayer) {
+    /**
+     * Handles the player entering the room.
+     *
+     * @param theGameController The game controller managing the inventory and actions.
+     * @throws IllegalArgumentException if theGameController is null.
+     */
+    public void playerEnters(final GameController theGameController) {
+        if (theGameController == null) {
+            throw new IllegalArgumentException("The gameController cannot be null.");
+        }
+
         if (!isVisited) {
             if (this.hasPit) {
                 System.out.println("Fell in pit");
             } else {
                 for (Item item : myRoomItems) {
-                    thePlayer.getMyInventory().addItem(item);
+                    theGameController.getInventory().addItem(item);
                 }
                 myRoomItems.clear();
             }
@@ -132,43 +237,105 @@ public class Room {
         }
     }
 
+    /**
+     * Adds an item to the room.
+     *
+     * @param theItem The item to add.
+     * @throws IllegalArgumentException if theItem is null.
+     */
     public void addItem(Item theItem) {
+        if (theItem == null) {
+            throw new IllegalArgumentException("Item cannot be null");
+        }
         myRoomItems.add(theItem);
     }
 
+    /**
+     * Returns a list of items in the room.
+     *
+     * @return An unmodifiable list of items in the room.
+     */
     public List<Item> getRoomItems() {
-        return myRoomItems;
+        return Collections.unmodifiableList(myRoomItems);
     }
 
-    int getX() {
+    /**
+     * Returns the X coordinate of the room.
+     *
+     * @return The X coordinate of the room.
+     */
+    public int getX() {
         return myX;
     }
 
-    int getY() {
+    /**
+     * Returns the Y coordinate of the room.
+     *
+     * @return The Y coordinate of the room.
+     */
+    public int getY() {
         return myY;
     }
 
-    Map<DoorDirection, Room> getConnectedRooms() {
-        return myConnectedRooms;
+    /**
+     * Returns the map of connected rooms.
+     *
+     * @return An unmodifiable map of connected rooms.
+     */
+    public Map<DoorDirection, Room> getConnectedRooms() {
+        return Collections.unmodifiableMap(myConnectedRooms);
     }
 
-    void setType(final RoomType theRoomType) {
+    /**
+     * Sets the type of the room.
+     *
+     * @param theRoomType The type of the room.
+     * @throws IllegalArgumentException if theRoomType is null.
+     */
+    public void setType(final RoomType theRoomType) {
+        if (theRoomType == null) {
+            throw new IllegalArgumentException("Room type cannot be null");
+        }
         myRoomType = theRoomType;
     }
 
-    RoomType getRoomType() {
+    /**
+     * Returns the type of the room.
+     *
+     * @return The type of the room.
+     */
+    public RoomType getRoomType() {
         return myRoomType;
     }
 
+    /**
+     * Checks if the room has a pit.
+     *
+     * @return True if the room has a pit, false otherwise.
+     */
     public boolean getPit() {
         return hasPit;
     }
 
+    /**
+     * Sets the pit status of the room.
+     *
+     * @param thePit True to set the room as having a pit, false otherwise.
+     */
     public void setPit(boolean thePit) {
         this.hasPit = thePit;
     }
 
+    /**
+     * Draws the room.
+     *
+     * @param theGraphics2D The Graphics2D context for drawing.
+     * @throws IllegalArgumentException if theGraphics2D is null.
+     */
     public void draw(final Graphics2D theGraphics2D) {
+        if (theGraphics2D == null) {
+            throw new IllegalArgumentException("The Graphics2D Cannot be null.");
+        }
         theGraphics2D.setColor(myRoomType == RoomType.START ? Color.GREEN :
                             myRoomType == RoomType.END ? Color.RED :
                             myRoomType == RoomType.OBJECTIVE ? Color.YELLOW : Color.DARK_GRAY);
@@ -189,7 +356,17 @@ public class Room {
         }
     }
 
+    /**
+     * Draws the floor of the room.
+     *
+     * @param theGraphics2D The Graphics2D context for drawing.
+     */
     private void drawFloor(final Graphics2D theGraphics2D) {
+        if (myFloorTiles == null) {
+            System.err.println("myFloorTiles in Room is null. Skipping floor rendering.");
+            return;
+        }
+
         for (int i = 0; i < ROOM_WIDTH; i++) {
             for (int j = 0; j < ROOM_HEIGHT; j++) {
                 theGraphics2D.drawImage(myFloorTiles[i][j], i * 32, j * 32, 32, 32, null);
@@ -197,6 +374,11 @@ public class Room {
         }
     }
 
+    /**
+     * Draws the walls of the room.
+     *
+     * @param theGraphics2D The Graphics2D context for drawing.
+     */
     private void drawWalls(final Graphics2D theGraphics2D) {
         for (int i = 0; i < ROOM_WIDTH; i++) {
             theGraphics2D.drawImage(myWallSpritesheet.getSprite(4, 1), i * 32, 0, 32, 32, null);
@@ -207,5 +389,37 @@ public class Room {
             theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5), 0, j * 32, 32, 32, null);
             theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5), 512, j * 32, 32, 32, null);
         }
+    }
+
+    /**
+     * Checks if the room has a door in the specified direction.
+     *
+     * @param theDirection The direction to check for a door.
+     * @return True if there is a door in the given direction, false otherwise.
+     */
+    public boolean hasDoor(final DoorDirection theDirection) {
+        return myDoors.containsKey(theDirection);
+    }
+
+    /**
+     * Custom deserialization method for the Room class.
+     *
+     * @param in The ObjectInputStream to read data from.
+     * @throws IOException if an I/O error occurs.
+     * @throws ClassNotFoundException if the class for an object being restored cannot be found.
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        initializeMyTilesArray();
+        //System.out.println("Reinitialized myFloorTiles.");
+
+        loadSpriteSheets();
+        //System.out.println("Reloaded sprite sheets.");
+
+        initializeAnimations();
+        //System.out.println("Initialized animations.");
     }
 }

@@ -2,7 +2,7 @@ package view;
 
 import controller.GameStateManager;
 import controller.InputListener;
-import utilities.GameConfig;
+import model.GameConfig;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -48,8 +48,7 @@ public class GamePanel extends JPanel {
 
         @Override
         public void mouseClicked(final MouseEvent theMouseEvent) {
-            myUI.handleMenuStateClick(theMouseEvent.getPoint());
-            myUI.handleGameStateClick(theMouseEvent.getPoint());
+            myUI.handleClicks(theMouseEvent.getPoint());
             repaint();
         }
     }

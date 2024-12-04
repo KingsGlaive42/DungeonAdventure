@@ -1,6 +1,6 @@
 package controller;
 
-import utilities.SoundManager;
+import model.GameConfig;
 import view.UI;
 
 import java.awt.*;
@@ -11,18 +11,22 @@ public class GameStateManager {
         GAME,
         PAUSE,
         COMBAT,
-        OPTION
+        OPTION,
+        LOAD,
+        SAVE
     }
 
     private final GameController myGameController;
+    private final transient SoundManager mySoundManager;
     private UI myUI;
 
     private State myCurrentState;
 
     public GameStateManager(final GameController theGameController) {
         myGameController = theGameController;
-        SoundManager mySoundManager = SoundManager.getInstance();
+        mySoundManager = SoundManager.getInstance();
         myCurrentState = State.MENU;
+        onEnterState(State.MENU);
     }
 
     public State getCurrentState() { return myCurrentState; }
@@ -36,14 +40,52 @@ public class GameStateManager {
     }
 
     private void onEnterState(final State theState) {
-
+        switch (theState) {
+            case MENU:
+                mySoundManager.playBackgroundMusic(GameConfig.MENU_THEME);
+                break;
+            case GAME:
+                mySoundManager.playBackgroundMusic(GameConfig.GAME_THEME);
+                break;
+            case LOAD:
+                break;
+            case SAVE:
+                break;
+            case PAUSE:
+                break;
+            case COMBAT:
+                mySoundManager.playBackgroundMusic(GameConfig.COMBAT_THEME);
+                break;
+            case OPTION:
+                mySoundManager.playBackgroundMusic(GameConfig.MENU_THEME);
+                break;
+        }
     }
 
     private void onExitState(final State theState) {
+        mySoundManager.stopBackgroundMusic();
 
+        switch (theState) {
+            case MENU:
+                break;
+            case GAME:
+                break;
+            case LOAD:
+                break;
+            case SAVE:
+                break;
+            case PAUSE:
+                break;
+            case COMBAT:
+                break;
+            case OPTION:
+                break;
+        }
     }
 
     public void update() {
+        handleInput();
+
         switch (myCurrentState) {
             case MENU:
                 break;
@@ -64,6 +106,12 @@ public class GameStateManager {
             case MENU:
                 myUI.drawTitleScreen(theGraphics2D);
                 break;
+            case LOAD:
+                myUI.drawLoadScreen(theGraphics2D);
+                break;
+            case SAVE:
+                myUI.drawSaveScreen(theGraphics2D);
+                break;
             case GAME:
                 myGameController.draw(theGraphics2D);
                 break;
@@ -75,6 +123,16 @@ public class GameStateManager {
                 break;
             case OPTION:
                 break;
+        }
+    }
+
+    private void handleInput() {
+        if (InputListener.getInstance().isPauseJustPressed()) {
+            if (myCurrentState == State.PAUSE) {
+                setState(State.GAME);
+            } else if (myCurrentState == State.GAME) {
+                setState(State.PAUSE);
+            }
         }
     }
 

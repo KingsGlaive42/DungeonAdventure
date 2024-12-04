@@ -2,9 +2,14 @@ package model.DungeonCharacters;
 
 import model.Combat.CombatEngine;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Random;
 
-public class Thief extends Hero {
+public class Thief extends Hero implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     public Thief(final String theName) {
         super(theName, 75, 20, 40, 6, 0.8, 0.4);
     }

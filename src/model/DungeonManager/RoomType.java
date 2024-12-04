@@ -1,6 +1,6 @@
 package model.DungeonManager;
 
-enum RoomType {
+public enum RoomType {
     START,
     END,
     OBJECTIVE,
