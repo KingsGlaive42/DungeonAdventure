@@ -3,11 +3,12 @@ package model.DungeonCharacters;
 import model.Combat.AttackResult;
 import model.Combat.CombatEngine;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import static java.lang.Math.min;
 
-public class Priestess extends Hero {
+public class Priestess extends Hero implements Serializable {
     private int myMagicPoints;
     private int myMaxMagicPoints;
 

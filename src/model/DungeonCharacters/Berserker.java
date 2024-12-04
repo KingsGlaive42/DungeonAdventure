@@ -2,7 +2,9 @@ package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
 
-public class Berserker extends Hero {
+import java.io.Serializable;
+
+public class Berserker extends Hero implements Serializable {
     public Berserker(final String theName) {
         super(theName, 200, 45, 70, 3, 0.7, 0.3);
     }

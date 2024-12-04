@@ -2,9 +2,10 @@ package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public abstract class DungeonCharacter {
+public abstract class DungeonCharacter implements Serializable {
     private String myName;
     private int myCurrentHitPoints;
     private int myMinDamage;

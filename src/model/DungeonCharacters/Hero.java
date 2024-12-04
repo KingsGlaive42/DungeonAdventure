@@ -2,9 +2,10 @@ package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Hero extends DungeonCharacter {
+public class Hero extends DungeonCharacter implements Serializable {
     private double myChanceToBlock;
     private final double myBaseChanceToBlock;
     private final Random rand;
