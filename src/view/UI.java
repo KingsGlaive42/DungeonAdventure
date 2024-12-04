@@ -3,7 +3,6 @@ package view;
 import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
-import model.PlayerInventory.Inventory;
 import model.SaveGame.SaveFileManager;
 
 import java.awt.*;
@@ -18,7 +17,7 @@ public class UI {
     private final LoadGameScreen myLoadGameScreen;
     private final SaveGameScreen mySaveGameScreen;
 
-    public UI(final GameStateManager theGameStateManager, final Inventory theInventory, final AssetManager theAssetManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
+    public UI(final GameStateManager theGameStateManager, final AssetManager theAssetManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
         this.myGameStateManager = theGameStateManager;
 
         this.myTitleScreen = new TitleScreen(theAssetManager, theGameStateManager);
