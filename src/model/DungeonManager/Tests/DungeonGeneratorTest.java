@@ -67,7 +67,7 @@ class DungeonGeneratorTest {
                 .forEach(room -> {
                     List<Item> items = room.getRoomItems();
                     assertFalse(items.isEmpty(), "OBJECTIVE rooms should have items.");
-                    assertEquals(ItemType.PILLAR, items.getFirst().getItemType(), "OBJECTIVE rooms should contain a pillar item.");
+                    assertEquals(ItemType.PILLAR, items, "OBJECTIVE rooms should contain a pillar item.");
                 });
 
         dungeon.values().stream()

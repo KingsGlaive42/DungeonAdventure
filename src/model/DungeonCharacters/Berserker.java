@@ -4,15 +4,31 @@ import model.Combat.AttackResult;
 
 import java.io.Serializable;
 
+/**
+ * This is the Berserker Class.
+ *
+ * @author Thomas Le
+ */
 public class Berserker extends Hero implements Serializable {
+
+    /**
+     * Berserker Constructor.
+     *
+     * @param theName Name of Berserker.
+     */
     public Berserker(final String theName) {
         super(theName, 200, 45, 70, 3, 0.7, 0.3);
     }
 
+    /**
+     * Berserker Class' unique special skill.
+     *
+     * @param theTarget the target of the attack.
+     * @return attack result.
+     */
     @Override
     public AttackResult useSpecialSkill(final DungeonCharacter theTarget) {
-        //System.out.println(myName + " used Blood Fiend!"); //Replace with however we'll announce it
-        this.takeDamage(25);
+        this.takeDamage(10);
         int tempMin = getMinDamage();
         int tempMax = getMaxDamage();
         setMinDamage(65);

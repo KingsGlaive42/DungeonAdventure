@@ -105,7 +105,7 @@ class RoomTest {
 
         List<Item> roomItems = room.getRoomItems();
         assertEquals(1, roomItems.size());
-        assertEquals(item, roomItems.getFirst());
+        assertEquals(item, roomItems);
     }
 
     @Test

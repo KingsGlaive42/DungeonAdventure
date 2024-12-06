@@ -1,5 +1,7 @@
 package model.DungeonCharacters;
 
+import model.Combat.AttackResult;
+
 public abstract class Monster extends DungeonCharacter{
 
     protected double myHealChance;
@@ -15,14 +17,27 @@ public abstract class Monster extends DungeonCharacter{
         this.myMaxHeal = theMaxHeal;
     }
 
-    public void heal() {
+    @Override
+    public AttackResult takeDamage(final int theDamage) {
+        int newHitPoints = getHitPoints() - theDamage;
+        if (newHitPoints > 0) {
+            setHitPoints(newHitPoints);
+            int healAmount = heal();
+            if (healAmount > 0) {
+                return AttackResult.HEAL;
+            }
+        } else {
+            setHitPoints(0);
+        }
+        return AttackResult.HIT;
+    }
+
+    public int heal() {
         if (Math.random() < myHealChance) {
             int healAmount = myMinHeal + (int) (Math.random() * (myMaxHeal - myMinHeal + 1));
             this.setHitPoints(Math.min(this.getHitPoints() + healAmount, getMaxHitPoints()));
-            System.out.println(this.getName() + " healed by " + healAmount + " points. Current HP: " + this.getHitPoints());
-
-        } else {
-            System.out.println(this.getName() + " healing failed.");
+            return healAmount;
         }
+        return 5;
     }
 }

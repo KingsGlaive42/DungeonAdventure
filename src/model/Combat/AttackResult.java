@@ -5,5 +5,6 @@ public enum AttackResult {
     MISS,
     BONK,
     HIT,
-    HALF_HIT
+    HALF_HIT,
+    HEAL
 }
