@@ -113,7 +113,23 @@ public class CombatController {
         if (hero instanceof Priestess) {
             combatPanel.showHealOptions();
         } else {
-            combatPanel.logAction(hero.getName() + " uses special skill on " + enemy.getName());
+            switch (hero.getClass().getSimpleName()) {
+                case "Warrior":
+                    combatPanel.logAction(hero.getName() + " uses Crushing Blow on " + enemy.getName());
+                    break;
+
+                case "Mage":
+                    combatPanel.logAction(hero.getName() + " casts Ultima on " + enemy.getName());
+                    break;
+
+                case "Thief":
+                    combatPanel.logAction(hero.getName() + " sneaks up on " + enemy.getName());
+                    break;
+
+                case "Berserker":
+                    combatPanel.logAction(hero.getName() + " uses Blood Fiend on " + enemy.getName());
+                    break;
+            }
             combatEngine.performSpecialSkill(hero, enemy);
             updateEnemyInfo();
 

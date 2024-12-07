@@ -14,6 +14,7 @@ public class Warrior extends Hero implements Serializable {
         super(theName, 125, 35, 60, 4, 0.8, 0.2);
     }
 
+    @Override
     public AttackResult useSpecialSkill(final DungeonCharacter theTarget) {
         //System.out.println(myName + " used Crushing Blow!"); //Replace with however we'll announce it
         Random rand = new Random();

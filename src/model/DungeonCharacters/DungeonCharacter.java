@@ -69,8 +69,6 @@ public abstract class DungeonCharacter implements Serializable {
     public int getMaxDamage() { return myMaxDamage; }
     public void setMaxDamage(final int theMaxDamage) { this.myMaxDamage = theMaxDamage; }
     public double getChanceToHit() { return myChanceToHit; }
-    public void setChanceToHit(final double theChanceToHit) { this.myChanceToHit = theChanceToHit; }
-    public boolean isAlive() { return myCurrentHitPoints > 0; }
     public int getMaxHitPoints() { return myMaxHitPoints; }
 
 }
