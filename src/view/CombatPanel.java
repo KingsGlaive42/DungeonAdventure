@@ -398,7 +398,7 @@ public class CombatPanel extends JFrame {
 
     //For testing
     public static void main(String[] args) {
-        Hero theHero = new Priestess("Terra");
+        Hero theHero = new Berserker("Terra");
         DungeonCharacter enemy = new Ogre(100, 15, 25, 10, 0.6,
                 0.4, 10, 20); //temp
 
