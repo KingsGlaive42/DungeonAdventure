@@ -62,6 +62,18 @@ public class Main {
         theAssetManager.loadAsset("inventoryButton", "src/resources/assets/Potato_seeds.png");
         theAssetManager.loadAsset("slotButton", "src/resources/test_image.png");
         theAssetManager.loadAsset("backButton", "src/resources/assets/Buttons/backButton.png");
+        theAssetManager.loadAsset("abstractionImage", "src/resources/assets/Buttons/AbstractionImage.png");
+        theAssetManager.loadAsset("encapsulationImage", "src/resources/assets/Buttons/EncapsulationImage.png");
+        theAssetManager.loadAsset("inheritanceImage", "src/resources/assets/Buttons/InheritanceButton.png");
+        theAssetManager.loadAsset("polymorphismImage", "src/resources/assets/Buttons/PolymorphismButton.png");
+        theAssetManager.loadAsset("warriorImage", "src/resources/test_image.png");
+        theAssetManager.loadAsset("thiefImage", "src/resources/test_image.png");
+        theAssetManager.loadAsset("priestessImage", "src/resources/test_image.png");
+        theAssetManager.loadAsset("createGameButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("easyButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("mediumButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("hardButton", "src/resources/test_image.png");
+
     }
 
     private static void testSaveFunctionality(SaveFileManager saveFileManager, GameState gameState) {

@@ -14,6 +14,7 @@ public class GameStateManager {
         OPTION,
         LOAD,
         SAVE,
+        GAME_CREATE
     }
 
     private final GameController myGameController;
@@ -44,44 +45,26 @@ public class GameStateManager {
 
     private void onEnterState(final State theState) {
         switch (theState) {
-            case MENU:
+            case MENU, OPTION:
                 mySoundManager.playBackgroundMusic(GameConfig.MENU_THEME);
                 break;
             case GAME:
                 mySoundManager.playBackgroundMusic(GameConfig.GAME_THEME);
                 break;
-            case LOAD:
-                break;
-            case SAVE:
-                break;
-            case PAUSE:
+            case LOAD, SAVE, GAME_CREATE, PAUSE:
                 break;
             case COMBAT:
                 mySoundManager.playBackgroundMusic(GameConfig.COMBAT_THEME);
-                break;
-            case OPTION:
-                mySoundManager.playBackgroundMusic(GameConfig.MENU_THEME);
                 break;
         }
     }
 
     private void onExitState(final State theState) {
         switch (theState) {
-            case MENU:
+            case MENU, COMBAT:
                 mySoundManager.stopBackgroundMusic();
                 break;
-            case GAME:
-                break;
-            case LOAD:
-                break;
-            case SAVE:
-                break;
-            case PAUSE:
-                break;
-            case COMBAT:
-                mySoundManager.stopBackgroundMusic();
-                break;
-            case OPTION:
+            case GAME, LOAD, SAVE, PAUSE, OPTION, GAME_CREATE:
                 break;
         }
     }
@@ -90,16 +73,10 @@ public class GameStateManager {
         handleInput();
 
         switch (myCurrentState) {
-            case MENU:
+            case MENU, PAUSE, OPTION, COMBAT:
                 break;
             case GAME:
                 myGameController.update();
-                break;
-            case PAUSE:
-                break;
-            case COMBAT:
-                break;
-            case OPTION:
                 break;
         }
     }
@@ -129,7 +106,10 @@ public class GameStateManager {
             case COMBAT:
                 break;
             case OPTION:
+                myUI.drawOptionScreen(theGraphics2D);
                 break;
+            case GAME_CREATE:
+                myUI.drawGameCreateScreen(theGraphics2D);
         }
     }
 
