@@ -15,6 +15,11 @@ public class GameScreen {
     private final UIButton myMapButton;
     private final UIButton myInventoryButton;
 
+    private final UIButton myFirstPillarSlot;
+    //private final UIButton mySecondPillerSlot;
+    //private final UIButton myThirdPillarSlot;
+    //private final UIButton myFourthPillerSlot;
+
     private boolean isMapVisible;
     private boolean isInventoryVisible;
 
@@ -26,6 +31,8 @@ public class GameScreen {
 
         isMapVisible = false;
         isInventoryVisible = false;
+
+        myFirstPillarSlot = new UIButton(theAssetManager.getAsset("abstractionImage"), new Rectangle(TILE_SIZE * 9, 215, TILE_SIZE, TILE_SIZE));
     }
 
     public void draw(final Graphics2D theGraphics2D) {
@@ -39,6 +46,11 @@ public class GameScreen {
     public void handleHoverUpdate(final Point theMousePoint) {
         myMapButton.setHovered(myMapButton.contains(theMousePoint));
         myInventoryButton.setHovered(myInventoryButton.contains(theMousePoint));
+
+        if (isInventoryVisible) {
+            myFirstPillarSlot.setHovered(myFirstPillarSlot.contains(theMousePoint));
+
+        }
     }
 
     public void handleClick(final Point theClickPoint) {
@@ -51,12 +63,15 @@ public class GameScreen {
     }
 
     private void drawMapScreen(final Graphics2D theGraphics2D) {
-        drawSubWindow(TILE_SIZE, TILE_SIZE * 7, TILE_SIZE * 7, theGraphics2D);
+        drawSubWindow(TILE_SIZE, TILE_SIZE,TILE_SIZE * 7, TILE_SIZE * 7, theGraphics2D);
     }
 
     private void drawInventoryScreen(final Graphics2D theGraphics2D) {
-        drawSubWindow(TILE_SIZE * 8, TILE_SIZE * 5, TILE_SIZE * 11, theGraphics2D);
+        drawSubWindow(TILE_SIZE * 8, TILE_SIZE, TILE_SIZE * 7, TILE_SIZE * 7, theGraphics2D);
+        drawSubWindow(TILE_SIZE * 8, TILE_SIZE * 8, TILE_SIZE * 7, TILE_SIZE * 3, theGraphics2D);
+
         List<Item> items = myGameController.getInventory().getItems();
+
         int itemY = TILE_SIZE + 20;
         for (Item item : items) {
             theGraphics2D.drawString(item.getName(), TILE_SIZE * 8 + 10, itemY);
@@ -73,11 +88,11 @@ public class GameScreen {
         isInventoryVisible = !isInventoryVisible;
     }
 
-    private void drawSubWindow(final int theX, final int theWidth, final int theHeight, final Graphics2D theGraphics2D) {
+    private void drawSubWindow(final int theX, final int theY, final int theWidth, final int theHeight, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 210));
-        theGraphics2D.fillRoundRect(theX, TILE_SIZE, theWidth, theHeight, 35, 35);
+        theGraphics2D.fillRoundRect(theX, theY, theWidth, theHeight, 35, 35);
         theGraphics2D.setColor(Color.WHITE);
         theGraphics2D.setStroke(new BasicStroke(5));
-        theGraphics2D.drawRoundRect(theX + 5, TILE_SIZE + 5, theWidth - 10, theHeight - 10, 25, 25);
+        theGraphics2D.drawRoundRect(theX + 5, theY + 5, theWidth - 10, theHeight - 10, 25, 25);
     }
 }

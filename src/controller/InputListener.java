@@ -13,6 +13,9 @@ public class InputListener implements KeyListener{
     private boolean isUpPressed, isDownPressed, isLeftPressed, isRightPressed, isPausedPressed;
     private boolean wasPausePressed = false;
 
+    private boolean isTypingName = false;
+    private final StringBuilder typedName = new StringBuilder();
+
     private static InputListener myInstance;
 
     public static InputListener getInstance() {
@@ -26,7 +29,15 @@ public class InputListener implements KeyListener{
 
     @Override
     public void keyTyped(final KeyEvent theKey) {
+        if (isTypingName) {
+            char keyChar = theKey.getKeyChar();
 
+            if (Character.isLetterOrDigit(keyChar) || keyChar == ' ') {
+                    typedName.append(keyChar);
+            } else if (keyChar == '\b' && !typedName.isEmpty()) {
+                    typedName.deleteCharAt(typedName.length() - 1);
+            }
+        }
     }
 
     @Override
@@ -98,7 +109,19 @@ public class InputListener implements KeyListener{
         return false;
     }
 
-    public void setLeftPressed(final boolean isLeftPressed) {
-        this.isLeftPressed = isLeftPressed;
+    public void setLeftPressed(final boolean isPressed) {
+        this.isLeftPressed = isPressed;
+    }
+
+    public void setTypingName(final boolean isTyping) {
+        isTypingName = isTyping;
+    }
+
+    public String getTypedName() {
+        return typedName.toString();
+    }
+
+    public void clearTypedName() {
+        typedName.setLength(0);
     }
 }
