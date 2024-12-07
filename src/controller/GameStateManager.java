@@ -14,7 +14,8 @@ public class GameStateManager {
         OPTION,
         LOAD,
         SAVE,
-        GAME_CREATE
+        GAME_CREATE,
+        LOADING_GAME
     }
 
     private final GameController myGameController;
@@ -110,6 +111,10 @@ public class GameStateManager {
                 break;
             case GAME_CREATE:
                 myUI.drawGameCreateScreen(theGraphics2D);
+                break;
+            case LOADING_GAME:
+                myUI.drawLoadingGameScreen(theGraphics2D);
+                break;
         }
     }
 
