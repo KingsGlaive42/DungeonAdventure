@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class UIButton {
-    private final BufferedImage myImage;
+    private BufferedImage myImage;
     private final Rectangle myBounds;
     private boolean isHovered;
 
@@ -30,5 +30,9 @@ public class UIButton {
 
     public boolean contains(final Point theClickPoint) {
         return myBounds.contains(theClickPoint);
+    }
+
+    public void setImage(final BufferedImage theImage) {
+        myImage = theImage;
     }
 }

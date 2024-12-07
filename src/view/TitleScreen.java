@@ -44,7 +44,7 @@ public class TitleScreen {
 
     public void handleClick(final Point theClickPoint) {
         if (myPlayButton.contains(theClickPoint)) {
-            myGameStateManager.setState(GameStateManager.State.GAME);
+            myGameStateManager.setState(GameStateManager.State.GAME_CREATE);
         } else if (myLoadButton.contains(theClickPoint)) {
             myGameStateManager.setState(GameStateManager.State.LOAD);
         } else if (myOptionsButton.contains(theClickPoint)) {
