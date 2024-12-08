@@ -1,5 +1,6 @@
 package view;
 
+import controller.CombatController;
 import controller.GameController;
 import controller.GameEngine;
 import controller.GameStateManager;
@@ -36,19 +37,21 @@ public class Main {
         GameController gameController = new GameController(gameState.getMyPlayer(), gameState.getMyDungeon(), gameState.getMyInventory());
         GameStateManager gameStateManager = new GameStateManager(gameController);
         UI ui = new UI(gameStateManager, assetManager, saveFileManager, gameController);
+        CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);
 
-        GamePanel gamePanel = new GamePanel(gameStateManager, ui);
+        CardLayoutManager cardLayoutManager = new CardLayoutManager(combatController, gameStateManager, ui);
+
         gameController.setUI(ui);
         gameStateManager.setUI(ui);
 
-        window.add(gamePanel);
+        window.add(cardLayoutManager.getCardPanel());
 
         window.pack(); // sizes window to fit preferred size and layouts of subcomponents
 
         window.setLocationRelativeTo(null); //display at center of screen
         window.setVisible(true);
 
-        GameEngine engine = new GameEngine(gamePanel, gameStateManager);
+        GameEngine engine = new GameEngine(cardLayoutManager.getGamePanel(), gameStateManager);
         engine.startGame();
     }
 

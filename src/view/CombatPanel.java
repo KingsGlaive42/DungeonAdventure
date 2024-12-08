@@ -20,7 +20,7 @@ import model.GameConfig;
  *
  * @author Thomas Le
  */
-public class CombatPanel extends JFrame {
+public class CombatPanel extends JPanel {
     private final JLabel heroInfo;
     private final JLabel enemyInfo;
     private final JTextArea actionLog;
@@ -47,12 +47,9 @@ public class CombatPanel extends JFrame {
     public CombatPanel(final CombatController combatController) {
         this.combatController = combatController;
 
-        setTitle("Combat Screen");
         setSize(new Dimension(GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT));
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        setResizable(false);
 
         // Create Hero and Enemy info panels
         heroInfo = new JLabel("Hero Info");
@@ -186,7 +183,7 @@ public class CombatPanel extends JFrame {
         // Add listeners for buttons
         addActionListeners();
 
-        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /**
@@ -505,14 +502,20 @@ public class CombatPanel extends JFrame {
     //For testing
     public static void main(String[] args) {
         Hero theHero = new Priestess("Terra");
-        Monster enemy = new Skeleton(100, 30, 60, 10, 0.6,
-                0.4, 10, 20); //temp
+        Monster enemy = new Skeleton(100, 30, 60, 10, 0.6, 0.4, 10, 20);
 
         CombatController combatController = new CombatController(theHero, enemy);
 
         SwingUtilities.invokeLater(() -> {
-            CombatPanel screen = combatController.getCombatPanel();
-            screen.setVisible(true);
+            // Create the CombatPanel with the combatController
+            CombatPanel combatPanel = new CombatPanel(combatController);
+
+            // Create a JFrame and set CombatPanel as the content pane
+            JFrame frame = new JFrame("Combat Screen");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Ensures the window closes properly
+            frame.setSize(new Dimension(GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT));  // Set frame size
+            frame.setContentPane(combatPanel);  // Set the CombatPanel as the content
+            frame.setVisible(true);  // Make the frame visible
         });
     }
 }
