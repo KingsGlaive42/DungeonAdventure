@@ -1,9 +1,7 @@
 package view;
 
-import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
-import model.DungeonManager.Dungeon;
 import model.Player.Player;
 
 import java.awt.*;
@@ -13,8 +11,7 @@ import static model.GameConfig.theGraphics2D;
 import static model.GameConfig.NUM_CHARACTERS;
 
 public class GameCreateScreen {
-    private final GameController myGameController;
-    private final GameStateManager myGameStateManager;
+    private final UI myUI;
 
     private UIButton[] myCharacterSelectButtons;
     private final UIButton myCreateGameButton;
@@ -32,9 +29,8 @@ public class GameCreateScreen {
     private final UIButton myHardDifficultyButton;
 
 
-    public GameCreateScreen(final AssetManager theAssetManager, final GameController theGameController, final GameStateManager theGameStateManager) {
-        myGameController = theGameController;
-        myGameStateManager = theGameStateManager;
+    public GameCreateScreen(final UI theUI, final AssetManager theAssetManager) {
+        myUI = theUI;
 
         createCharacterButtons(theAssetManager);
 
@@ -108,9 +104,7 @@ public class GameCreateScreen {
 
         if (myCreateGameButton.contains(theClickPoint)) {
             if (isCharacterSelected && !myPlayerName.isEmpty()) {
-                myGameController.setMyPlayer(new Player(mySelectedCharacter, myPlayerName));
-                myGameController.setMyDungeon(new Dungeon(3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty));
-                myGameStateManager.setState(GameStateManager.State.GAME);
+                myUI.loadGame(new Player(mySelectedCharacter, myPlayerName), 3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty);
             } else {
                 System.out.println("Please select a character and enter a name.");
             }
