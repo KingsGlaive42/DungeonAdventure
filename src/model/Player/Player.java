@@ -366,7 +366,7 @@ public class Player extends GameObject implements Serializable {
         }
     }
 
-    private void addToInventory(final Item theItem) {
+    public void addToInventory(final Item theItem) {
         myInventory.addItem(theItem);
     }
 

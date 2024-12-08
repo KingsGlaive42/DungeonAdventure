@@ -24,7 +24,8 @@ public class Room implements Serializable {
     private final static int ROOM_WIDTH = 17;
     private final static int ROOM_HEIGHT = 13;
     private static final int TILE_SIZE = 32;
-    private static final Random myRandom = new Random();
+    private static final Random ROOM_SPECIFIC_RANDOM = new Random();
+    private final Random myRandom = new Random();
 
     private final Sprite myFloorSpritesheet = new Sprite();
     private final Sprite myWallSpritesheet = new Sprite();
@@ -76,25 +77,25 @@ public class Room implements Serializable {
                 int rng = myRandom.nextInt(100);
 
                 if (rng < 70) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 0, TILE_SIZE);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 0);
                 }
                 else if (rng < 77) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 0, TILE_SIZE);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 0);
                 }
                 else if (rng < 84) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(3, 0, TILE_SIZE);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(3, 0);
                 }
                 else if (rng < 91) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 0, TILE_SIZE);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 0);
                 }
                 else if (rng < 94) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 1, TILE_SIZE);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(1, 1);
                 }
                 else if (rng < 96) {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 1, TILE_SIZE);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(4, 1);
                 }
                 else {
-                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 2, TILE_SIZE);
+                    myFloorTiles[i][j] = myFloorSpritesheet.getSprite(2, 2);
                 }
 
             }
@@ -132,6 +133,21 @@ public class Room implements Serializable {
         return null; // No collision
     }
 
+    public Monster checkPlayerCollisionWithMonsters(Player thePlayer) {
+        for (Monster monster : myRoomMonsters) {
+            if (isPlayerCollidingWithMonster(thePlayer, monster)) {
+                return monster;
+            }
+        }
+        return null;
+    }
+
+    private boolean isPlayerCollidingWithMonster(Player thePlayer, Monster theMonster) {
+        Rectangle playerbounds = new Rectangle((int) thePlayer.getX(), (int) thePlayer.getY(), TILE_SIZE*2, TILE_SIZE*2);
+        Rectangle monsterBounds = new Rectangle(theMonster.getMonsterX(), theMonster.getMonsterY(), TILE_SIZE*2, TILE_SIZE*2);
+        return playerbounds.intersects(monsterBounds);
+    }
+
     void addDoor(final DoorDirection theDirection) {
         if (theDirection == null) {
             throw new IllegalArgumentException("DoorDirection cannot be null");
@@ -148,7 +164,7 @@ public class Room implements Serializable {
                 System.out.println("Fell in pit");
             } else {
                 for (Item item : myRoomItems) {
-                    thePlayer.getMyInventory().addItem(item);
+                    thePlayer.addToInventory(item);
                 }
                 myRoomItems.clear();
                 placeMonsters();
@@ -163,6 +179,8 @@ public class Room implements Serializable {
 
     public void addMonster(Monster theMonster) {
         myRoomMonsters.add(theMonster);
+        //System.out.println("Monster added to room: " + myRoomType);
+        //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
     }
 
     public List<Item> getRoomItems() {
@@ -189,7 +207,7 @@ public class Room implements Serializable {
         myRoomType = theRoomType;
     }
 
-    RoomType getRoomType() {
+    public RoomType getRoomType() {
         return myRoomType;
     }
 
@@ -213,13 +231,6 @@ public class Room implements Serializable {
         for (Door door : myDoors.values()) {
             door.draw(theGraphics2D);
         }
-
-        for (Item item : myRoomItems) {
-            if (item.getItemType() == ItemType.PILLAR) {
-                theGraphics2D.setColor(Color.WHITE);
-                theGraphics2D.drawString(item.getName().substring(0, 1), 50, 50);
-            }
-        }
         drawMonsters(theGraphics2D);
     }
 
@@ -238,13 +249,13 @@ public class Room implements Serializable {
 
     private void drawWalls(final Graphics2D theGraphics2D) {
         for (int i = 0; i < ROOM_WIDTH; i++) {
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(4, 1, TILE_SIZE), i * 32, 0, 32, 32, null);
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(2, 0, TILE_SIZE), i * 32, 384, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(4, 1), i * 32, 0, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(2, 0), i * 32, 384, 32, 32, null);
         }
 
         for (int j = 0; j < ROOM_HEIGHT; j++) {
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5, TILE_SIZE), 0, j * 32, 32, 32, null);
-            theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5, TILE_SIZE), 512, j * 32, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5), 0, j * 32, 32, 32, null);
+            theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5), 512, j * 32, 32, 32, null);
         }
     }
 
@@ -252,6 +263,13 @@ public class Room implements Serializable {
         int scaleWidth = 64;
         int scaleHeight = 64;
         for (Monster monster: myRoomMonsters) {
+            if (monster.getName().equals("Gremlin")) {
+                scaleWidth = 156;
+                scaleHeight = 156;
+            } else {
+                scaleWidth = 64;
+                scaleHeight = 64;
+            }
             BufferedImage monsterSprite = monster.getSprite();
             if (monsterSprite != null) {
                 int monsterX = monster.getMonsterX();
@@ -263,25 +281,32 @@ public class Room implements Serializable {
     }
 
     private void placeMonsters() {
-        int monsterCount = myRoomMonsters.size();
+        if (myRoomMonsters.isEmpty()) {
+            return;
+        }
+
         List<Point> availablePositions = new ArrayList<>();
-        int startX = 1;
-        int startY = 1;
-        int endX = ROOM_WIDTH - 1;
-        int endY = ROOM_HEIGHT - 1;
+        int startX = 4;
+        int startY = 4;
+        int endX = ROOM_WIDTH - 4;
+        int endY = ROOM_HEIGHT - 4;
         for (int i = startX; i < endX; i++) {
             for (int j = startY; j < endY; j++) {
                 availablePositions.add(new Point(i * TILE_SIZE, j *TILE_SIZE));
             }
         }
         // shuffle list randomizing positions
-        Collections.shuffle(availablePositions);
+        long seed = (long) myX * 31 + myX;
+        ROOM_SPECIFIC_RANDOM.setSeed(seed);
+        Collections.shuffle(availablePositions, ROOM_SPECIFIC_RANDOM);
 
+        int monsterCount = Math.min(myRoomMonsters.size(), availablePositions.size());
         for (int i = 0; i < monsterCount; i++) {
             if (i < availablePositions.size()) {
                 Point pos = availablePositions.get(i);
                 Monster monster = myRoomMonsters.get(i);
                 monster.setPosition(pos.x, pos.y);
+                //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
             }
         }
     }

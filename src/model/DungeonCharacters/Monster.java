@@ -4,9 +4,9 @@ import java.awt.image.BufferedImage;
 
 public abstract class Monster extends DungeonCharacter{
 
-    protected double myHealChance;
-    protected int myMinHeal;
-    protected int myMaxHeal;
+    private final double myHealChance;
+    private final int myMinHeal;
+    private final int myMaxHeal;
     private int monsterX;
     private int monsterY;
 

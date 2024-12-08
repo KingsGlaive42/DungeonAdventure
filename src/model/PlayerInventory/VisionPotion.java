@@ -15,7 +15,7 @@ import java.util.Map;
 public class VisionPotion extends Item {
     private static final BufferedImage IMAGE;
     public VisionPotion() {
-        super("Vision Potion", "Reveals nearby rooms.", ItemType.VISION_POTION);
+        super("Vision Potion", "Reveals up to 8 nearby rooms.", ItemType.VISION_POTION);
     }
 
     public void use(final Dungeon theDungeon) {
@@ -38,6 +38,7 @@ public class VisionPotion extends Item {
         }
         IMAGE = temp;
     }
+
 
     @Override
     public BufferedImage getImage() {

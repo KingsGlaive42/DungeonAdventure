@@ -28,7 +28,11 @@ public class Sprite implements Serializable {
         }
     }
 
-    public synchronized BufferedImage getSprite(final int theXGrid, final int theYGrid, int theTileSize) {
+    public synchronized BufferedImage getSprite(final int theXGrid, final int theYGrid) {
+        return getSprite(theXGrid, theYGrid, TILE_SIZE, TILE_SIZE);
+    }
+
+    public synchronized BufferedImage getSprite(final int theXGrid, final int theYGrid, final int theWidth, final int theHeight) {
         if (mySpriteSheet == null) {
             loadSprite(DEFAULT_SPRITE_PATH);
         }
@@ -37,11 +41,11 @@ public class Sprite implements Serializable {
         int sheetHeight = mySpriteSheet.getHeight();
 
         if (theXGrid < 0 || theYGrid < 0 ||
-                theXGrid * theTileSize >= sheetWidth ||
-                theYGrid * theTileSize >= sheetHeight) {
-            throw new IllegalArgumentException("Invalid grid coordinates: (" + theXGrid + ", " + theYGrid + ")");
+                theXGrid * theWidth >= sheetWidth ||
+                theYGrid * theHeight >= sheetHeight) {
+            throw new IllegalArgumentException("Invalid grid coordinates or sprite size: (" + theXGrid + ", " + theYGrid + ")");
         }
 
-        return mySpriteSheet.getSubimage(theXGrid * theTileSize, theYGrid * theTileSize, theTileSize, theTileSize);
+        return mySpriteSheet.getSubimage(theXGrid * theWidth, theYGrid * theHeight, theWidth, theHeight);
     }
 }

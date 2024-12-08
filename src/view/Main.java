@@ -33,7 +33,7 @@ public class Main {
 
         //testSaveFunctionality(saveFileManager, gameState);
 
-        GameController gameController = new GameController(gameState.getMyPlayer(), gameState.getMyDungeon());
+        GameController gameController = new GameController(gameState.getMyPlayer(), gameState.getMyDungeon(), gameState.getMyInventory());
         GameStateManager gameStateManager = new GameStateManager(gameController);
         UI ui = new UI(gameStateManager, gameState.getMyInventory(), assetManager, saveFileManager, gameController);
 

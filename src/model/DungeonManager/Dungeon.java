@@ -87,6 +87,10 @@ public class Dungeon implements Serializable {
         return Collections.unmodifiableMap(surroundingRooms);
     }
 
+    public Map<Point, Room> getMyRooms() {
+        return myRooms;
+    }
+
     public Room getMyCurrentRoom() {
         return myCurrentRoom;
     }

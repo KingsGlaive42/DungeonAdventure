@@ -11,7 +11,7 @@ public class Pillar extends Item {
     private BufferedImage pillarImage;
 
     public Pillar(String theName) {
-        super("'" + theName.charAt(0) + "' pillar", "The pillar of " + theName.toLowerCase(), ItemType.PILLAR);
+        super("'" + theName.charAt(0) + "' pillar", "The pillar of " + theName.toLowerCase() + ". \nRequired to exit the dungeon.", ItemType.PILLAR);
         this.myName = theName;
         loadPillarImage();
     }
@@ -30,9 +30,9 @@ public class Pillar extends Item {
         }
     }
 
-
     @Override
     public BufferedImage getImage() {
         return pillarImage;
     }
 }
+

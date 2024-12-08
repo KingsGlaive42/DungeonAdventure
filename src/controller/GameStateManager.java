@@ -2,6 +2,7 @@ package controller;
 
 import utilities.GameConfig;
 import utilities.SoundManager;
+import view.GameScreen;
 import view.UI;
 
 import java.awt.*;

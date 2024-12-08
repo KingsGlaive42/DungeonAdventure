@@ -13,7 +13,7 @@ public class HealingPotion extends Item {
     private static final BufferedImage IMAGE;
 
     public HealingPotion() {
-        super("Healing Potion", "Restores a random amount of health points.", ItemType.HEALING_POTION);
+        super("Healing Potion", "Restores a random amount of \nhealth points. \n(5-15 HP)", ItemType.HEALING_POTION);
         this.myHealingAmount = (int)(Math.random() * 11 + 5); // 5-15 HP
     }
 
@@ -33,6 +33,7 @@ public class HealingPotion extends Item {
         IMAGE = temp;
     }
 
+    @Override
     public BufferedImage getImage() {
         return IMAGE;
     }

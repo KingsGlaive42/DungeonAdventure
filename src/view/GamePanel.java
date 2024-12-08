@@ -24,7 +24,7 @@ public class GamePanel extends JPanel {
         this.addKeyListener(myInputListener);
         this.setFocusable(true);
 
-        this.addKeyListener(myInputListener);
+        //this.addKeyListener(myInputListener);
         this.addMouseListener(new MouseInputAdapter());
         this.addMouseMotionListener(new MouseInputAdapter());
     }

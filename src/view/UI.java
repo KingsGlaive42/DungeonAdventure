@@ -67,4 +67,8 @@ public class UI {
             case GameStateManager.State.SAVE -> mySaveGameScreen.handleClick(theClickPoint);
         }
     }
+
+    public GameScreen getGameScreen() {
+        return myGameScreen;
+    }
 }
