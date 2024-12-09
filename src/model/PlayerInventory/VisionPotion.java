@@ -1,21 +1,21 @@
 package model.PlayerInventory;
 
-import model.DungeonCharacters.Hero;
+import controller.InputListener;
+import controller.SoundManager;
 import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.Buffer;
+import java.io.*;
 import java.util.Map;
 
-public class VisionPotion extends Item {
-    private static final BufferedImage IMAGE;
+public class VisionPotion extends Item implements Serializable {
+    private transient BufferedImage IMAGE;
     public VisionPotion() {
         super("Vision Potion", "Reveals up to 8 nearby rooms.", ItemType.VISION_POTION);
+        loadSprite();
     }
 
     public void use(final Dungeon theDungeon) {
@@ -29,7 +29,7 @@ public class VisionPotion extends Item {
         }
     }
 
-    static {
+    private void loadSprite() {
         BufferedImage temp;
         try {
             temp = ImageIO.read(new File("src/resources/assets/Inventory/potion_blue.png"));
@@ -43,5 +43,20 @@ public class VisionPotion extends Item {
     @Override
     public BufferedImage getImage() {
         return IMAGE;
+    }
+
+    /**
+     * Custom deserialization method to restore transient fields.
+     *
+     * @param in The ObjectInputStream used to read the object.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the class cannot be found.
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        loadSprite();
     }
 }

@@ -3,8 +3,12 @@ package model.DungeonCharacters;
 import model.Combat.AttackResult;
 
 import java.awt.image.BufferedImage;
+import java.io.Serial;
+import java.io.Serializable;
 
-public abstract class Monster extends DungeonCharacter{
+public abstract class Monster extends DungeonCharacter implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final double myHealChance;
     private final int myMinHeal;

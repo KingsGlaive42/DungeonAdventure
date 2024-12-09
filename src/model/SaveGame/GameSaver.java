@@ -22,6 +22,7 @@ public class GameSaver {
             return true;
         } catch (final IOException theException) {
             System.err.println("Error occurred while saving. Error: " + theException.getMessage());
+            theException.printStackTrace();
             return false;
         }
     }
