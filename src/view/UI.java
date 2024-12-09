@@ -70,23 +70,23 @@ public class UI {
 
     public void updateHoverStates(final Point theMousePoint) {
         switch (myGameStateManager.getCurrentState()) {
-            case GameStateManager.State.MENU -> myTitleScreen.handleHoverUpdate(theMousePoint);
-            case GameStateManager.State.GAME -> myGameScreen.handleHoverUpdate(theMousePoint);
-            case GameStateManager.State.PAUSE -> myPauseScreen.handleHoverUpdate(theMousePoint);
-            case GameStateManager.State.LOAD -> myLoadGameScreen.handleHoverUpdate(theMousePoint);
-            case GameStateManager.State.SAVE -> mySaveGameScreen.handleHoverUpdate(theMousePoint);
-            case GameStateManager.State.GAME_CREATE -> myGameCreateScreen.handleHoverUpdate(theMousePoint);
+            case MENU -> myTitleScreen.handleHoverUpdate(theMousePoint);
+            case GAME -> myGameScreen.handleHoverUpdate(theMousePoint);
+            case PAUSE -> myPauseScreen.handleHoverUpdate(theMousePoint);
+            case LOAD -> myLoadGameScreen.handleHoverUpdate(theMousePoint);
+            case SAVE -> mySaveGameScreen.handleHoverUpdate(theMousePoint);
+            case GAME_CREATE -> myGameCreateScreen.handleHoverUpdate(theMousePoint);
         }
     }
 
     public void handleClicks(final Point theClickPoint) {
         switch (myGameStateManager.getCurrentState()) {
-            case GameStateManager.State.MENU -> myTitleScreen.handleClick(theClickPoint);
-            case GameStateManager.State.GAME -> myGameScreen.handleClick(theClickPoint);
-            case GameStateManager.State.PAUSE -> myPauseScreen.handleClick(theClickPoint);
-            case GameStateManager.State.LOAD -> myLoadGameScreen.handleClick(theClickPoint);
-            case GameStateManager.State.SAVE -> mySaveGameScreen.handleClick(theClickPoint);
-            case GameStateManager.State.GAME_CREATE -> myGameCreateScreen.handleClick(theClickPoint);
+            case MENU -> myTitleScreen.handleClick(theClickPoint);
+            case GAME -> myGameScreen.handleClick(theClickPoint);
+            case PAUSE -> myPauseScreen.handleClick(theClickPoint);
+            case LOAD -> myLoadGameScreen.handleClick(theClickPoint);
+            case SAVE -> mySaveGameScreen.handleClick(theClickPoint);
+            case GAME_CREATE -> myGameCreateScreen.handleClick(theClickPoint);
         }
     }
 

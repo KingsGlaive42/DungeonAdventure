@@ -3,10 +3,7 @@ package model.Player;
 import controller.InputListener;
 import model.AnimationSystem.Animation;
 import model.AnimationSystem.Sprite;
-import model.DungeonCharacters.DungeonCharacter;
-import model.DungeonCharacters.Priestess;
-import model.DungeonCharacters.Thief;
-import model.DungeonCharacters.Warrior;
+import model.DungeonCharacters.*;
 import model.DungeonManager.DoorDirection;
 import model.GameObject;
 import controller.SoundManager;
@@ -48,7 +45,7 @@ public class Player extends GameObject implements Serializable {
     private final Sprite myIdleSpritesheet = new Sprite();
 
     // Hero
-    private DungeonCharacter myHeroClass;
+    private Hero myHeroClass;
     private Inventory myInventory;
     //private transient SoundManager mySoundManager = SoundManager.getInstance();
 
@@ -122,6 +119,11 @@ public class Player extends GameObject implements Serializable {
             case "priestess" -> myHeroClass = new Priestess(thePlayerName);
             default -> throw new IllegalArgumentException("Invalid character class: " + theCharacterClass);
         }
+    }
+
+    //Thomas Le
+    public Hero getHeroClass() {
+        return myHeroClass;
     }
 
     /**

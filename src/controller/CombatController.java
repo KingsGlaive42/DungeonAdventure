@@ -17,7 +17,7 @@ public class CombatController {
     private final CombatEngine combatEngine;
     private final CombatPanel combatPanel;
     private final Hero hero;
-    private final Monster enemy;
+    private Monster enemy;
 
     /**
      * Controller Constructor.
@@ -33,6 +33,12 @@ public class CombatController {
         updateHeroInfo();
         updateEnemyInfo();
         resetTurns();
+    }
+
+    public void startCombat(final Monster theEnemy) {
+        enemy = theEnemy;
+        // Initialize combat logic, e.g., start turns
+        System.out.println("Combat started between " + hero.getName() + " and " + enemy.getName());
     }
 
     /**
@@ -157,7 +163,7 @@ public class CombatController {
                 default -> myImageIcon;
             };
         } else {
-            String theType = enemy.getClass().getSimpleName();
+            String theType = "Skeleton"; //enemy.getClass().getSimpleName();
             myImageIcon = switch (theType) {
                 case "Skeleton" -> new ImageIcon("src/resources/assets/Monsters/Skeleton.png");
                 case "Ogre" -> new ImageIcon("src/resources/assets/Monsters/Ogre.png");
@@ -175,12 +181,12 @@ public class CombatController {
      */
     private void resetTurns() {
         int numberOfTurns;
-        if (enemy.getAttackSpeed() > hero.getAttackSpeed()) {
-            numberOfTurns = enemy.getAttackSpeed() / hero.getAttackSpeed();
+        if (/*enemy.getAttackSpeed()*/5 > hero.getAttackSpeed()) {
+            numberOfTurns = /*enemy.getAttackSpeed()*/5 / hero.getAttackSpeed();
             combatEngine.setHeroFaster(false);
             combatEngine.setNumberOfTurns(numberOfTurns, false);
         } else {
-            numberOfTurns = hero.getAttackSpeed() / enemy.getAttackSpeed();
+            numberOfTurns = hero.getAttackSpeed() / 5/*enemy.getAttackSpeed()*/;
             combatEngine.setHeroFaster(true);
             combatEngine.setNumberOfTurns(numberOfTurns, true);
         }
@@ -378,7 +384,7 @@ public class CombatController {
      * This method updates monster info after an action.
      */
     private void updateEnemyInfo() {
-        String enemyInfo = enemy.getName() + " - HP: " + enemy.getHitPoints() + "/" + enemy.getMaxHitPoints();
+        String enemyInfo = "Skeleton - HP: 50/50";//enemy.getName() + " - HP: " + enemy.getHitPoints() + "/" + enemy.getMaxHitPoints();
         combatPanel.updateEnemyInfo(enemyInfo);
     }
 
@@ -389,6 +395,6 @@ public class CombatController {
     public void switchToGamePanel() {
         //gamePanel.setVisible(true);  // Make GamePanel visible
         //combatPanel.setVisible(false);  // Hide CombatPanel
-        combatPanel.dispose();
+        //combatPanel.dispose();
     }
 }

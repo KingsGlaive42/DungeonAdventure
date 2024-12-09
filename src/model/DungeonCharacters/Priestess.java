@@ -1,8 +1,6 @@
 package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
-import model.Combat.CombatEngine;
-
 import java.io.Serializable;
 import java.util.Random;
 
