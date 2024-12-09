@@ -7,10 +7,11 @@ import model.SaveGame.GameLoader;
 import model.SaveGame.GameSaver;
 import model.SaveGame.GameState;
 import model.SaveGame.SaveFileManager;
-import utilities.GameConfig;
+import model.GameConfig;
 
 import java.awt.*;
 import java.io.File;
+import java.time.LocalDateTime;
 
 public class SaveGameScreen {
     private final GameStateManager myGameStateManager;
@@ -31,7 +32,7 @@ public class SaveGameScreen {
         for (int i = 0; i < 3; i++) {
             saveSlotButtons[i] = new UIButton(
                     theAssetManager.getAsset("slotButton"),
-                    new Rectangle(100, 50 + i * 100, 300, 75)
+                    new Rectangle(100, 50 + i * 100, 350, 75)
             );
         }
 
@@ -95,6 +96,11 @@ public class SaveGameScreen {
         for (int i = 0; i < saveSlotButtons.length; i++) {
             if (saveSlotButtons[i].contains(theClickPoint)) {
                 saveGame(i + 1);
+                saveSlotDetails[i] = String.format(
+                        "Player: %s, Last Save: %s",
+                        myGameController.getPlayer().getName(),
+                        LocalDateTime.now()
+                );
                 return;
             }
         }
@@ -111,24 +117,24 @@ public class SaveGameScreen {
             GameState currentState = new GameState();
             currentState.setMyPlayer(myGameController.getPlayer());
             currentState.setMyDungeon(myGameController.getDungeon());
-            currentState.setMyInventory(myGameController.getPlayer().getMyInventory());
+            currentState.setMyInventory(myGameController.getInventory());
 
             GameSaver.saveGame(currentState, saveFile.getPath());
             System.out.println("Game successfully saved to slot " + theSlotNumber);
         } catch (final Exception theException) {
-            throw new RuntimeException("Error occured while saving the game: " + theException);
+            throw new RuntimeException("Error occurred while saving the game: " + theException);
         }
     }
 
     private void drawSubWindow(final int theY, final int theSlotIndex, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 210));
-        theGraphics2D.fillRoundRect(100, theY, 300, 75, 35, 35);
+        theGraphics2D.fillRoundRect(100, theY, 350, 75, 35, 35);
         if (saveSlotButtons[theSlotIndex].isHovered()) {
             theGraphics2D.setColor(Color.MAGENTA);
         } else {
             theGraphics2D.setColor(Color.WHITE);
         }
         theGraphics2D.setStroke(new BasicStroke(5));
-        theGraphics2D.drawRoundRect(100 + 5, theY + 5, 300 - 10, 75 - 10, 25, 25);
+        theGraphics2D.drawRoundRect(100 + 5, theY + 5, 350 - 10, 75 - 10, 25, 25);
     }
 }

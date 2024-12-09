@@ -3,7 +3,7 @@ package view;
 import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
-import model.PlayerInventory.Inventory;
+import model.Player.Player;
 import model.SaveGame.SaveFileManager;
 
 import java.awt.*;
@@ -17,8 +17,11 @@ public class UI {
     private final PauseScreen myPauseScreen;
     private final LoadGameScreen myLoadGameScreen;
     private final SaveGameScreen mySaveGameScreen;
+    private final OptionScreen myOptionScreen;
+    private final GameCreateScreen myGameCreateScreen;
+    private final LoadingScreen myWaitScreen;
 
-    public UI(final GameStateManager theGameStateManager, final Inventory theInventory, final AssetManager theAssetManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
+    public UI(final GameStateManager theGameStateManager, final AssetManager theAssetManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
         this.myGameStateManager = theGameStateManager;
 
         this.myTitleScreen = new TitleScreen(theAssetManager, theGameStateManager);
@@ -26,6 +29,9 @@ public class UI {
         this.myPauseScreen = new PauseScreen(theAssetManager, theGameStateManager);
         this.myLoadGameScreen = new LoadGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
         this.mySaveGameScreen = new SaveGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
+        this.myOptionScreen = new OptionScreen();
+        this.myGameCreateScreen = new GameCreateScreen(this, theAssetManager, theGameController);
+        this.myWaitScreen = new LoadingScreen(theGameController, theGameStateManager);
     }
 
     public void drawTitleScreen(final Graphics2D theGraphics2D) {
@@ -48,6 +54,20 @@ public class UI {
         mySaveGameScreen.draw(theGraphics2D);
     }
 
+    public void drawOptionScreen(final Graphics2D theGraphics2D) {
+
+    }
+
+    public void drawGameCreateScreen(final Graphics2D theGraphics2D) {
+        myGameCreateScreen.draw(theGraphics2D);
+    }
+
+    public void drawLoadingGameScreen(final Graphics2D theGraphics2D) {
+        if (myWaitScreen.isLoading()) {
+            myWaitScreen.draw(theGraphics2D);
+        }
+    }
+
     public void updateHoverStates(final Point theMousePoint) {
         switch (myGameStateManager.getCurrentState()) {
             case GameStateManager.State.MENU -> myTitleScreen.handleHoverUpdate(theMousePoint);
@@ -55,6 +75,7 @@ public class UI {
             case GameStateManager.State.PAUSE -> myPauseScreen.handleHoverUpdate(theMousePoint);
             case GameStateManager.State.LOAD -> myLoadGameScreen.handleHoverUpdate(theMousePoint);
             case GameStateManager.State.SAVE -> mySaveGameScreen.handleHoverUpdate(theMousePoint);
+            case GameStateManager.State.GAME_CREATE -> myGameCreateScreen.handleHoverUpdate(theMousePoint);
         }
     }
 
@@ -65,7 +86,20 @@ public class UI {
             case GameStateManager.State.PAUSE -> myPauseScreen.handleClick(theClickPoint);
             case GameStateManager.State.LOAD -> myLoadGameScreen.handleClick(theClickPoint);
             case GameStateManager.State.SAVE -> mySaveGameScreen.handleClick(theClickPoint);
+            case GameStateManager.State.GAME_CREATE -> myGameCreateScreen.handleClick(theClickPoint);
         }
+    }
+
+    public void handleKeyPress(final int theKeyCode, final char theKeyChar) {
+        if (myGameStateManager.getCurrentState() == GameStateManager.State.GAME_CREATE) {
+            myGameCreateScreen.handleKeyPress(theKeyCode, theKeyChar);
+        }
+    }
+
+    public void loadGame(final Player thePlayer, final int theDungeonWidth, final int theDungeonHeight, final int theNumRooms) {
+        myGameStateManager.setState(GameStateManager.State.LOADING_GAME);
+
+        myWaitScreen.loadGame(thePlayer, theDungeonWidth, theDungeonHeight, theNumRooms);
     }
 
     public GameScreen getGameScreen() {

@@ -2,10 +2,12 @@ package view;
 
 import controller.GameStateManager;
 import controller.InputListener;
-import utilities.GameConfig;
+import model.GameConfig;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -24,7 +26,8 @@ public class GamePanel extends JPanel {
         this.addKeyListener(myInputListener);
         this.setFocusable(true);
 
-        //this.addKeyListener(myInputListener);
+        this.addKeyListener(myInputListener);
+        this.addKeyListener(new KeyInputAdapter());
         this.addMouseListener(new MouseInputAdapter());
         this.addMouseMotionListener(new MouseInputAdapter());
     }
@@ -49,6 +52,14 @@ public class GamePanel extends JPanel {
         @Override
         public void mouseClicked(final MouseEvent theMouseEvent) {
             myUI.handleClicks(theMouseEvent.getPoint());
+            repaint();
+        }
+    }
+
+    private class KeyInputAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(final KeyEvent theEvent) {
+            myUI.handleKeyPress(theEvent.getKeyCode(), theEvent.getKeyChar());
             repaint();
         }
     }

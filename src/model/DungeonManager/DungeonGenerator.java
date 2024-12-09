@@ -9,33 +9,59 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-class DungeonGenerator implements Serializable {
+public class DungeonGenerator implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // Constants for Dungeon Generation
     private static final int MIN_DEAD_ENDS = 6;
     private static final int MIN_DUNGEON_DIMENSION = 8;
+
+    //because there are 6 required rooms that must be in a dead end and
+    // 9 rooms is minimum configuration for a correct dungeon generation
+    //HOWEVER, that means it must generate in the exact perfect configuration
+    //leading to long load times as it continues to regenerate the dungeon
+    //12 gives a little breathing room for what it can generate
+    private static final int MIN_DUNGEON_ROOMS = 12;
+
     private static final int STARTING_ROOM_RADIUS = 3;
     private static final int NUM_OBJECTIVE_ROOMS = 4;
+    private static final double PIT_PROBABILITY = 0.1;
+    private static final double HEALING_POTION_PROBABILITY = 0.1;
+    private static final double VISION_POTION_PROBABILITY = 0.1;
+
     private static final Random RNG = new Random();
     private final String[] myPillarsNames = {"Abstraction", "Encapsulation", "Inheritance", "Polymorphism"};
 
+    // Dungeon properties
     private final int myDungeonWidth;
     private final int myDungeonHeight;
+
     private Room[][] myDungeonGrid;
     private ArrayList<Point> myAvailableRoomLocations;
 
     private Room myStartRoom;
     private ArrayList<Room> myObjectiveRooms;
 
-    DungeonGenerator(final int theDungeonWidth, final int theDungeonHeight) {
+    /**
+     * Constructs a new DungeonGenerator with the specified dimensions.
+     *
+     * @param theDungeonWidth  Width of the dungeon.
+     * @param theDungeonHeight Height of the dungeon.
+     */
+    public DungeonGenerator(final int theDungeonWidth, final int theDungeonHeight) {
         myDungeonWidth = Math.max(theDungeonWidth, MIN_DUNGEON_DIMENSION);
         myDungeonHeight = Math.max(theDungeonHeight, MIN_DUNGEON_DIMENSION);
     }
 
-    void generateDungeon(final int theNumRooms) {
-        if (theNumRooms <= 8) {
-            throw new IllegalArgumentException("Number of rooms must be at least 8.");
+    /**
+     * Generates the dungeon with the specified number of rooms.
+     *
+     * @param theNumRooms The number of rooms to generate in the dungeon.
+     */
+    public void generateDungeon(final int theNumRooms) {
+        if (theNumRooms < MIN_DUNGEON_ROOMS) {
+            throw new IllegalArgumentException("Number of rooms must be at least " + MIN_DUNGEON_ROOMS + ".");
         }
 
         do {
@@ -46,12 +72,20 @@ class DungeonGenerator implements Serializable {
         addDoors();
     }
 
+    /**
+     * Initializes the dungeon grid and lists for room locations.
+     */
     private void initializeDungeon() {
         myDungeonGrid = new Room[myDungeonWidth][myDungeonHeight];
         myAvailableRoomLocations = new ArrayList<>();
         myObjectiveRooms = new ArrayList<>();
     }
 
+    /**
+     * Creates rooms for the dungeon based on the specified number.
+     *
+     * @param theNumRooms The number of rooms to create.
+     */
     private void createRooms(final int theNumRooms) {
         int centerX = myDungeonWidth / 2;
         int centerY = myDungeonHeight / 2;
@@ -76,6 +110,11 @@ class DungeonGenerator implements Serializable {
         }
     }
 
+    /**
+     * Assigns start, end, and objective rooms.
+     *
+     * @return true if the special rooms were successfully assigned, otherwise false.
+     */
     private boolean assignSpecialRooms() {
         ArrayList<Room> deadEnds = getDeadEndRooms();
         if (deadEnds.size() < MIN_DEAD_ENDS) {
@@ -103,6 +142,9 @@ class DungeonGenerator implements Serializable {
         return true;
     }
 
+    /**
+     * Assigns pillars to objective rooms.
+     */
     private void assignPillars() {
         for (int i = 0; i < NUM_OBJECTIVE_ROOMS; i++) {
             Room objectiveRoom = myObjectiveRooms.get(i);
@@ -112,10 +154,14 @@ class DungeonGenerator implements Serializable {
         }
     }
 
+    /**
+     * Adds dungeon items (healing potions, vision potions, pits) to the rooms.
+     */
     private void addDungeonItemsAndMonsters() {
         MonsterGeneration monsters = new MonsterGeneration();
         List<Monster> randomMonsters = monsters.generateMonsters(25);
         int monsterIndex = 0;
+
         for (int i = 0; i < myDungeonWidth; i++) {
             for (int k = 0; k < myDungeonHeight; k++) {
                 Room room = myDungeonGrid[i][k];
@@ -145,17 +191,22 @@ class DungeonGenerator implements Serializable {
         }
     }
 
+    /**
+     * Places random items like potions or pits into a room.
+     *
+     * @param room The room to place items in.
+     */
     private void placeRandomItems(final Room room) {
-        if (Math.random() < 0.1) {
+        if (Math.random() < PIT_PROBABILITY) {
             room.setPit(true);
             //System.out.println("add a pit");
         } else if (!room.getPit()){
-            if (Math.random() < 0.1) {
+            if (Math.random() < HEALING_POTION_PROBABILITY) {
                 //System.out.println("add healing potion");
                 HealingPotion hPotion = new HealingPotion();
                 room.addItem(hPotion);
             }
-            if (Math.random() < 0.1) {
+            if (Math.random() < VISION_POTION_PROBABILITY) {
                 //System.out.println("add vision potion");
                 VisionPotion vPotion = new VisionPotion();
                 room.addItem(vPotion);
@@ -163,6 +214,12 @@ class DungeonGenerator implements Serializable {
         }
     }
 
+    /**
+     * Adds available locations around a given room coordinate.
+     *
+     * @param theX X-coordinate of the room.
+     * @param theY Y-coordinate of the room.
+     */
     private void addAvailableLocations(final int theX, final int theY) {
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Down, Up, Right, Left
         for (int[] dir : directions) {
@@ -174,6 +231,13 @@ class DungeonGenerator implements Serializable {
         }
     }
 
+    /**
+     * Connects adjacent rooms to a given room.
+     *
+     * @param theRoom The room to connect.
+     * @param theX X-coordinate of the room.
+     * @param theY Y-coordinate of the room.
+     */
     private void connectAdjacentRooms(final Room theRoom, final int theX, final int theY) {
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Down, Up, Right, Left
         for (int[] dir : directions) {
@@ -189,6 +253,11 @@ class DungeonGenerator implements Serializable {
         }
     }
 
+    /**
+     * Gets a list of rooms that have only one connection (dead-end rooms).
+     *
+     * @return A list of dead-end rooms.
+     */
     private ArrayList<Room> getDeadEndRooms() {
         ArrayList<Room> deadEnds = new ArrayList<>();
 
@@ -205,6 +274,13 @@ class DungeonGenerator implements Serializable {
         return deadEnds;
     }
 
+    /**
+     * Finds the furthest room from the given start room.
+     *
+     * @param theStartRoom The starting room.
+     * @param theDeadEnds  A list of dead-end rooms.
+     * @return The furthest room from the start room.
+     */
     private Room findFurthestRoom(final Room theStartRoom, final ArrayList<Room> theDeadEnds) {
         if (theStartRoom == null || theDeadEnds == null || theDeadEnds.isEmpty()) {
             throw new IllegalArgumentException("Start room and dead-end list must not be null or empty.");
@@ -224,6 +300,13 @@ class DungeonGenerator implements Serializable {
         return furthestRoom;
     }
 
+    /**
+     * Checks if a room placement is valid for the given coordinates.
+     *
+     * @param theX X-coordinate of the room.
+     * @param theY Y-coordinate of the room.
+     * @return true if the room can be placed at the given coordinates.
+     */
     private boolean isValidRoomPlacement(final int theX, final int theY) {
         return  theX >= 0 && theY >= 0 &&
                 theX < myDungeonWidth &&
@@ -231,6 +314,9 @@ class DungeonGenerator implements Serializable {
                 myDungeonGrid[theX][theY] == null;
     }
 
+    /**
+     * Adds doors to each room based on its connections to adjacent rooms.
+     */
     private void addDoors() {
         for (int i = 0; i < myDungeonWidth; i++) {
             for (int j = 0; j < myDungeonHeight; j++) {
@@ -244,7 +330,12 @@ class DungeonGenerator implements Serializable {
         }
     }
 
-    Map<Point, Room> getGeneratedDungeon() {
+    /**
+     * Returns a map of the generated dungeon.
+     *
+     * @return A map of points representing the dungeon layout with their respective rooms.
+     */
+    public Map<Point, Room> getGeneratedDungeon() {
         Map<Point, Room> generatedDungeon = new HashMap<>();
 
         for (int i = 0; i < myDungeonWidth; i++) {
@@ -257,7 +348,10 @@ class DungeonGenerator implements Serializable {
         return Collections.unmodifiableMap(generatedDungeon);
     }
 
-    void printDungeon() {
+    /**
+     * Prints the dungeon to the console for visualization.
+     */
+    public void printDungeon() {
         for (int i = 0; i < myDungeonWidth; i++) {
             for (int j = 0; j < myDungeonHeight; j++) {
                 if (myDungeonGrid[i][j] != null) {

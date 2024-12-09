@@ -1,73 +1,104 @@
 package model.DungeonCharacters;
 
-import java.io.Serial;
+import model.Combat.AttackResult;
+
 import java.io.Serializable;
+import java.util.Random;
 
+/**
+ * This is the Dungeon Character Class
+ *
+ * @author Thomas Le
+ */
 public abstract class DungeonCharacter implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+    private final String myName;
+    private int myCurrentHitPoints;
+    private int myMinDamage;
+    private int myMaxDamage;
+    private final int myAttackSpeed;
+    private final double myChanceToHit;
+    private final Random rand;
+    private final int myMaxHitPoints;
 
-    protected String myName;
-    protected int myHitPoints;
-    protected int myMagicPoints;
-    protected int myMinDamage;
-    protected int myMaxDamage;
-    protected int myAttackSpeed;
-    protected double myChanceToHit;
-    protected double myChanceToBlock;
-
-    // New fields for maximum HP and MP
-    protected int myMaxHitPoints;
-    protected int myMaxMagicPoints;
-    protected double myBaseChanceToBlock;
-
-    protected DungeonCharacter() {
-        this.myName = "";
-        this.myHitPoints = 0;
-        this.myMagicPoints = 0;
-        this.myMinDamage = 0;
-        this.myMaxDamage = 0;
-        this.myAttackSpeed = 0;
-        this.myChanceToHit = 0;
-        this.myChanceToBlock = 0;
-        this.myMaxHitPoints = 0;
-        this.myMaxMagicPoints = 0;
+    /**
+     * This is a constructor method that creates a Dungeon Character
+     * with the given parameters.
+     *
+     * @param theName Name of Dungeon Character.
+     * @param theHitPoints HP of Dungeon Character.
+     * @param theMinDamage MinDamage of Dungeon Character.
+     * @param theMaxDamage MaxDamage of Dungeon Character.
+     * @param theAttackSpeed Attack Speed of Dungeon Character.
+     * @param theChanceToHit Chance to Hit of Dungeon Character.
+     */
+    public DungeonCharacter(final String theName, final int theHitPoints, final int theMinDamage, final int theMaxDamage,
+                               final int theAttackSpeed, final double theChanceToHit) {
+        myName = theName;
+        myCurrentHitPoints = theHitPoints;
+        myMaxHitPoints = theHitPoints;
+        myMinDamage = theMinDamage;
+        myMaxDamage = theMaxDamage;
+        myAttackSpeed = theAttackSpeed;
+        myChanceToHit = theChanceToHit;
+        rand = new Random();
     }
 
-    protected DungeonCharacter(String theName, int theHitPoints, int theMinDamage,
-                               int theMaxDamage, int theAttackSpeed, double theChanceToHit) {
-        this.myName = theName;
-        this.myHitPoints = theHitPoints;
-        this.myMaxHitPoints = theHitPoints;  // Set max HP to initial HP
-        this.myMagicPoints = 0;
-        this.myMaxMagicPoints = 0;           // Initialize max MP to 0 or a specific value
-        this.myMinDamage = theMinDamage;
-        this.myMaxDamage = theMaxDamage;
-        this.myAttackSpeed = theAttackSpeed;
-        this.myChanceToHit = theChanceToHit;
+    /**
+     * This is the attack method that attacks the
+     * given target.
+     *
+     * @param theTarget Character being attacked.
+     * @return Result of the attack.
+     */
+    public AttackResult attack(final DungeonCharacter theTarget) {
+        if ((rand.nextInt(10) + 1) / 10.0 <= getChanceToHit()) {
+            int damage = calculateDamage(getMinDamage(), getMaxDamage());
+            return theTarget.takeDamage(damage);
+        } else {
+            return AttackResult.MISS;
+        }
     }
 
+    /**
+     * This is the takeDamage method that lowers the current
+     * HP by the given damage number.
+     *
+     * @param theDamage Damage taken
+     * @return attack result.
+     */
+    public AttackResult takeDamage(final int theDamage) {
+        int newHitPoints = getHitPoints() - theDamage;
+        setHitPoints(Math.max(newHitPoints, 0));
+        return AttackResult.HIT;
+    }
+
+    /**
+     * This method calculates the damage amount.
+     *
+     * @param theMinDamage MinDamage Character can do.
+     * @param theMaxDamage MaxDamage Character can do
+     * @return damage number.
+     */
+    public int calculateDamage(final int theMinDamage, final int theMaxDamage) {
+        return theMinDamage + (int) (Math.random() * ((theMaxDamage - theMinDamage) + 1));
+    }
+
+    /**
+     * This method returns the name of the character.
+     *
+     * @return Character name.
+     */
     public String getName() { return myName; }
-    public int getHitPoints() { return myHitPoints; }
-    public void setHitPoints(final int theHitPoints) {
-        this.myHitPoints = Math.min(theHitPoints, myMaxHitPoints); // Ensures HP does not exceed max
+    public int getHitPoints() { return myCurrentHitPoints; }
+    public void setHitPoints(final int theCurrentHitPoints) {
+        this.myCurrentHitPoints = Math.min(theCurrentHitPoints, myMaxHitPoints); // Ensures HP does not exceed max
     }
-
-    public int getMagicPoints() { return myMagicPoints; }
-    public void setMagicPoints(final int theMagicPoints) {
-        this.myMagicPoints = Math.min(theMagicPoints, myMaxMagicPoints); // Ensures MP does not exceed max
-    }
-    public double getBaseChanceToBlock() { return myBaseChanceToBlock; }
-
+    public int getAttackSpeed() { return myAttackSpeed; }
     public int getMinDamage() { return myMinDamage; }
     public void setMinDamage(final int theMinDamage) { this.myMinDamage = theMinDamage; }
     public int getMaxDamage() { return myMaxDamage; }
     public void setMaxDamage(final int theMaxDamage) { this.myMaxDamage = theMaxDamage; }
     public double getChanceToHit() { return myChanceToHit; }
-    public void setChanceToHit(final double theChanceToHit) { this.myChanceToHit = theChanceToHit; }
-    public double getChanceToBlock() { return myChanceToBlock; }
-    public void setChanceToBlock(final double theChanceToBlock) { this.myChanceToBlock = theChanceToBlock; }
-    public boolean isAlive() { return myHitPoints > 0; }
     public int getMaxHitPoints() { return myMaxHitPoints; }
-    public int getMaxMagicPoints() { return myMaxMagicPoints; }
+
 }

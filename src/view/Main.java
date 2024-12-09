@@ -26,16 +26,17 @@ public class Main {
 
         GameState gameState = new GameState();
         SaveFileManager saveFileManager = new SaveFileManager();
-
-        gameState.setMyDungeon(new Dungeon(20, 20, 20));
-        gameState.setMyInventory(new Inventory(gameState.getMyDungeon()));
-        gameState.setMyPlayer(new Player("Priestess", "Phil", gameState.getMyInventory()));
+        Dungeon dungeon = new Dungeon(20, 20, 20);
+        gameState.setMyDungeon(dungeon);
+        Inventory inventory = new Inventory(gameState.getMyDungeon());
+        gameState.setMyInventory(inventory);
+        gameState.setMyPlayer(new Player("Priestess", "Phil", inventory));
 
         //testSaveFunctionality(saveFileManager, gameState);
 
         GameController gameController = new GameController(gameState.getMyPlayer(), gameState.getMyDungeon(), gameState.getMyInventory());
         GameStateManager gameStateManager = new GameStateManager(gameController);
-        UI ui = new UI(gameStateManager, gameState.getMyInventory(), assetManager, saveFileManager, gameController);
+        UI ui = new UI(gameStateManager, assetManager, saveFileManager, gameController);
 
         GamePanel gamePanel = new GamePanel(gameStateManager, ui);
         gameController.setUI(ui);
@@ -54,12 +55,26 @@ public class Main {
 
     private static void initializeAssets(final AssetManager theAssetManager) {
         theAssetManager.loadAsset("playButton", "src/resources/assets/Buttons/Royal Buttons/Gold/royal gold button (not pressed).png");
+        theAssetManager.loadAsset("loadButton", "src/resources/assets/Buttons/loadButtonImage.png");
+        theAssetManager.loadAsset("saveButton", "src/resources/assets/Buttons/saveButtonImage.png");
         theAssetManager.loadAsset("optionButton", "src/resources/assets/Buttons/Colored Buttons/light orange/options.png");
         theAssetManager.loadAsset("exitButton", "src/resources/assets/Buttons/Colored Buttons/light orange/exit.png");
         theAssetManager.loadAsset("mapButton", "src/resources/assets/map-icon.png");
         theAssetManager.loadAsset("inventoryButton", "src/resources/assets/Potato_seeds.png");
-        theAssetManager.loadAsset("slotButton", "src/resources/assets/Buttons/Royal Buttons/Gold/royal gold button (not pressed).png");
-        theAssetManager.loadAsset("backButton", "src/resources/assets/Buttons/Royal Buttons/Gold/royal gold button (not pressed).png");
+        theAssetManager.loadAsset("slotButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("backButton", "src/resources/assets/Buttons/backButton.png");
+        theAssetManager.loadAsset("abstractionImage", "src/resources/assets/Buttons/AbstractionImage.png");
+        theAssetManager.loadAsset("encapsulationImage", "src/resources/assets/Buttons/EncapsulationImage.png");
+        theAssetManager.loadAsset("inheritanceImage", "src/resources/assets/Buttons/InheritanceButton.png");
+        theAssetManager.loadAsset("polymorphismImage", "src/resources/assets/Buttons/PolymorphismButton.png");
+        theAssetManager.loadAsset("warriorImage", "src/resources/test_image.png");
+        theAssetManager.loadAsset("thiefImage", "src/resources/test_image.png");
+        theAssetManager.loadAsset("priestessImage", "src/resources/test_image.png");
+        theAssetManager.loadAsset("createGameButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("easyButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("mediumButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("hardButton", "src/resources/test_image.png");
+
     }
 
     private static void testSaveFunctionality(SaveFileManager saveFileManager, GameState gameState) {

@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-import static model.PlayerInventory.ItemType.*;
-
 public class Inventory implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

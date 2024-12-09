@@ -1,5 +1,7 @@
 package model.DungeonCharacters;
 
+import model.Combat.AttackResult;
+
 import java.awt.image.BufferedImage;
 
 public abstract class Monster extends DungeonCharacter{
@@ -19,15 +21,28 @@ public abstract class Monster extends DungeonCharacter{
         this.myMaxHeal = theMaxHeal;
     }
 
-    public void heal() {
+    @Override
+    public AttackResult takeDamage(final int theDamage) {
+        int newHitPoints = getHitPoints() - theDamage;
+        if (newHitPoints > 0) {
+            setHitPoints(newHitPoints);
+            int healAmount = heal();
+            if (healAmount > 0) {
+                return AttackResult.HEAL;
+            }
+        } else {
+            setHitPoints(0);
+        }
+        return AttackResult.HIT;
+    }
+
+    public int heal() {
         if (Math.random() < myHealChance) {
             int healAmount = myMinHeal + (int) (Math.random() * (myMaxHeal - myMinHeal + 1));
-            this.myHitPoints = Math.min(myHitPoints + healAmount, getMaxHitPoints());
-            System.out.println(myName + " healed by " + healAmount + " points. Current HP: " + myHitPoints);
-
-        } else {
-            System.out.println(myName + " healing failed.");
+            this.setHitPoints(Math.min(this.getHitPoints() + healAmount, getMaxHitPoints()));
+            return healAmount;
         }
+        return 5;
     }
 
     public void setPosition(final int theX, final int theY) {

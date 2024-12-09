@@ -9,12 +9,13 @@ import model.DungeonCharacters.Thief;
 import model.DungeonCharacters.Warrior;
 import model.DungeonManager.DoorDirection;
 import model.GameObject;
+import controller.SoundManager;
+import model.GameConfig;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
-import utilities.SoundManager;
-import utilities.GameConfig;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
@@ -23,93 +24,124 @@ import java.io.Serial;
 import java.io.Serializable;
 
 public class Player extends GameObject implements Serializable {
+
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // Constants
     private static final int MIN_X = -32;
     private static final int MAX_X = 480;
     private static final int MIN_Y = -32;
     private static final int MAX_Y = 330;
+    private static final int STEP_DELAY = 300;
 
+    // Transient Dependencies
     private transient InputListener myInputListener;
+    private transient SoundManager mySoundManager;
+
+    // Configurations
     private final int TILE_SIZE;
     private final int PLAYER_SIZE;
 
+    // Sprites
     private final Sprite myWalkingSpritesheet = new Sprite();
     private final Sprite myIdleSpritesheet = new Sprite();
 
+    // Hero
     private DungeonCharacter myHeroClass;
     private Inventory myInventory;
-    private transient SoundManager mySoundManager = SoundManager.getInstance();
+    //private transient SoundManager mySoundManager = SoundManager.getInstance();
 
-    // These are animation states
+    // Animations
     private Animation myWalkUpAnimation;
     private Animation myWalkDownAnimation;
     private Animation myWalkLeftAnimation;
     private Animation myWalkRightAnimation;
-
     private Animation myIdleUpAnimation;
     private Animation myIdleDownAnimation;
     private Animation myIdleLeftAnimation;
     private Animation myIdleRightAnimation;
 
-    // This is the actual animation
     private Animation myAnimation;
 
+    //Player State
     private boolean isMoving = false;
     private boolean wasMoving = false;
     private GameObject.FacingDirection myFacingDirection = GameObject.FacingDirection.DOWN;
 
     private long lastStepTime = 0;
-    private static final int STEP_DELAY = 300;
 
+    /**
+     * Constructs a Player object with the specified Hero Class, Player Name, and Inventory.
+     *
+     * @param theCharacterClass The character class of the player (e.g., "Warrior", "Thief", "Priestess").
+     * @param thePlayerName The name of the player character.
+     */
     public Player(final String theCharacterClass, final String thePlayerName, final Inventory theInventory) {
+        validateInput(theCharacterClass, "Character class");
+        validateInput(thePlayerName, "Player name");
+
         myInputListener = InputListener.getInstance();
-        this.TILE_SIZE = GameConfig.TILE_SIZE;
-        int PLAYER_SCALE = 3;
-        this.PLAYER_SIZE = TILE_SIZE * PLAYER_SCALE;
+        mySoundManager = SoundManager.getInstance();
+
+        TILE_SIZE = GameConfig.TILE_SIZE;
+        PLAYER_SIZE = TILE_SIZE * 3; // Default Scale
 
         this.myInventory = theInventory;
 
         setHeroClass(theCharacterClass, thePlayerName);
-
         loadSpriteSheets();
         initializeAnimations();
-
         loadSoundEffects();
-
         setDefaultValues();
     }
 
-    private void setHeroClass(final String theCharacterClass, final String thePlayerName) {
-        if (thePlayerName == null || thePlayerName.isEmpty()) {
-            throw new IllegalArgumentException("Player name cannot be null or empty.");
-        }
-
-        switch (theCharacterClass.toLowerCase()) {
-            case "warrior":
-                this.myHeroClass = new Warrior(thePlayerName);
-                break;
-            case "thief":
-                this.myHeroClass = new Thief(thePlayerName);
-                break;
-            case "priestess":
-                this.myHeroClass = new Priestess(thePlayerName);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid character class selected.");
+    /**
+     * Validates the input string to ensure it is not null or empty.
+     *
+     * @param theInput The input to validate.
+     * @param theParameterName The name of the parameter for error reporting.
+     * @throws IllegalArgumentException if the input is null or empty
+     */
+    private void validateInput(final String theInput, final String theParameterName) {
+        if (theInput == null || theInput.isEmpty()) {
+            throw new IllegalArgumentException(theParameterName + " cannot be null or empty.");
         }
     }
 
+    /**
+     * Sets the hero class based on the provided class name.
+     *
+     * @param theCharacterClass The character class name.
+     * @param thePlayerName The name of the player.
+     */
+    private void setHeroClass(final String theCharacterClass, final String thePlayerName) {
+        switch (theCharacterClass.toLowerCase()) {
+            case "warrior" -> myHeroClass = new Warrior(thePlayerName);
+            case "thief" -> myHeroClass = new Thief(thePlayerName);
+            case "priestess" -> myHeroClass = new Priestess(thePlayerName);
+            default -> throw new IllegalArgumentException("Invalid character class: " + theCharacterClass);
+        }
+    }
+
+    /**
+     * Loads sound effect for the player character.
+     */
     private void loadSoundEffects() {
         mySoundManager.loadSoundEffect("step1", "src/resources/sounds/step.wav");
     }
 
+    /**
+     * Loads sprite sheets for the player character's walking and idle states.
+     */
     private void loadSpriteSheets() {
         myWalkingSpritesheet.loadSprite("src/resources/assets/player/player_walking.png");
         myIdleSpritesheet.loadSprite("src/resources/assets/player/player_idle.png");
     }
 
+    /**
+     * Initializes animations for the player's walking and idle states in all directions.
+     */
     private void initializeAnimations() {
         // Images for each animation
         BufferedImage[] myWalkingDownSprites = new BufferedImage[]{
@@ -218,24 +250,42 @@ public class Player extends GameObject implements Serializable {
         myAnimation.start();
     }
 
-    private void setDefaultValues() {
-        myX = 6.5 * TILE_SIZE;
-        myY = 4 * TILE_SIZE;
-        mySpeed = 6;
-    }
-
+    /**
+     * Updates the player's state, including movement and animations.
+     */
     public void update() {
         applyMovement();
         applyMovementAnimations();
     }
 
+    /**
+     * Draws the player on the screen.
+     *
+     * @param graphics2D The Graphics2D object used for drawing.
+     */
+    public void draw(Graphics2D graphics2D) {
+        graphics2D.setColor(Color.PINK);
+
+        AffineTransform transform = AffineTransform.getTranslateInstance(myX, myY);
+
+        // If you want to scale the image as well, you can do this
+        double scaleX = (double) PLAYER_SIZE / myAnimation.getSprite().getWidth(null);
+        double scaleY = (double) PLAYER_SIZE / myAnimation.getSprite().getHeight(null);
+        transform.scale(scaleX, scaleY);
+
+        // Draw the image with the transform applied
+        graphics2D.drawImage(myAnimation.getSprite(), transform, null);
+        //graphics2D.fillRect(myX + TILE_SIZE, myY + TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    /**
+     * Applies movement logic to update the player's position based on input.
+     */
     private void applyMovement() {
         double diagonalSpeedFactor = 1.2; // Speed normalizer
 
-        int horizontalSpeed = myInputListener.isLeftPressed() ? -mySpeed :
-                myInputListener.isRightPressed() ? mySpeed : 0;
-        int verticalSpeed = myInputListener.isUpPressed() ? -mySpeed :
-                myInputListener.isDownPressed() ? mySpeed : 0;
+        int horizontalSpeed = computeSpeed(myInputListener.isLeftPressed(), myInputListener.isRightPressed());
+        int verticalSpeed = computeSpeed(myInputListener.isUpPressed(), myInputListener.isDownPressed());
 
         wasMoving = isMoving;
         isMoving = horizontalSpeed != 0 || verticalSpeed != 0;
@@ -246,40 +296,54 @@ public class Player extends GameObject implements Serializable {
             verticalSpeed = (int) (verticalSpeed / Math.sqrt(2) * diagonalSpeedFactor);
         }
 
-        if (myX + horizontalSpeed < MIN_X) {
-            myX = MIN_X;
-        }
-        else if (myX + horizontalSpeed > MAX_X) {
-            myX = MAX_X;
-        }
-        else {
-            myX += horizontalSpeed;
-        }
-
-        if (myY + verticalSpeed < MIN_Y) {
-            myY = MIN_Y;
-        }
-        else if (myY + verticalSpeed > MAX_Y) {
-            myY = MAX_Y;
-        }
-        else {
-            myY += verticalSpeed;
-        }
-
-        // Update facing direction based on movement
-        if (horizontalSpeed < 0) {
-            myFacingDirection = FacingDirection.LEFT;
-        } else if (horizontalSpeed > 0) {
-            myFacingDirection = FacingDirection.RIGHT;
-        } else if (verticalSpeed < 0) {
-            myFacingDirection = FacingDirection.UP;
-        } else if (verticalSpeed > 0) {
-            myFacingDirection = FacingDirection.DOWN;
-        }
-
+        applyBounds(horizontalSpeed, verticalSpeed);
+        updateFacingDirection(horizontalSpeed, verticalSpeed);
         playWalkSounds();
     }
 
+    /**
+     * Computes the speed based on the input keys pressed.
+     *
+     * @param isNegativePressed Whether the negative direction key is pressed.
+     * @param isPositivePressed Whether the positive direction key is pressed.
+     * @return the computed speed.
+     */
+    private int computeSpeed(final boolean isNegativePressed, final boolean isPositivePressed) {
+        return isNegativePressed ? -mySpeed : isPositivePressed ? mySpeed : 0;
+    }
+
+    /**
+     * Applies boundary checks to ensure the player stays within the game boundaries.
+     *
+     * @param theHorizontalSpeed The horizontal speed of the player.
+     * @param theVerticalSpeed The vertical speed of the player.
+     */
+    private void applyBounds(final int theHorizontalSpeed, final int theVerticalSpeed) {
+        myX = Math.max(MIN_X, Math.min(myX + theHorizontalSpeed, MAX_X));
+        myY = Math.max(MIN_Y, Math.min(myY + theVerticalSpeed, MAX_Y));
+    }
+
+    /**
+     * Updates the player's facing direction based on movement speed.
+     *
+     * @param theHorizontalSpeed The horizontal speed of the player.
+     * @param theVerticalSpeed The vertical speed of the player.
+     */
+    private void updateFacingDirection(final int theHorizontalSpeed, final int theVerticalSpeed) {
+        if (theHorizontalSpeed < 0) {
+            myFacingDirection = FacingDirection.LEFT;
+        } else if (theHorizontalSpeed > 0) {
+            myFacingDirection = FacingDirection.RIGHT;
+        } else if (theVerticalSpeed < 0) {
+            myFacingDirection = FacingDirection.UP;
+        } else if (theVerticalSpeed > 0) {
+            myFacingDirection = FacingDirection.DOWN;
+        }
+    }
+
+    /**
+     * Plays the walking sound effect if the player is moving.
+     */
     private void playWalkSounds() {
         if (isMoving && System.currentTimeMillis() - lastStepTime > STEP_DELAY) {
             mySoundManager.playSoundEffect("step1");
@@ -287,6 +351,9 @@ public class Player extends GameObject implements Serializable {
         }
     }
 
+    /**
+     * Applies movement animations to the player based on their direction and state.
+     */
     private void applyMovementAnimations() {
         if (isMoving) {
             switch (myFacingDirection) {
@@ -347,18 +414,23 @@ public class Player extends GameObject implements Serializable {
         myAnimation.update();
     }
 
+    /**
+     * Moves the player to the opposite side of the door when transitioning rooms.
+     *
+     * @param theDoorDirection The direction of the door.
+     */
     public void moveToOppositeDoor(final DoorDirection theDoorDirection) {
         switch (theDoorDirection) {
-            case DoorDirection.DOWN:
+            case DOWN:
                 this.myY = 0;
                 break;
-            case DoorDirection.UP:
+            case UP:
                 this.myY = 9 * TILE_SIZE;
                 break;
-            case DoorDirection.RIGHT:
+            case RIGHT:
                 this.myX = (double) TILE_SIZE / 2;
                 break;
-            case DoorDirection.LEFT:
+            case LEFT:
                 this.myX = 14 * TILE_SIZE;
                 break;
             default:
@@ -377,38 +449,84 @@ public class Player extends GameObject implements Serializable {
     public Inventory getMyInventory() {
         return myInventory;
     }
+    /**
+     * Sets default values for player attributes like position and speed
+     */
+    private void setDefaultValues() {
+        myX = 6.5 * TILE_SIZE;
+        myY = 4 * TILE_SIZE;
+        mySpeed = 6;
+    }
 
+    /**
+     * Gets the player's x-coordinate.
+     *
+     * @return The x-coordinate of the player.
+     */
     public double getX() {
         return myX;
     }
 
+    /**
+     * Gets the player's y-coordinate.
+     *
+     * @return The y-coordinate of the player.
+     */
     public double getY() {
         return myY;
     }
 
+    /**
+     * Sets the x position of the player.
+     *
+     * @param theX The wanted X-position of player.
+     */
+    public void setX(final double theX) {
+        this.myX = theX;
+    }
+
+    /**
+     * Sets the Y position of the player.
+     *
+     * @param theY The wanted Y-position of player.
+     */
+    public void setY(final double theY) {
+        this.myY = theY;
+    }
+
+    /**
+     * Gets the player speed
+     * @return the current speed of the player.
+     */
+    public double getSpeed() {
+        return mySpeed;
+    }
+
+    /**
+     * Gets the tile size used for the player.
+     *
+     * @return The tile size.
+     */
     public int getTileSize() {
         return TILE_SIZE;
     }
 
+    /**
+     * Gets the player's name.
+     *
+     * @return The name of the player.
+     */
     public String getName() {
         return myHeroClass.getName();
     }
 
-    public void draw(Graphics2D graphics2D) {
-        graphics2D.setColor(Color.PINK);
-
-        AffineTransform transform = AffineTransform.getTranslateInstance(myX, myY);
-
-        // If you want to scale the image as well, you can do this
-        double scaleX = (double) PLAYER_SIZE / myAnimation.getSprite().getWidth(null);
-        double scaleY = (double) PLAYER_SIZE / myAnimation.getSprite().getHeight(null);
-        transform.scale(scaleX, scaleY);
-
-        // Draw the image with the transform applied
-        graphics2D.drawImage(myAnimation.getSprite(), transform, null);
-        //graphics2D.fillRect(myX + TILE_SIZE, myY + TILE_SIZE, TILE_SIZE, TILE_SIZE);
-    }
-
+    /**
+     * Custom deserialization method to restore transient fields.
+     *
+     * @param in The ObjectInputStream used to read the object.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the class cannot be found.
+     */
     @Serial
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
@@ -418,6 +536,8 @@ public class Player extends GameObject implements Serializable {
 
         this.myInputListener = InputListener.getInstance();
         this.mySoundManager = SoundManager.getInstance();
+
+        loadSoundEffects();
 
         loadSpriteSheets();
         //System.out.println("Reloaded sprite sheets.");

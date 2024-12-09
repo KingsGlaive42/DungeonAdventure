@@ -17,13 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static utilities.GameConfig.TILE_SIZE;
+import static model.GameConfig.TILE_SIZE;
 
 public class GameScreen {
     private final GameController myGameController;
 
     private final UIButton myMapButton;
     private final UIButton myInventoryButton;
+
+    private final UIButton myFirstPillarSlot;
+    //private final UIButton mySecondPillerSlot;
+    //private final UIButton myThirdPillarSlot;
+    //private final UIButton myFourthPillerSlot;
 
     private boolean isMapVisible;
     private boolean isInventoryVisible;
@@ -49,6 +54,8 @@ public class GameScreen {
         isMapVisible = false;
         isInventoryVisible = false;
 
+        myFirstPillarSlot = new UIButton(theAssetManager.getAsset("abstractionImage"), new Rectangle(TILE_SIZE * 9, 215, TILE_SIZE, TILE_SIZE));
+
         loadRoomImages();
     }
 
@@ -68,6 +75,11 @@ public class GameScreen {
     public void handleHoverUpdate(final Point theMousePoint) {
         myMapButton.setHovered(myMapButton.contains(theMousePoint));
         myInventoryButton.setHovered(myInventoryButton.contains(theMousePoint));
+
+        if (isInventoryVisible) {
+            myFirstPillarSlot.setHovered(myFirstPillarSlot.contains(theMousePoint));
+
+        }
     }
 
     public void handleClick(final Point theClickPoint) {
@@ -84,6 +96,13 @@ public class GameScreen {
         Dungeon dungeon = myGameController.getDungeon();
         Map<Point, Room> rooms = dungeon.getMyRooms();
 
+        Map<Integer, Integer> rowRoomCount = new HashMap<>();
+
+        int dungeonWidth = dungeon.getMyWidth();
+        int dungeonHeight = dungeon.getMyHeight();
+
+        int xOffset = TILE_SIZE + ((TILE_SIZE*7) - dungeonWidth * (TILE_SIZE-10)) / 2;
+        int yOffset = TILE_SIZE + ((TILE_SIZE*7) - dungeonHeight * (TILE_SIZE-10)) / 2;
         for(Map.Entry<Point, Room> entry : rooms.entrySet()) {
             Point roomLocation = entry.getKey();
             Room room = entry.getValue();
@@ -91,8 +110,8 @@ public class GameScreen {
             Image roomImage = getRoomImage(room.getRoomType());
 
             if (roomImage != null) {
-                int x = TILE_SIZE + roomLocation.x * (TILE_SIZE-10) - (TILE_SIZE-10) * 5;
-                int y = TILE_SIZE + roomLocation.y * (TILE_SIZE-10) - (TILE_SIZE-10) * 6;
+                int x = xOffset + roomLocation.x * (TILE_SIZE - 10);
+                int y = yOffset + roomLocation.y * (TILE_SIZE - 10);
 
                 theGraphics2D.drawImage(roomImage, x, y, TILE_SIZE - 10, TILE_SIZE - 10, null);
             }

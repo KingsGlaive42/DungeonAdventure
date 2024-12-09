@@ -2,12 +2,12 @@ package view;
 
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
-import utilities.SoundManager;
+import controller.SoundManager;
 
 import java.awt.*;
 
-import static utilities.GameConfig.SCREEN_HEIGHT;
-import static utilities.GameConfig.SCREEN_WIDTH;
+import static model.GameConfig.SCREEN_HEIGHT;
+import static model.GameConfig.SCREEN_WIDTH;
 
 public class PauseScreen {
     private static final int SLIDER_WIDTH = 200;
@@ -16,11 +16,13 @@ public class PauseScreen {
     private int mySFXVolume = 50;
     private Rectangle myBgmSliderBounds, mySfxSliderBounds;
     private final UIButton mySaveButton;
+    private final UIButton myLoadButton;
     private final GameStateManager myGameStateManager;
 
     public PauseScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager) {
         this.myGameStateManager = theGameStateManager;
-        mySaveButton = new UIButton(theAssetManager.getAsset("playButton"), new Rectangle(10, 10, 50, 50));
+        mySaveButton = new UIButton(theAssetManager.getAsset("saveButton"), new Rectangle(10, 10, 55, 55));
+        myLoadButton = new UIButton(theAssetManager.getAsset("loadButton"), new Rectangle(70, 10, 55, 55));
     }
 
     public void draw(final Graphics2D theGraphics2D) {
@@ -34,6 +36,7 @@ public class PauseScreen {
         drawVolumeOptions(theGraphics2D);
 
         mySaveButton.draw(theGraphics2D);
+        myLoadButton.draw(theGraphics2D);
     }
 
     public void handleClick(final Point theClickPoint) {
@@ -52,10 +55,14 @@ public class PauseScreen {
         if (mySaveButton.contains(theClickPoint)) {
             myGameStateManager.setState(GameStateManager.State.SAVE);
         }
+        if (myLoadButton.contains(theClickPoint)) {
+            myGameStateManager.setState(GameStateManager.State.LOAD);
+        }
     }
 
     public void handleHoverUpdate(final Point theMousePoint) {
         mySaveButton.setHovered(mySaveButton.contains(theMousePoint));
+        myLoadButton.setHovered(myLoadButton.contains(theMousePoint));
     }
 
     private void drawVolumeOptions(final Graphics2D theGraphics2D) {

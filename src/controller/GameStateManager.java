@@ -1,8 +1,9 @@
 package controller;
 
-import utilities.GameConfig;
-import utilities.SoundManager;
+import model.GameConfig;
+import controller.SoundManager;
 import view.GameScreen;
+import model.GameConfig;
 import view.UI;
 
 import java.awt.*;
@@ -15,20 +16,24 @@ public class GameStateManager {
         COMBAT,
         OPTION,
         LOAD,
-        SAVE
+        SAVE,
+        GAME_CREATE,
+        LOADING_GAME
     }
 
     private final GameController myGameController;
     private final transient SoundManager mySoundManager;
     private UI myUI;
 
-    private State myCurrentState;
+    private static State myCurrentState;
+    private static State myPreviousState;
 
     public GameStateManager(final GameController theGameController) {
         myGameController = theGameController;
         mySoundManager = SoundManager.getInstance();
         myCurrentState = State.MENU;
         onEnterState(State.MENU);
+        myPreviousState = State.MENU;
     }
 
     public State getCurrentState() { return myCurrentState; }
@@ -36,6 +41,7 @@ public class GameStateManager {
     public void setState(final State theNewState) {
         if (theNewState != myCurrentState) {
             onExitState(myCurrentState);
+            myPreviousState = myCurrentState;
             myCurrentState = theNewState;
             onEnterState(theNewState);
         }
@@ -43,44 +49,26 @@ public class GameStateManager {
 
     private void onEnterState(final State theState) {
         switch (theState) {
-            case MENU:
+            case MENU, OPTION:
                 mySoundManager.playBackgroundMusic(GameConfig.MENU_THEME);
                 break;
             case GAME:
                 mySoundManager.playBackgroundMusic(GameConfig.GAME_THEME);
                 break;
-            case LOAD:
-                break;
-            case SAVE:
-                break;
-            case PAUSE:
+            case LOAD, SAVE, GAME_CREATE, PAUSE:
                 break;
             case COMBAT:
                 mySoundManager.playBackgroundMusic(GameConfig.COMBAT_THEME);
-                break;
-            case OPTION:
-                mySoundManager.playBackgroundMusic(GameConfig.MENU_THEME);
                 break;
         }
     }
 
     private void onExitState(final State theState) {
-        mySoundManager.stopBackgroundMusic();
-
         switch (theState) {
-            case MENU:
+            case MENU, COMBAT:
+                mySoundManager.stopBackgroundMusic();
                 break;
-            case GAME:
-                break;
-            case LOAD:
-                break;
-            case SAVE:
-                break;
-            case PAUSE:
-                break;
-            case COMBAT:
-                break;
-            case OPTION:
+            case GAME, LOAD, SAVE, PAUSE, OPTION, GAME_CREATE:
                 break;
         }
     }
@@ -89,21 +77,19 @@ public class GameStateManager {
         handleInput();
 
         switch (myCurrentState) {
-            case MENU:
+            case MENU, PAUSE, OPTION, COMBAT:
                 break;
             case GAME:
                 myGameController.update();
-                break;
-            case PAUSE:
-                break;
-            case COMBAT:
-                break;
-            case OPTION:
                 break;
         }
     }
 
     public void paint(final Graphics2D theGraphics2D) {
+        if (myUI == null) {
+            throw new IllegalStateException("UI not initialized");
+        }
+
         switch (myCurrentState) {
             case MENU:
                 myUI.drawTitleScreen(theGraphics2D);
@@ -124,6 +110,13 @@ public class GameStateManager {
             case COMBAT:
                 break;
             case OPTION:
+                myUI.drawOptionScreen(theGraphics2D);
+                break;
+            case GAME_CREATE:
+                myUI.drawGameCreateScreen(theGraphics2D);
+                break;
+            case LOADING_GAME:
+                myUI.drawLoadingGameScreen(theGraphics2D);
                 break;
         }
     }
@@ -140,5 +133,9 @@ public class GameStateManager {
 
     public void setUI(final UI theUI) {
         myUI = theUI;
+    }
+
+    public static State getPreviousState() {
+        return myPreviousState;
     }
 }

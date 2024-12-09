@@ -27,7 +27,7 @@ public class GameController {
             myUI.getGameScreen().handleInventoryNavigation(InputListener.getInstance());
         } else {
             myPlayer.update();
-            myDungeon.checkDoorCollisions(myPlayer);
+            myDungeon.checkDoorCollisions(myPlayer, this);
 
             Monster collidedMonster = myDungeon.getMyCurrentRoom().checkPlayerCollisionWithMonsters(myPlayer);
             if (collidedMonster != null) {
@@ -64,11 +64,19 @@ public class GameController {
         this.myDungeon = theDungeon;
     }
 
+    public void setMyInventory(final Inventory theInventory) {
+        this.myInventory = theInventory;
+    }
+
     public Player getPlayer() {
         return myPlayer;
     }
 
     public Dungeon getDungeon() {
         return myDungeon;
+    }
+
+    public Inventory getInventory() {
+        return myInventory;
     }
 }

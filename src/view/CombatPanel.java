@@ -1,14 +1,25 @@
 package view;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 import controller.CombatController;
+import model.Combat.AttackResult;
 import model.DungeonCharacters.*;
+import model.GameConfig;
 
+/**
+ * This is a combat panel that hosts all the visual elements
+ * for the combat screen.
+ *
+ * @author Thomas Le
+ */
 public class CombatPanel extends JFrame {
     private final JLabel heroInfo;
     private final JLabel enemyInfo;
@@ -16,8 +27,9 @@ public class CombatPanel extends JFrame {
     private final JButton attackButton;
     private final JButton specialSkillButton;
     private final JButton defendButton;
+    private final JButton usePotionButton;
     private final JButton retreatButton;
-    private final JButton returnButton;  // Changed to 'returnButton'
+    private final JButton returnButton;
     private final JButton heal1Button;
     private final JButton heal2Button;
     private final JButton heal3Button;
@@ -27,30 +39,33 @@ public class CombatPanel extends JFrame {
     private static ImageIcon heroImageIcon;
     private static ImageIcon enemyImageIcon;
 
+    /**
+     * Combat Panel constructor.
+     *
+     * @param combatController Controller for connecting view and model.
+     */
     public CombatPanel(final CombatController combatController) {
         this.combatController = combatController;
 
         setTitle("Combat Screen");
-        setSize(600, 400);
+        setSize(new Dimension(GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        // Use GridBagLayout for more flexible sizing
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+        setResizable(false);
 
         // Create Hero and Enemy info panels
         heroInfo = new JLabel("Hero Info");
         enemyInfo = new JLabel("Enemy Info");
 
         JPanel infoPanel = new JPanel(new GridLayout(1, 2));
-        infoPanel.add(heroInfo);
-        infoPanel.add(enemyInfo);
+        infoPanel.add(enemyInfo); // Enemy HP
+        infoPanel.add(heroInfo); // Hero HP and MP
 
-        // Create Action Log area with a larger JTextArea
-        actionLog = new JTextArea(20, 40);  // Increase the number of rows and columns to make it larger
+        // Create Action Log area
+        actionLog = new JTextArea(20, 40);
         actionLog.setEditable(false);
-
-        // Set the preferred size of the JTextArea (make it larger)
-        actionLog.setPreferredSize(new Dimension(500, 200));  // Adjust width and height as needed
+        actionLog.setPreferredSize(new Dimension(500, 200));
 
         JScrollPane actionLogScroll = new JScrollPane(actionLog);
 
@@ -58,13 +73,14 @@ public class CombatPanel extends JFrame {
         attackButton = new JButton("Attack");
         specialSkillButton = new JButton("Use Special Skill");
         defendButton = new JButton("Defend");
+        usePotionButton = new JButton("Use Potion");
         retreatButton = new JButton("Retreat");
-        returnButton = new JButton("Return");  // Added 'Return' button
+        returnButton = new JButton("Return");
 
         // Create Heal Range Buttons for Priestess's special skill
-        heal1Button = new JButton("Heal I (25 HP, 5 MP)");
-        heal2Button = new JButton("Heal II (50 HP, 10 MP)");
-        heal3Button = new JButton("Heal III (75 HP, 15 MP)");
+        heal1Button = new JButton("Heal I (5MP)");
+        heal2Button = new JButton("Heal II (10MP)");
+        heal3Button = new JButton("Heal III (15MP)");
 
         // Set heal buttons to be initially hidden
         heal1Button.setVisible(false);
@@ -76,13 +92,13 @@ public class CombatPanel extends JFrame {
         buttonPanel.add(attackButton);
         buttonPanel.add(specialSkillButton);
         buttonPanel.add(defendButton);
+        buttonPanel.add(usePotionButton);
         buttonPanel.add(retreatButton);
         buttonPanel.add(returnButton);
         buttonPanel.add(heal1Button);
         buttonPanel.add(heal2Button);
         buttonPanel.add(heal3Button);
 
-        // Add components to the frame using GridBagLayout
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Row 1: infoPanel
@@ -91,48 +107,71 @@ public class CombatPanel extends JFrame {
         gbc.gridwidth = 1;
         add(infoPanel, gbc);
 
-        // Row 2: Visual Panel (empty space for now)
+        // Row 2: Visual Panel
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-        gbc.weighty = 0.5;  // Give visual panel more space
-        gbc.weightx = 1.0;  // Make visual panel resize horizontally
-        gbc.fill = GridBagConstraints.BOTH;  // Allow the panel to expand both ways
-        JPanel visualPanel = new JPanel(new BorderLayout());  // This is the blank visual panel
-        visualPanel.setPreferredSize(new Dimension(1000,500)); // Set a preferred size
-        visualPanel.setBackground(Color.GREEN);  // Set background color to differentiate the panel
+        gbc.weighty = 0.4;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+
+        // Create a JPanel with a background image
+        JPanel visualPanel = new JPanel(new BorderLayout()) {
+            private Image backgroundImage;
+
+            {
+                // Load the background image
+                try {
+                    backgroundImage = ImageIO.read(new File("src/resources/assets/Terrain/CombatScreen.png"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (backgroundImage != null) {
+                    // Draw the image as the background
+                    g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                }
+            }
+        };
+
+        // Set the preferred size
+        visualPanel.setPreferredSize(new Dimension(1000, 500));
 
         // Load and scale the hero image
-        heroImageIcon = new ImageIcon("src/resources/assets/player/Terra.png");
-        Image heroImage = heroImageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Adjust width and height as needed
+        heroImageIcon = combatController.setImage(true);
+        Image heroImage = heroImageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         heroImageIcon = new ImageIcon(heroImage);
         heroImageLabel = new JLabel(heroImageIcon); // Create a JLabel with the scaled image
         heroImageLabel.setHorizontalAlignment(JLabel.CENTER);
         heroImageLabel.setVerticalAlignment(JLabel.CENTER);
-        // Add margins to the hero image label
-        heroImageLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20)); // Top, left, bottom, right margins
+        heroImageLabel.setBorder(BorderFactory.createEmptyBorder(100, 20, 0, 50));
         visualPanel.add(heroImageLabel, BorderLayout.EAST);
 
         // Load and scale the enemy image
-        enemyImageIcon = new ImageIcon("src/resources/assets/player/Behemoth.png");
-        Image enemyImage = enemyImageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH); // Adjust width and height as needed
+        enemyImageIcon = combatController.setImage(false);
+        Image enemyImage = enemyImageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         enemyImageIcon = new ImageIcon(enemyImage);
-        enemyImageLabel = new JLabel(enemyImageIcon); // Create a JLabel with the scaled image
+        enemyImageLabel = new JLabel(enemyImageIcon);
         enemyImageLabel.setHorizontalAlignment(JLabel.CENTER);
         enemyImageLabel.setVerticalAlignment(JLabel.CENTER);
-        // Add margins to the enemy image label
-        enemyImageLabel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20)); // Top, left, bottom, right margins
+        enemyImageLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20)); // Top, left, bottom, right margins
         visualPanel.add(enemyImageLabel, BorderLayout.WEST);
 
+        // Add the visual panel to the main container
         add(visualPanel, gbc);
+
 
         // Row 3: actionLogScroll
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
-        gbc.weighty = 0.1; // Smaller weight for action log
-        gbc.weightx = 1.0; // Make it resize horizontally
-        gbc.fill = GridBagConstraints.BOTH;  // Make it expand in both directions
+        gbc.weighty = 0.2;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
         add(actionLogScroll, gbc);
 
 
@@ -140,17 +179,19 @@ public class CombatPanel extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 1;
-        gbc.weighty = 0.03; // Smaller weight for button panel
+        gbc.weighty = 0.03;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         add(buttonPanel, gbc);
 
         // Add listeners for buttons
         addActionListeners();
 
-        // Center the CombatPanel on the screen
         setLocationRelativeTo(null);
     }
 
+    /**
+     * This method adds action listeners to buttons
+     */
     private void addActionListeners() {
         attackButton.addActionListener(e -> {
             deactivateButtons();
@@ -165,6 +206,11 @@ public class CombatPanel extends JFrame {
         defendButton.addActionListener(e -> {
             deactivateButtons();
             combatController.handleDefend();
+        });
+
+        usePotionButton.addActionListener(e -> {
+            deactivateButtons();
+            combatController.handlePotion();
         });
 
         retreatButton.addActionListener(e -> {
@@ -185,29 +231,51 @@ public class CombatPanel extends JFrame {
         heal3Button.addActionListener(e -> combatController.handleHeal(3));
     }
 
-    public void updateHeroInfo(String info) {
-        heroInfo.setText(info);
+    /**
+     * This method updates hero's hp and mp info.
+     *
+     * @param theInfo Updated hero info.
+     */
+    public void updateHeroInfo(final String theInfo) {
+        heroInfo.setText(theInfo);
     }
 
-    public void updateEnemyInfo(String info) {
-        enemyInfo.setText(info);
+    /**
+     * This method updates enemy's hp info
+     *
+     * @param theInfo Updated enemy info.
+     */
+    public void updateEnemyInfo(final String theInfo) {
+        enemyInfo.setText(theInfo);
     }
 
-    public void logAction(String message) {
-        actionLog.append(message + "\n");
+    /**
+     * This method logs actions in the action log.
+     *
+     * @param theMessage Message to be logged.
+     */
+    public void logAction(final String theMessage) {
+        actionLog.append(theMessage + "\n");
     }
 
-    // Called when the battle is over, transition to the GamePanel
+    /**
+     * This method displays the game over screen for hero or enemy death.
+     *
+     * @param theMessage Message displayed on death of hero or enemy.
+     */
     public void displayGameOver(final String theMessage) {
         JOptionPane.showMessageDialog(this, theMessage, "Game Over", JOptionPane.INFORMATION_MESSAGE);
-        combatController.switchToGamePanel();  // Notify the controller to switch to GamePanel
+        combatController.switchToGamePanel();
     }
 
-    // Show heal options and hide main buttons
+    /**
+     * This method hides main action buttons and show healing buttons.
+     */
     public void showHealOptions() {
         attackButton.setVisible(false);
         specialSkillButton.setVisible(false);
         defendButton.setVisible(false);
+        usePotionButton.setVisible(false);
         retreatButton.setVisible(false);
         heal1Button.setVisible(true);
         heal2Button.setVisible(true);
@@ -215,11 +283,14 @@ public class CombatPanel extends JFrame {
         returnButton.setVisible(true);  // Show the 'Return' button
     }
 
-    // Show main action buttons and hide heal options
+    /**
+     * This method shows main action buttons and hides healing buttons.
+     */
     public void showActionButtons() {
         attackButton.setVisible(true);
         specialSkillButton.setVisible(true);
         defendButton.setVisible(true);
+        usePotionButton.setVisible(true);
         retreatButton.setVisible(true);
         heal1Button.setVisible(false);
         heal2Button.setVisible(false);
@@ -227,15 +298,24 @@ public class CombatPanel extends JFrame {
         returnButton.setVisible(false);  // Hide the 'Return' button when in action mode
     }
 
-    public void shakeHero(){
-        shakeImage(heroImageLabel);
+    /**
+     * This method selects whether hero or enemy sprite is shaked when damaged.
+     *
+     * @param isHero True if hero is damaged, false if enemy is damaged
+     */
+    private void shakeImage(final boolean isHero){
+        if (isHero) {
+            shakeImage(heroImageLabel);
+        } else {
+            shakeImage(enemyImageLabel);
+        }
     }
 
-    public void shakeEnemy(){
-        shakeImage(enemyImageLabel);
-    }
-
-    // Add this method to handle the shake effect
+    /**
+     * This method shakes the hero or enemy sprite when damaged.
+     *
+     * @param theImage The image that is shaken.
+     */
     private void shakeImage(final JLabel theImage) {
         final int shakeDistance = 10; // How far the image moves left or right
         final int shakeCount = 10; // Number of shakes
@@ -271,10 +351,15 @@ public class CombatPanel extends JFrame {
         shakeTimer.start();
     }
 
-    // Add this method to handle the attack animation
-    public void attackAnimation(final boolean theHero) {
-        final int animationSpeed = 10; // How fast the sprite moves (lower value = faster)
-        final int animationStep = 50;  // How far the sprite moves in each step
+    /**
+     * This method rushes the attacker towards the defender, simulating an attack.
+     *
+     * @param theHero True if hero is attacking, false if enemy is attack.
+     * @param theResult Result of attack to determine if image needs to be shaken.
+     */
+    public void attackAnimation(final boolean theHero, final AttackResult theResult) {
+        final int animationSpeed = 5; // How fast the sprite moves (lower value = faster)
+        final int animationStep = 20;  // How far the sprite moves in each step
 
         // Store the original position of the image
         Point originalPosition, targetPosition;
@@ -289,7 +374,7 @@ public class CombatPanel extends JFrame {
 
         Timer attackTimer = new Timer(animationSpeed, new ActionListener() {
             int currentX = originalPosition.x; // Track the current X position
-            int moveDistance = targetX - originalPosition.x; // Calculate the distance to move
+            final int moveDistance = targetX - originalPosition.x; // Calculate the distance to move
 
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -309,21 +394,28 @@ public class CombatPanel extends JFrame {
                         enemyImageLabel.setLocation(originalPosition);
                     }
                     ((Timer) e.getSource()).stop();
+                    switch(theResult) {
+                        case HIT, BONK, HALF_HIT:
+                            shakeImage(!theHero);
+                            break;
+                    }
+                    if(!theHero) {
+                        reactivateButtons();
+                    }
                 }
             }
         });
 
         // Start the animation
         attackTimer.start();
-
-        if (theHero) { //Need to change so that doesn't shake when blocked
-            shakeEnemy();
-        } else {
-            shakeHero();
-        }
-        reactivateButtons();
     }
 
+    /**
+     * This method slowly changes the hero or enemy
+     * sprite to transparent upon death.
+     *
+     * @param theHero True if hero dies, false if enemy dies.
+     */
     public static void deathAnimation(final boolean theHero) {
         JLabel label;
         ImageIcon originalIcon;
@@ -358,7 +450,14 @@ public class CombatPanel extends JFrame {
         timer.start(); // Start the animation
     }
 
-    public static ImageIcon createTransparentIcon(final ImageIcon icon, final float alpha) {
+    /**
+     * Helper method for turning hero/enemy sprite transparent.
+     *
+     * @param icon Icon of image to be transparent.
+     * @param alpha Transparency number.
+     * @return transparent image.
+     */
+    private static ImageIcon createTransparentIcon(final ImageIcon icon, final float alpha) {
         // Get the original image from the ImageIcon
         Image originalImage = icon.getImage();
 
@@ -379,24 +478,34 @@ public class CombatPanel extends JFrame {
         return new ImageIcon(transparentImage);
     }
 
+    /**
+     * Method that deactivates buttons when the attack
+     * animation is running.
+     */
     private void deactivateButtons() {
         attackButton.setEnabled(false);
         specialSkillButton.setEnabled(false);
         defendButton.setEnabled(false);
+        usePotionButton.setEnabled(false);
         retreatButton.setEnabled(false);
     }
 
-    private void reactivateButtons() {
+    /**
+     * Method that reactivates buttons when the attack
+     * animation is finished.
+     */
+    public void reactivateButtons() {
         attackButton.setEnabled(true);
         specialSkillButton.setEnabled(true);
         defendButton.setEnabled(true);
+        usePotionButton.setEnabled(true);
         retreatButton.setEnabled(true);
     }
 
     //For testing
     public static void main(String[] args) {
-        Hero theHero = new Berserker("Terra");
-        DungeonCharacter enemy = new Ogre(100, 15, 25, 5, 0.6,
+        Hero theHero = new Priestess("Terra");
+        Monster enemy = new Skeleton(100, 30, 60, 10, 0.6,
                 0.4, 10, 20); //temp
 
         CombatController combatController = new CombatController(theHero, enemy);
