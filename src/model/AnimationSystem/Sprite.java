@@ -63,6 +63,10 @@ public class Sprite implements Serializable {
      * @throws IllegalArgumentException if the grid coordinates are invalid.
      */
     public synchronized BufferedImage getSprite(final int theXGrid, final int theYGrid) {
+        return getSprite(theXGrid, theYGrid, TILE_SIZE, TILE_SIZE);
+    }
+
+    public synchronized BufferedImage getSprite(final int theXGrid, final int theYGrid, final int theWidth, final int theHeight) {
         if (mySpriteSheet == null) {
             loadSprite(DEFAULT_SPRITE_PATH);
         }
@@ -71,12 +75,12 @@ public class Sprite implements Serializable {
         int sheetHeight = mySpriteSheet.getHeight();
 
         if (theXGrid < 0 || theYGrid < 0 ||
-                theXGrid * TILE_SIZE >= sheetWidth ||
-                theYGrid * TILE_SIZE >= sheetHeight) {
-            throw new IllegalArgumentException("Invalid grid coordinates: (" + theXGrid + ", " + theYGrid + ")");
+                theXGrid * theWidth >= sheetWidth ||
+                theYGrid * theHeight >= sheetHeight) {
+            throw new IllegalArgumentException("Invalid grid coordinates or sprite size: (" + theXGrid + ", " + theYGrid + ")");
         }
 
-        return mySpriteSheet.getSubimage(theXGrid * TILE_SIZE, theYGrid * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        return mySpriteSheet.getSubimage(theXGrid * theWidth, theYGrid * theHeight, theWidth, theHeight);
     }
 
     /**

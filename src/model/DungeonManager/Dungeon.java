@@ -34,6 +34,10 @@ public class Dungeon implements Serializable {
     // Sound manager for sound effects, restored during deserialization
     private transient SoundManager mySoundManager;
 
+    private final int myWidth;
+
+    private final int myHeight;
+
     /**
      * Constructs a new Dungeon with specified width, height, and number of rooms.
      *
@@ -46,6 +50,8 @@ public class Dungeon implements Serializable {
         if (theWidth <= 0 || theHeight <= 0 || theNumRooms <= 0) {
             throw new IllegalArgumentException("Width, height, and number of rooms must be greater than 0.");
         }
+        this.myHeight = theHeight;
+        this.myWidth = theWidth;
 
         generator = new DungeonGenerator(theWidth, theHeight);
         generator.generateDungeon(theNumRooms);
@@ -142,6 +148,10 @@ public class Dungeon implements Serializable {
         return Collections.unmodifiableMap(surroundingRooms);
     }
 
+    public Map<Point, Room> getMyRooms() {
+        return myRooms;
+    }
+
     /**
      * Gets the current room the player is in.
      *
@@ -149,6 +159,15 @@ public class Dungeon implements Serializable {
      */
     public Room getMyCurrentRoom() {
         return myCurrentRoom;
+    }
+
+    public int getMyHeight() {
+        return myHeight;
+    }
+
+
+    public int getMyWidth() {
+        return myWidth;
     }
 
     /**

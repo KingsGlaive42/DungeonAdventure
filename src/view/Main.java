@@ -1,5 +1,6 @@
 package view;
 
+import controller.CombatController;
 import controller.GameController;
 import controller.GameEngine;
 import controller.GameStateManager;
@@ -26,29 +27,32 @@ public class Main {
 
         GameState gameState = new GameState();
         SaveFileManager saveFileManager = new SaveFileManager();
-
-        gameState.setMyDungeon(new Dungeon(20, 20, 20));
-        gameState.setMyInventory(new Inventory(gameState.getMyDungeon()));
-        gameState.setMyPlayer(new Player("Priestess", "Phil"));
+        Dungeon dungeon = new Dungeon(20, 20, 20);
+        gameState.setMyDungeon(dungeon);
+        Inventory inventory = new Inventory(gameState.getMyDungeon());
+        gameState.setMyInventory(inventory);
+        gameState.setMyPlayer(new Player("Priestess", "Phil", inventory));
 
         //testSaveFunctionality(saveFileManager, gameState);
 
         GameController gameController = new GameController(gameState.getMyPlayer(), gameState.getMyDungeon(), gameState.getMyInventory());
         GameStateManager gameStateManager = new GameStateManager(gameController);
         UI ui = new UI(gameStateManager, assetManager, saveFileManager, gameController);
+        CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);
 
-        GamePanel gamePanel = new GamePanel(gameStateManager, ui);
+        CardLayoutManager cardLayoutManager = new CardLayoutManager(combatController, gameStateManager, ui);
+
         gameController.setUI(ui);
         gameStateManager.setUI(ui);
 
-        window.add(gamePanel);
+        window.add(cardLayoutManager.getCardPanel());
 
         window.pack(); // sizes window to fit preferred size and layouts of subcomponents
 
         window.setLocationRelativeTo(null); //display at center of screen
         window.setVisible(true);
 
-        GameEngine engine = new GameEngine(gamePanel, gameStateManager);
+        GameEngine engine = new GameEngine(cardLayoutManager.getGamePanel(), gameStateManager);
         engine.startGame();
     }
 

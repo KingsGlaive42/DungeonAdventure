@@ -1,13 +1,17 @@
 package model.Player.Tests;
 
 
+import model.DungeonManager.Dungeon;
 import model.Player.Player;
+import model.PlayerInventory.Inventory;
 
 import java.io.*;
 
 public class PlayerSerializationTest {
     public static void main(String[] args) {
-        Player player = new Player("warrior", "warrior");
+        Dungeon dungeon = new Dungeon(10, 10, 20);
+        Inventory inventory = new Inventory(dungeon);
+        Player player = new Player("warrior", "warrior", inventory);
 
         // Save the room to a file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("room.ser"))) {

@@ -1,9 +1,8 @@
 package model.DungeonManager;
 
-import model.PlayerInventory.HealingPotion;
-import model.PlayerInventory.Item;
-import model.PlayerInventory.ItemType;
-import model.PlayerInventory.VisionPotion;
+import model.DungeonCharacters.Monster;
+import model.MonsterManager.MonsterGeneration;
+import model.PlayerInventory.*;
 
 import java.awt.Point;
 import java.io.Serial;
@@ -138,7 +137,7 @@ public class DungeonGenerator implements Serializable {
         }
 
         assignPillars();
-        addDungeonItems();
+        addDungeonItemsAndMonsters();
 
         return true;
     }
@@ -150,7 +149,7 @@ public class DungeonGenerator implements Serializable {
         for (int i = 0; i < NUM_OBJECTIVE_ROOMS; i++) {
             Room objectiveRoom = myObjectiveRooms.get(i);
             String pillar = myPillarsNames[i];
-            Item pillarItem = new Item("'" + pillar.charAt(0) + "' pillar", "The pillar of " + pillar.toLowerCase(), ItemType.PILLAR);
+            Pillar pillarItem = new Pillar(pillar);
             objectiveRoom.addItem(pillarItem);
         }
     }
@@ -158,12 +157,35 @@ public class DungeonGenerator implements Serializable {
     /**
      * Adds dungeon items (healing potions, vision potions, pits) to the rooms.
      */
-    private void addDungeonItems() {
+    private void addDungeonItemsAndMonsters() {
+        MonsterGeneration monsters = new MonsterGeneration();
+        List<Monster> randomMonsters = monsters.generateMonsters(25);
+        int monsterIndex = 0;
+
         for (int i = 0; i < myDungeonWidth; i++) {
             for (int k = 0; k < myDungeonHeight; k++) {
                 Room room = myDungeonGrid[i][k];
-                if (room != null && room.getRoomType() == RoomType.FILLER) {
+                if (room == null) {
+                    continue;
+                }
+                if (room.getRoomType() == RoomType.FILLER) {
                     placeRandomItems(room);
+                }
+                if (room.getRoomType() == RoomType.OBJECTIVE) {
+                    for (int j = 0; j < 2; j++) {
+                        room.addMonster(randomMonsters.get(monsterIndex));
+                        monsterIndex++;
+                    }
+                } else if (room.getRoomType() == RoomType.END) {
+                    for (int j = 0; j < 4; j++) {
+                        room.addMonster(randomMonsters.get(monsterIndex));
+                        //System.out.println("Monster index: " + monsterIndex + ", Total Monsters: " + randomMonsters.size());
+
+                        monsterIndex++;
+                    }
+                } else if (monsterIndex < randomMonsters.size() && Math.random() < 0.2 && room.getRoomType() == RoomType.FILLER) {
+                    room.addMonster(randomMonsters.get(monsterIndex));
+                    monsterIndex++;
                 }
             }
         }
@@ -177,15 +199,15 @@ public class DungeonGenerator implements Serializable {
     private void placeRandomItems(final Room room) {
         if (Math.random() < PIT_PROBABILITY) {
             room.setPit(true);
-            System.out.println("add a pit");
+            //System.out.println("add a pit");
         } else if (!room.getPit()){
             if (Math.random() < HEALING_POTION_PROBABILITY) {
-                System.out.println("add healing potion");
+                //System.out.println("add healing potion");
                 HealingPotion hPotion = new HealingPotion();
                 room.addItem(hPotion);
             }
             if (Math.random() < VISION_POTION_PROBABILITY) {
-                System.out.println("add vision potion");
+                //System.out.println("add vision potion");
                 VisionPotion vPotion = new VisionPotion();
                 room.addItem(vPotion);
             }

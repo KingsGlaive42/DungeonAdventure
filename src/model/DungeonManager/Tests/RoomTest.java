@@ -2,12 +2,11 @@ package model.DungeonManager.Tests;
 
 import controller.GameController;
 import model.DungeonManager.DoorDirection;
+import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 import model.DungeonManager.RoomType;
 import model.Player.Player;
-import model.PlayerInventory.Inventory;
-import model.PlayerInventory.Item;
-import model.PlayerInventory.ItemType;
+import model.PlayerInventory.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +28,7 @@ class RoomTest {
   public void setup() {
       room = new Room(0, 0, RoomType.FILLER);
       connectedRoom = new Room(1, 0, RoomType.FILLER);
-      player = new Player("warrior", "TestPlayer");
+      player = new Player("warrior", "TestPlayer", new Inventory(new Dungeon(0,0,0)));
   }
 
     @Test
@@ -70,11 +69,12 @@ class RoomTest {
         assertEquals("DoorDirection cannot be null", exception.getMessage());
     }
 
+
     @Test
     public void testPlayerEntersRoomNotVisited() {
         // Add items to the room and simulate player entering
-        Item item1 = new Item("Pillar","description", ItemType.PILLAR);
-        Item item2 = new Item("Potion", "description", ItemType.HEALING_POTION);
+        Item item1 = new Pillar("Polymorphism");
+        Item item2 = new HealingPotion();
         room.addItem(item1);
         room.addItem(item2);
 
@@ -100,7 +100,7 @@ class RoomTest {
 
     @Test
     public void testAddItemValidItem() {
-        Item item = new Item("Pillar", "description", ItemType.PILLAR);
+        Pillar item = new Pillar("Encapsulation");
         room.addItem(item);
 
         List<Item> roomItems = room.getRoomItems();
@@ -146,8 +146,8 @@ class RoomTest {
     @Test
     public void testAddAndRetrieveItems() {
         // Add multiple items and verify they can be retrieved correctly
-        Item item1 = new Item("Pillar", "Pillar", ItemType.PILLAR);
-        Item item2 = new Item("Potion", "potion", ItemType.HEALING_POTION);
+        Pillar item1 = new Pillar("Abstraction");
+        HealingPotion item2 = new HealingPotion();
         room.addItem(item1);
         room.addItem(item2);
 

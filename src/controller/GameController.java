@@ -1,8 +1,11 @@
 package controller;
 
+import model.DungeonCharacters.Hero;
+import model.DungeonCharacters.Monster;
 import model.DungeonManager.Dungeon;
 import model.Player.Player;
 import model.PlayerInventory.Inventory;
+import model.PlayerInventory.Item;
 import view.UI;
 
 import java.awt.*;
@@ -20,8 +23,18 @@ public class GameController {
     }
 
     public void update() {
-        myPlayer.update();
-        myDungeon.checkDoorCollisions(myPlayer, this);
+        if (myUI.getGameScreen().isMyInventoryVisible()) {
+            myUI.getGameScreen().handleInventoryNavigation(InputListener.getInstance());
+        } else {
+            myPlayer.update();
+            myDungeon.checkDoorCollisions(myPlayer, this);
+
+            Monster collidedMonster = myDungeon.getMyCurrentRoom().checkPlayerCollisionWithMonsters(myPlayer);
+            if (collidedMonster != null) {
+                // start combat with monster
+                System.out.println("COLLISION");
+            }
+        }
     }
 
     public void draw(final Graphics2D theGraphics2D) {
@@ -29,6 +42,15 @@ public class GameController {
         myPlayer.draw(theGraphics2D);
         myUI.drawGameHUD(theGraphics2D);
     }
+
+    /*
+    public void useItem(Item theItem) {
+        if (theItem != null) {
+            myInventory.useItem(theItem, );
+        }
+    }
+    */
+
 
     public void setUI(final UI theUI) {
         myUI = theUI;

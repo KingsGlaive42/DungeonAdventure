@@ -2,6 +2,7 @@ package model.DungeonManager;
 
 import controller.GameController;
 import model.AnimationSystem.Sprite;
+import model.DungeonCharacters.Monster;
 import model.Player.Player;
 import model.PlayerInventory.Item;
 import model.PlayerInventory.ItemType;
@@ -31,8 +32,8 @@ public class Room implements Serializable {
     private final static int ROOM_WIDTH = 17;
     private final static int ROOM_HEIGHT = 13;
     private static final int TILE_SIZE = 32;
-
-    private static final Random myRandom = new Random();
+    private static final Random ROOM_SPECIFIC_RANDOM = new Random();
+    private final Random myRandom = new Random();
 
     // Sprites for the floor and wall textures
     private final Sprite myFloorSpritesheet = new Sprite();
@@ -40,6 +41,7 @@ public class Room implements Serializable {
 
     // List of items in the room
     private final List<Item> myRoomItems = new ArrayList<>();
+    private final List<Monster> myRoomMonsters = new ArrayList<>();
 
     // Room coordinates
     private final int myX;
@@ -197,6 +199,22 @@ public class Room implements Serializable {
         return null;
     }
 
+    public Monster checkPlayerCollisionWithMonsters(Player thePlayer) {
+        for (Monster monster : myRoomMonsters) {
+            if (isPlayerCollidingWithMonster(thePlayer, monster)) {
+                return monster;
+            }
+        }
+        return null;
+    }
+
+    private boolean isPlayerCollidingWithMonster(Player thePlayer, Monster theMonster) {
+        Rectangle playerbounds = new Rectangle((int) thePlayer.getX(), (int) thePlayer.getY(), TILE_SIZE*2, TILE_SIZE*2);
+        Rectangle monsterBounds = new Rectangle(theMonster.getMonsterX(), theMonster.getMonsterY(), TILE_SIZE*2, TILE_SIZE*2);
+        return playerbounds.intersects(monsterBounds);
+    }
+
+    //void addDoor(final DoorDirection theDirection) {
     /**
      * Adds a door in the specified direction.
      *
@@ -229,9 +247,11 @@ public class Room implements Serializable {
                 System.out.println("Fell in pit");
             } else {
                 for (Item item : myRoomItems) {
+                    //thePlayer.addToInventory(item);
                     theGameController.getInventory().addItem(item);
                 }
                 myRoomItems.clear();
+                placeMonsters();
             }
             isVisited = true;
         }
@@ -250,6 +270,12 @@ public class Room implements Serializable {
         myRoomItems.add(theItem);
     }
 
+    public void addMonster(Monster theMonster) {
+        myRoomMonsters.add(theMonster);
+        //System.out.println("Monster added to room: " + myRoomType);
+        //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
+    }
+
     /**
      * Returns a list of items in the room.
      *
@@ -264,6 +290,10 @@ public class Room implements Serializable {
      *
      * @return The X coordinate of the room.
      */
+    public List<Monster> getMyRoomMonsters() {
+        return myRoomMonsters;
+    }
+
     public int getX() {
         return myX;
     }
@@ -347,13 +377,7 @@ public class Room implements Serializable {
         for (Door door : myDoors.values()) {
             door.draw(theGraphics2D);
         }
-
-        for (Item item : myRoomItems) {
-            if (item.getItemType() == ItemType.PILLAR) {
-                theGraphics2D.setColor(Color.WHITE);
-                theGraphics2D.drawString(item.getName().substring(0, 1), 50, 50);
-            }
-        }
+        drawMonsters(theGraphics2D);
     }
 
     /**
@@ -388,6 +412,58 @@ public class Room implements Serializable {
         for (int j = 0; j < ROOM_HEIGHT; j++) {
             theGraphics2D.drawImage(myWallSpritesheet.getSprite(1, 5), 0, j * 32, 32, 32, null);
             theGraphics2D.drawImage(myWallSpritesheet.getSprite(8, 5), 512, j * 32, 32, 32, null);
+        }
+    }
+
+    private void drawMonsters(final Graphics2D theGraphics2D) {
+        int scaleWidth = 64;
+        int scaleHeight = 64;
+        for (Monster monster: myRoomMonsters) {
+            if (monster.getName().equals("Gremlin")) {
+                scaleWidth = 156;
+                scaleHeight = 156;
+            } else {
+                scaleWidth = 64;
+                scaleHeight = 64;
+            }
+            BufferedImage monsterSprite = monster.getSprite();
+            if (monsterSprite != null) {
+                int monsterX = monster.getMonsterX();
+                int monsterY = monster.getMonsterY();
+                theGraphics2D.drawImage(monsterSprite, monsterX, monsterY,
+                        scaleWidth, scaleHeight, null);
+            }
+        }
+    }
+
+    private void placeMonsters() {
+        if (myRoomMonsters.isEmpty()) {
+            return;
+        }
+
+        List<Point> availablePositions = new ArrayList<>();
+        int startX = 4;
+        int startY = 4;
+        int endX = ROOM_WIDTH - 4;
+        int endY = ROOM_HEIGHT - 4;
+        for (int i = startX; i < endX; i++) {
+            for (int j = startY; j < endY; j++) {
+                availablePositions.add(new Point(i * TILE_SIZE, j *TILE_SIZE));
+            }
+        }
+        // shuffle list randomizing positions
+        long seed = (long) myX * 31 + myX;
+        ROOM_SPECIFIC_RANDOM.setSeed(seed);
+        Collections.shuffle(availablePositions, ROOM_SPECIFIC_RANDOM);
+
+        int monsterCount = Math.min(myRoomMonsters.size(), availablePositions.size());
+        for (int i = 0; i < monsterCount; i++) {
+            if (i < availablePositions.size()) {
+                Point pos = availablePositions.get(i);
+                Monster monster = myRoomMonsters.get(i);
+                monster.setPosition(pos.x, pos.y);
+                //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
+            }
         }
     }
 

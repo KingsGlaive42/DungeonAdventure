@@ -1,6 +1,9 @@
 package controller;
 
 import model.GameConfig;
+import controller.SoundManager;
+import view.GameScreen;
+import model.GameConfig;
 import view.UI;
 
 import java.awt.*;

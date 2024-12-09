@@ -22,8 +22,8 @@ public class DungeonTest {
     @BeforeEach
     void setUp() {
         dungeon = new Dungeon(10, 10, 20);
-        player = new Player("warrior", "PlayerName");
         inventory = new Inventory(dungeon);
+        player = new Player("warrior", "PlayerName", inventory);
         gameController = new GameController(player, dungeon, inventory);
     }
 

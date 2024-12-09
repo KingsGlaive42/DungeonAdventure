@@ -2,7 +2,9 @@ package model.Player.Tests;
 
 import controller.InputListener;
 import model.DungeonManager.DoorDirection;
+import model.DungeonManager.Dungeon;
 import model.Player.Player;
+import model.PlayerInventory.Inventory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +17,9 @@ class PlayerTest {
     @BeforeEach
     public void setup() {
         myInputListener = InputListener.getInstance();
-
-        myPlayer = new Player("Warrior", "TestPlayer");
+        Dungeon dungeon = new Dungeon(10, 10, 20);
+        Inventory inventory = new Inventory(dungeon);
+        myPlayer = new Player("Warrior", "TestPlayer", inventory);
     }
 
     @Test
@@ -27,15 +30,19 @@ class PlayerTest {
 
     @Test
     public void testConstructorInvalidCharacterClass() {
+        Dungeon dungeon = new Dungeon(10, 10, 20);
+        Inventory inventory = new Inventory(dungeon);
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new Player("invalidClass", "TestPlayer"));
+                new Player("invalidClass", "TestPlayer", inventory));
         assertEquals("Invalid character class: invalidClass", exception.getMessage());
     }
 
     @Test
     public void testConstructorNullName() {
+        Dungeon dungeon = new Dungeon(10, 10, 20);
+        Inventory inventory = new Inventory(dungeon);
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new Player("warrior", null));
+                new Player("warrior", null, inventory));
         assertEquals("Player name cannot be null or empty.", exception.getMessage());
     }
 

@@ -1,8 +1,10 @@
 package view;
 
+import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
 import model.Player.Player;
+import model.PlayerInventory.Inventory;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -15,6 +17,8 @@ public class GameCreateScreen {
 
     private UIButton[] myCharacterSelectButtons;
     private final UIButton myCreateGameButton;
+
+    private final GameController myGameController;
 
     private boolean isCharacterSelected;
     private String mySelectedCharacter;
@@ -29,9 +33,10 @@ public class GameCreateScreen {
     private final UIButton myHardDifficultyButton;
 
 
-    public GameCreateScreen(final UI theUI, final AssetManager theAssetManager) {
+    public GameCreateScreen(final UI theUI, final AssetManager theAssetManager, final GameController theGameController) {
         myUI = theUI;
 
+        this.myGameController = theGameController;
         createCharacterButtons(theAssetManager);
 
         myCreateGameButton = new UIButton(theAssetManager.getAsset("createGameButton"), new Rectangle(300, 300, 30, 30));
@@ -104,7 +109,7 @@ public class GameCreateScreen {
 
         if (myCreateGameButton.contains(theClickPoint)) {
             if (isCharacterSelected && !myPlayerName.isEmpty()) {
-                myUI.loadGame(new Player(mySelectedCharacter, myPlayerName), 3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty);
+                myUI.loadGame(new Player(mySelectedCharacter, myPlayerName, myGameController.getInventory()), 3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty);
             } else {
                 System.out.println("Please select a character and enter a name.");
             }
