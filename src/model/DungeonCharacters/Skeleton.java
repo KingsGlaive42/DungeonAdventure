@@ -4,8 +4,15 @@ import model.AnimationSystem.Animation;
 import model.AnimationSystem.Sprite;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Skeleton extends Monster{
+public class Skeleton extends Monster implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final String SKELETON_SS_IDLE = "src/resources/assets/Monsters/skeleton_sprite_idle.png";
     private static final String SKELETON_SS_ATTACK = "src/resources/assets/Monsters/skeleton_sprite_attack.png";
     private static final String SKELETON_SS_DEATH = "src/resources/assets/Monsters/skeleton_sprite_death.png";
@@ -100,5 +107,24 @@ public class Skeleton extends Monster{
             lastUpdate = currT;
         }
         return idleAnimation.getSprite();
+    }
+
+    /**
+     * Custom deserialization method to restore transient fields.
+     *
+     * @param in The ObjectInputStream used to read the object.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the class cannot be found.
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        loadSprites();
+        //System.out.println("Reloaded sprite sheets.");
+
+        initializeAnimations();
+        //System.out.println("Initialized animations.");
     }
 }

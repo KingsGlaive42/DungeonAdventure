@@ -1,11 +1,20 @@
 package model.DungeonCharacters;
 
+import controller.InputListener;
+import controller.SoundManager;
 import model.AnimationSystem.Animation;
 import model.AnimationSystem.Sprite;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Gremlin extends Monster {
+public class Gremlin extends Monster implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final String GREMLIN_SS_IDLE = "src/resources/assets/Monsters/gremlin_sprite_idle.png";
     private static final String GREMLIN_SS_ATTACK = "src/resources/assets/Monsters/gremlin_sprite_attack.png";
     private static final String GREMLIN_SS_DEATH = "src/resources/assets/Monsters/gremlin_sprite_death.png";
@@ -91,5 +100,24 @@ public class Gremlin extends Monster {
             lastUpdate = currT;
         }
         return idleAnimation.getSprite();
+    }
+
+    /**
+     * Custom deserialization method to restore transient fields.
+     *
+     * @param in The ObjectInputStream used to read the object.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the class cannot be found.
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        loadSprites();
+        //System.out.println("Reloaded sprite sheets.");
+
+        initializeAnimations();
+        //System.out.println("Initialized animations.");
     }
 }

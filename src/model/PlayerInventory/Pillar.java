@@ -1,14 +1,19 @@
 package model.PlayerInventory;
 
+import controller.InputListener;
+import controller.SoundManager;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serial;
 
 public class Pillar extends Item {
     private final String myName;
     private static final String IMAGE_PATH = "src/resources/assets/Inventory/";
-    private BufferedImage pillarImage;
+    private transient BufferedImage pillarImage;
 
     public Pillar(String theName) {
         super("'" + theName.charAt(0) + "' pillar", "The pillar of " + theName.toLowerCase() + ". \nRequired to exit the dungeon.", ItemType.PILLAR);
@@ -33,6 +38,21 @@ public class Pillar extends Item {
     @Override
     public BufferedImage getImage() {
         return pillarImage;
+    }
+
+    /**
+     * Custom deserialization method to restore transient fields.
+     *
+     * @param in The ObjectInputStream used to read the object.
+     * @throws IOException If an I/O error occurs.
+     * @throws ClassNotFoundException If the class cannot be found.
+     */
+    @Serial
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        //System.out.println("Deserialized Room object.");
+
+        loadPillarImage();
     }
 }
 
