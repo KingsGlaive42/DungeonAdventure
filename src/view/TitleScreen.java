@@ -48,7 +48,7 @@ public class TitleScreen {
         } else if (myLoadButton.contains(theClickPoint)) {
             myGameStateManager.setState(GameStateManager.State.LOAD);
         } else if (myOptionsButton.contains(theClickPoint)) {
-            myGameStateManager.setState(GameStateManager.State.LOAD);
+            myGameStateManager.setState(GameStateManager.State.OPTION);
         } else if (myExitButton.contains(theClickPoint)) {
             System.exit(0);
         }

@@ -1,6 +1,7 @@
 package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
+import model.GameConfig;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -45,6 +46,11 @@ public class Hero extends DungeonCharacter implements Serializable {
             return AttackResult.BLOCK;
         } else {
             int newHitPoints = getHitPoints() - theDamage;
+
+            if (GameConfig.isInfiniteHealth()) {
+                newHitPoints += theDamage;
+            }
+
             // Ensure HP does not go below zero
             setHitPoints(Math.max(newHitPoints, 0));
         }

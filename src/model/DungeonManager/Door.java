@@ -1,10 +1,10 @@
 package model.DungeonManager;
 
+import model.GameConfig;
 import model.Player.Player;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
-import java.awt.Graphics2D;
 import java.io.Serial;
 import java.io.Serializable;
 
@@ -85,6 +85,14 @@ public class Door implements Serializable {
         }
         theGraphics2D.setColor(DOOR_COLOR);
         theGraphics2D.fill(myRect);
+
+        if (GameConfig.isShowHitboxes()) {
+            AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+            theGraphics2D.setComposite(ac);
+            theGraphics2D.setColor(Color.CYAN);
+            theGraphics2D.fill(myRect);
+            theGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
+import model.GameConfig;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -41,9 +42,15 @@ public class Mage extends Hero implements Serializable {
             return AttackResult.BONK;
         }
         Random rand = new Random();
-        if ((rand.nextInt(10) + 1) / 10.0 <= getChanceToHit()) {
+        if ((rand.nextInt(10) + 1) / 10.0 <= getChanceToHit() || GameConfig.isInfiniteDamage()) {
             int damage = calculateDamage(getMinDamage(), getMaxDamage());
+
+            if (GameConfig.isInfiniteDamage()) {
+                damage = 9999999;
+            }
+
             theTarget.takeDamage(damage);
+
             return AttackResult.HIT;
         } else {
             return AttackResult.MISS;
@@ -97,4 +104,5 @@ public class Mage extends Hero implements Serializable {
      * @return Max MP amount.
      */
     public int getMaxMagicPoints() { return myMaxMagicPoints; }
+
 }

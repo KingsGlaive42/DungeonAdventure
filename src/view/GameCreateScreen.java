@@ -73,7 +73,8 @@ public class GameCreateScreen {
         theGraphics2D.setColor(Color.WHITE);
         theGraphics2D.setFont(new Font("Arial", Font.BOLD, 18));
         theGraphics2D.drawString("Select Character:", 50, 50);
-        theGraphics2D.drawString("Select Difficulty", 50, 165);
+        theGraphics2D.drawString("Select Difficulty:", 50, 165);
+        theGraphics2D.drawString("Create New Game", 50, 25);
 
         for (UIButton button : myCharacterSelectButtons) {
             button.draw(theGraphics2D);
