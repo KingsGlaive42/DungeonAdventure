@@ -3,6 +3,7 @@ package model.PlayerInventory;
 import controller.InputListener;
 import controller.SoundManager;
 import model.DungeonCharacters.Hero;
+import model.DungeonManager.Dungeon;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,12 +23,6 @@ public class HealingPotion extends Item {
         loadSprite();
     }
 
-    public void use(final Hero theHero) {
-        int newHealth = Math.min(theHero.getHitPoints() + myHealingAmount, theHero.getMaxHitPoints());
-        theHero.setHitPoints(newHealth);
-        System.out.println(theHero.getName() + " uses a Healing Potion and restores " + myHealingAmount);
-    }
-
     private void loadSprite() {
         BufferedImage temp;
         try {
@@ -36,6 +31,24 @@ public class HealingPotion extends Item {
             temp = null;
         }
         IMAGE = temp;
+    }
+
+    @Override
+    public void use(Hero theHero, Dungeon theDungeon) {
+        int oldHealth = theHero.getHitPoints();
+        System.out.println("Health: " + oldHealth);
+        if (theHero.getHitPoints() < theHero.getMaxHitPoints()) {
+            int newHealth = Math.min(theHero.getHitPoints() + myHealingAmount, theHero.getMaxHitPoints());
+            theHero.setHitPoints(newHealth);
+            if (oldHealth + myHealingAmount <= theHero.getMaxHitPoints()) {
+                System.out.println(theHero.getName() + " uses a Healing Potion and restores " + myHealingAmount);
+            } else {
+                System.out.println(theHero.getName() + "'s full health has been restored!");
+            }
+            System.out.println("Health: " + newHealth);
+        } else {
+            System.out.println("You are already at maximum HP!");
+        }
     }
 
     @Override

@@ -142,7 +142,9 @@ public class Dungeon implements Serializable {
         for (int[] pos : directions) {
             Point point = new Point(pos[0], pos[1]);
             if (myRooms.containsKey(point)) {
+                myRooms.get(point).setVisibility(true);
                 surroundingRooms.put(point, myRooms.get(point));
+
             }
         }
         return Collections.unmodifiableMap(surroundingRooms);
@@ -164,7 +166,6 @@ public class Dungeon implements Serializable {
     public int getMyHeight() {
         return myHeight;
     }
-
 
     public int getMyWidth() {
         return myWidth;

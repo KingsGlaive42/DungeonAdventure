@@ -2,6 +2,7 @@ package model.DungeonManager;
 
 import controller.GameController;
 import model.AnimationSystem.Sprite;
+import model.DungeonCharacters.Hero;
 import model.DungeonCharacters.Monster;
 import model.Player.Player;
 import model.PlayerInventory.Item;
@@ -50,6 +51,7 @@ public class Room implements Serializable {
     // Room properties
     private boolean hasPit;
     private boolean isVisited;
+    private boolean isVisible;
 
     private RoomType myRoomType;
     private transient BufferedImage[][] myFloorTiles = new BufferedImage[ROOM_WIDTH][ROOM_HEIGHT];
@@ -244,16 +246,18 @@ public class Room implements Serializable {
 
         if (!isVisited) {
             if (this.hasPit) {
-                System.out.println("Fell in pit");
+                //System.out.println("Fell in pit");
+                handlePitDamage(theGameController);
+
             } else {
                 for (Item item : myRoomItems) {
-                    //thePlayer.addToInventory(item);
                     theGameController.getInventory().addItem(item);
                 }
                 myRoomItems.clear();
                 placeMonsters();
             }
             isVisited = true;
+            isVisible = true;
         }
     }
 
@@ -275,6 +279,16 @@ public class Room implements Serializable {
         //System.out.println("Monster added to room: " + myRoomType);
         //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
     }
+
+    public void handlePitDamage(final GameController theGameController) {
+        if (this.hasPit) {
+            int damage = (int)(Math.random() * 20 + 1);
+            theGameController.getPlayer().getHeroClass().takeDamage(damage);
+            //System.out.println("Player took " + damage + " damage from the pit!");
+            theGameController.getUI().getGameScreen().showDialogue("You fell into a pit! -" + damage + " HP");
+        }
+    }
+
 
     /**
      * Returns a list of items in the room.
@@ -352,8 +366,16 @@ public class Room implements Serializable {
      *
      * @param thePit True to set the room as having a pit, false otherwise.
      */
-    public void setPit(boolean thePit) {
+    public void setPit(final boolean thePit) {
         this.hasPit = thePit;
+    }
+
+    public void setVisibility(final boolean theVisibility) {
+        this.isVisible = theVisibility;
+    }
+
+    public boolean getVisibility() {
+        return isVisible;
     }
 
     /**

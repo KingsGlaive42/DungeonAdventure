@@ -28,7 +28,7 @@ class RoomTest {
   public void setup() {
       room = new Room(0, 0, RoomType.FILLER);
       connectedRoom = new Room(1, 0, RoomType.FILLER);
-      player = new Player("warrior", "TestPlayer", new Inventory(new Dungeon(0,0,0)));
+      player = new Player("warrior", "TestPlayer", new Inventory(new Dungeon(0, 0, 0)));
   }
 
     @Test

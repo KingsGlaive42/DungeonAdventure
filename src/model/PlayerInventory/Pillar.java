@@ -2,6 +2,8 @@ package model.PlayerInventory;
 
 import controller.InputListener;
 import controller.SoundManager;
+import model.DungeonCharacters.Hero;
+import model.DungeonManager.Dungeon;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,6 +35,11 @@ public class Pillar extends Item {
             e.printStackTrace();
             pillarImage = null;
         }
+    }
+
+    @Override
+    public void use(Hero theHero, Dungeon theDungeon) {
+        System.out.println("Cannot use Pillars!");
     }
 
     @Override

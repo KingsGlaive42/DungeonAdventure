@@ -2,6 +2,7 @@ package model.PlayerInventory;
 
 import controller.InputListener;
 import controller.SoundManager;
+import model.DungeonCharacters.Hero;
 import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 
@@ -18,17 +19,6 @@ public class VisionPotion extends Item implements Serializable {
         loadSprite();
     }
 
-    public void use(final Dungeon theDungeon) {
-        Room currRoom = theDungeon.getMyCurrentRoom();
-        Map<Point, Room> surroundingRooms = theDungeon.getSurroundingRooms(currRoom);
-
-        System.out.println("Revealing surrounding rooms:");
-        for (Map.Entry<Point, Room> entry : surroundingRooms.entrySet()) {
-            Room room = entry.getValue();
-            System.out.println("Room at " + entry.getKey() + " -> Items: " + room.getRoomItems().size() + " item(s)");
-        }
-    }
-
     private void loadSprite() {
         BufferedImage temp;
         try {
@@ -39,6 +29,20 @@ public class VisionPotion extends Item implements Serializable {
         IMAGE = temp;
     }
 
+
+    @Override
+    public void use(Hero theHero, Dungeon theDungeon) {
+        Room currRoom = theDungeon.getMyCurrentRoom();
+        Map<Point, Room> surroundingRooms = theDungeon.getSurroundingRooms(currRoom);
+
+        System.out.println("Revealing surrounding rooms:");
+        for (Map.Entry<Point, Room> entry : surroundingRooms.entrySet()) {
+            Room room = entry.getValue();
+            room.setVisibility(true);
+            //System.out.println("Room at " + entry.getKey() + " -> Items: " + room.getRoomItems().size() + " item(s)");
+        }
+
+    }
 
     @Override
     public BufferedImage getImage() {

@@ -3,6 +3,8 @@ package controller;
 import model.GameConfig;
 import view.GamePanel;
 
+import java.awt.*;
+
 public class GameEngine implements Runnable {
     private final GamePanel myGamePanel;
     private final GameStateManager myGameStateManager;

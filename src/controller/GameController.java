@@ -6,6 +6,7 @@ import model.DungeonManager.Dungeon;
 import model.Player.Player;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
+import model.PlayerInventory.ItemType;
 import view.UI;
 
 import java.awt.*;
@@ -43,17 +44,19 @@ public class GameController {
         myUI.drawGameHUD(theGraphics2D);
     }
 
-    /*
-    public void useItem(Item theItem) {
+
+    public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, UI theUI) {
         if (theItem != null) {
-            myInventory.useItem(theItem, );
+            myInventory.useItem(theItem, theHero, theDungeon);
         }
     }
-    */
-
 
     public void setUI(final UI theUI) {
         myUI = theUI;
+    }
+
+    public UI getUI() {
+        return myUI;
     }
 
     public void setMyPlayer(final Player thePlayer) {
