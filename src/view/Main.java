@@ -70,13 +70,15 @@ public class Main {
         theAssetManager.loadAsset("encapsulationImage", "src/resources/assets/Buttons/EncapsulationImage.png");
         theAssetManager.loadAsset("inheritanceImage", "src/resources/assets/Buttons/InheritanceButton.png");
         theAssetManager.loadAsset("polymorphismImage", "src/resources/assets/Buttons/PolymorphismButton.png");
-        theAssetManager.loadAsset("warriorImage", "src/resources/test_image.png");
-        theAssetManager.loadAsset("thiefImage", "src/resources/test_image.png");
-        theAssetManager.loadAsset("priestessImage", "src/resources/test_image.png");
-        theAssetManager.loadAsset("createGameButton", "src/resources/test_image.png");
-        theAssetManager.loadAsset("easyButton", "src/resources/test_image.png");
-        theAssetManager.loadAsset("mediumButton", "src/resources/test_image.png");
-        theAssetManager.loadAsset("hardButton", "src/resources/test_image.png");
+        theAssetManager.loadAsset("warriorImage", "src/resources/assets/player/EdgarPortrait.png");
+        theAssetManager.loadAsset("thiefImage", "src/resources/assets/player/SetzerPortrait.png");
+        theAssetManager.loadAsset("priestessImage", "src/resources/assets/player/TerraPortrait.png");
+        theAssetManager.loadAsset("berserkerImage", "src/resources/assets/player/LockePortrait.png");
+        theAssetManager.loadAsset("mageImage", "src/resources/assets/player/CelesPortrait.png");
+        theAssetManager.loadAsset("createGameButton", "src/resources/assets/Buttons/forwardButton.png");
+        theAssetManager.loadAsset("easyButton", "src/resources/assets/Buttons/easyButton.png");
+        theAssetManager.loadAsset("mediumButton", "src/resources/assets/Buttons/mediumButton.png");
+        theAssetManager.loadAsset("hardButton", "src/resources/assets/Buttons/hardButton.png");
 
     }
 

@@ -117,6 +117,8 @@ public class Player extends GameObject implements Serializable {
             case "warrior" -> myHeroClass = new Warrior(thePlayerName);
             case "thief" -> myHeroClass = new Thief(thePlayerName);
             case "priestess" -> myHeroClass = new Priestess(thePlayerName);
+            case "berserker" -> myHeroClass = new Berserker(thePlayerName);
+            case "mage" -> myHeroClass = new Mage(thePlayerName);
             default -> throw new IllegalArgumentException("Invalid character class: " + theCharacterClass);
         }
     }
