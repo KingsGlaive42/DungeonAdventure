@@ -3,11 +3,13 @@ package model.DungeonManager;
 import controller.GameController;
 import model.AnimationSystem.Sprite;
 import model.DungeonCharacters.Monster;
+import model.GameConfig;
 import model.Player.Player;
 import model.PlayerInventory.Item;
 import model.PlayerInventory.ItemType;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -209,9 +211,14 @@ public class Room implements Serializable {
     }
 
     private boolean isPlayerCollidingWithMonster(Player thePlayer, Monster theMonster) {
-        Rectangle playerbounds = new Rectangle((int) thePlayer.getX(), (int) thePlayer.getY(), TILE_SIZE*2, TILE_SIZE*2);
-        Rectangle monsterBounds = new Rectangle(theMonster.getMonsterX(), theMonster.getMonsterY(), TILE_SIZE*2, TILE_SIZE*2);
-        return playerbounds.intersects(monsterBounds);
+        Rectangle2D playerBounds = new Rectangle2D.Double(
+                thePlayer.getX() + thePlayer.getTileSize(),
+                thePlayer.getY() + thePlayer.getTileSize(),
+                thePlayer.getTileSize(),
+                thePlayer.getTileSize() * 2
+        );
+        Rectangle2D monsterBounds = new Rectangle2D.Double(theMonster.getMonsterX(), theMonster.getMonsterY(), TILE_SIZE*2, TILE_SIZE*2);
+        return playerBounds.intersects(monsterBounds);
     }
 
     //void addDoor(final DoorDirection theDirection) {
@@ -382,6 +389,17 @@ public class Room implements Serializable {
             door.draw(theGraphics2D);
         }
         drawMonsters(theGraphics2D);
+
+        if (GameConfig.isShowHitboxes()) {
+            AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+            theGraphics2D.setComposite(ac);
+            theGraphics2D.setColor(Color.CYAN);
+            for (Monster monster : myRoomMonsters) {
+
+                theGraphics2D.fill(new Rectangle(monster.getMonsterX(), monster.getMonsterY(), TILE_SIZE*2, TILE_SIZE*2));
+            }
+            theGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        }
     }
 
     /**

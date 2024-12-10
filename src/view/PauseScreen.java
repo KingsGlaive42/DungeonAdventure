@@ -18,11 +18,13 @@ public class PauseScreen {
     private final UIButton mySaveButton;
     private final UIButton myLoadButton;
     private final GameStateManager myGameStateManager;
+    private final UIButton myBackButton;
 
     public PauseScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager) {
         this.myGameStateManager = theGameStateManager;
         mySaveButton = new UIButton(theAssetManager.getAsset("saveButton"), new Rectangle(10, 10, 55, 55));
         myLoadButton = new UIButton(theAssetManager.getAsset("loadButton"), new Rectangle(70, 10, 55, 55));
+        myBackButton = new UIButton(theAssetManager.getAsset("backButton"), new Rectangle(25, 325, 70, 70));
     }
 
     public void draw(final Graphics2D theGraphics2D) {
@@ -37,6 +39,7 @@ public class PauseScreen {
 
         mySaveButton.draw(theGraphics2D);
         myLoadButton.draw(theGraphics2D);
+        myBackButton.draw(theGraphics2D);
     }
 
     public void handleClick(final Point theClickPoint) {
@@ -58,11 +61,15 @@ public class PauseScreen {
         if (myLoadButton.contains(theClickPoint)) {
             myGameStateManager.setState(GameStateManager.State.LOAD);
         }
+        if (myBackButton.contains(theClickPoint)) {
+            myGameStateManager.setState(GameStateManager.State.MENU);
+        }
     }
 
     public void handleHoverUpdate(final Point theMousePoint) {
         mySaveButton.setHovered(mySaveButton.contains(theMousePoint));
         myLoadButton.setHovered(myLoadButton.contains(theMousePoint));
+        myBackButton.setHovered(myBackButton.contains(theMousePoint));
     }
 
     private void drawVolumeOptions(final Graphics2D theGraphics2D) {

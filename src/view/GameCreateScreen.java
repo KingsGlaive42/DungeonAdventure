@@ -3,8 +3,10 @@ package view;
 import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
+import model.GameConfig;
 import model.Player.Player;
 import model.PlayerInventory.Inventory;
+import model.SaveGame.GameState;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,15 +19,17 @@ public class GameCreateScreen {
 
     private UIButton[] myCharacterSelectButtons;
     private final UIButton myCreateGameButton;
+    private final UIButton myBackButton;
 
     private final GameController myGameController;
+    private final GameStateManager myGameStateManager;
 
     private boolean isCharacterSelected;
     private String mySelectedCharacter;
 
     private boolean isNameInputFocused = false;
     private String myPlayerName = "";
-    private final Rectangle myNameInputFieldBounds = new Rectangle(200, 350, 200, 30);
+    private final Rectangle myNameInputFieldBounds = new Rectangle(50, 250, 200, 30);
 
     private int myDifficulty;
     private final UIButton myEasyDifficultyButton;
@@ -33,24 +37,26 @@ public class GameCreateScreen {
     private final UIButton myHardDifficultyButton;
 
 
-    public GameCreateScreen(final UI theUI, final AssetManager theAssetManager, final GameController theGameController) {
+    public GameCreateScreen(final UI theUI, final AssetManager theAssetManager, final GameController theGameController, final GameStateManager theGameStateManager) {
         myUI = theUI;
 
         this.myGameController = theGameController;
+        this.myGameStateManager = theGameStateManager;
         createCharacterButtons(theAssetManager);
 
-        myCreateGameButton = new UIButton(theAssetManager.getAsset("createGameButton"), new Rectangle(300, 300, 30, 30));
+        myCreateGameButton = new UIButton(theAssetManager.getAsset("createGameButton"), new Rectangle(450, 325, 70, 70));
+        myBackButton = new UIButton(theAssetManager.getAsset("backButton"), new Rectangle(50, 325, 70, 70));
 
-        myEasyDifficultyButton = new UIButton(theAssetManager.getAsset("easyButton"), new Rectangle(400, 50, 40, 40));
-        myMediumDifficultyButton = new UIButton(theAssetManager.getAsset("mediumButton"), new Rectangle(400, 100, 40, 40));
-        myHardDifficultyButton = new UIButton(theAssetManager.getAsset("hardButton"), new Rectangle(400, 150, 40, 40));
+        myEasyDifficultyButton = new UIButton(theAssetManager.getAsset("easyButton"), new Rectangle(50, 170, 70, 70));
+        myMediumDifficultyButton = new UIButton(theAssetManager.getAsset("mediumButton"), new Rectangle(130, 170, 70, 70));
+        myHardDifficultyButton = new UIButton(theAssetManager.getAsset("hardButton"), new Rectangle(210, 170, 70, 70));
     }
 
     private void createCharacterButtons(final AssetManager theAssetManager) {
         myCharacterSelectButtons = new UIButton[NUM_CHARACTERS];
 
         for (int i = 0; i < NUM_CHARACTERS; i++) {
-            myCharacterSelectButtons[i] = new UIButton(theAssetManager.getAsset(theGraphics2D[i] + "Image"), new Rectangle(60 * i, 30, 50, 50));
+            myCharacterSelectButtons[i] = new UIButton(theAssetManager.getAsset(theGraphics2D[i] + "Image"), new Rectangle(80 * i + 50, 60, 70, 70));
         }
     }
 
@@ -58,6 +64,17 @@ public class GameCreateScreen {
         if (theGraphics2D == null) {
             throw new IllegalArgumentException("Graphics2D Cannot be null");
         }
+
+
+
+        theGraphics2D.setColor(Color.BLACK);
+        theGraphics2D.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
+
+        theGraphics2D.setColor(Color.WHITE);
+        theGraphics2D.setFont(new Font("Arial", Font.BOLD, 18));
+        theGraphics2D.drawString("Select Character:", 50, 50);
+        theGraphics2D.drawString("Select Difficulty:", 50, 165);
+        theGraphics2D.drawString("Create New Game", 50, 25);
 
         for (UIButton button : myCharacterSelectButtons) {
             button.draw(theGraphics2D);
@@ -81,6 +98,7 @@ public class GameCreateScreen {
             myCreateGameButton.draw(theGraphics2D);
         }
 
+        myBackButton.draw(theGraphics2D);
         myEasyDifficultyButton.draw(theGraphics2D);
         myMediumDifficultyButton.draw(theGraphics2D);
         myHardDifficultyButton.draw(theGraphics2D);
@@ -98,6 +116,7 @@ public class GameCreateScreen {
         myEasyDifficultyButton.setHovered(myEasyDifficultyButton.contains(theMousePoint) || myDifficulty == 5);
         myMediumDifficultyButton.setHovered(myMediumDifficultyButton.contains(theMousePoint) || myDifficulty == 8);
         myHardDifficultyButton.setHovered(myHardDifficultyButton.contains(theMousePoint) || myDifficulty == 12);
+        myBackButton.setHovered(myBackButton.contains(theMousePoint));
 
         myCreateGameButton.setHovered(myCreateGameButton.contains(theMousePoint));
     }
@@ -123,6 +142,9 @@ public class GameCreateScreen {
         }
         if (myHardDifficultyButton.contains(theClickPoint)) {
             myDifficulty = 12;
+        }
+        if (myBackButton.contains(theClickPoint)) {
+            myGameStateManager.setState(GameStateManager.State.MENU);
         }
     }
 
