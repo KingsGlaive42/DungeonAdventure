@@ -1,6 +1,8 @@
 package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
+import model.GameConfig;
+
 import java.io.Serializable;
 import java.util.Random;
 
@@ -45,6 +47,11 @@ public class Priestess extends Hero implements Serializable {
         setMagicPoints(getMagicPoints() - 5);
         if ((rand.nextInt(10) + 1) / 10.0 <= getChanceToHit()) {
             int damage = calculateDamage(getMinDamage(), getMaxDamage());
+
+            if (GameConfig.isInfiniteDamage()) {
+                damage = 9999999;
+            }
+
             theTarget.takeDamage(damage);
             return AttackResult.HIT;
         } else {
@@ -99,4 +106,5 @@ public class Priestess extends Hero implements Serializable {
      * @return Max MP value.
      */
     public int getMaxMagicPoints() { return myMaxMagicPoints; }
+
 }

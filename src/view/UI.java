@@ -29,8 +29,8 @@ public class UI {
         this.myPauseScreen = new PauseScreen(theAssetManager, theGameStateManager);
         this.myLoadGameScreen = new LoadGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
         this.mySaveGameScreen = new SaveGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
-        this.myOptionScreen = new OptionScreen();
-        this.myGameCreateScreen = new GameCreateScreen(this, theAssetManager, theGameController);
+        this.myOptionScreen = new OptionScreen(theGameStateManager, theAssetManager);
+        this.myGameCreateScreen = new GameCreateScreen(this, theAssetManager, theGameController, theGameStateManager);
         this.myWaitScreen = new LoadingScreen(theGameController, theGameStateManager);
     }
 
@@ -55,7 +55,7 @@ public class UI {
     }
 
     public void drawOptionScreen(final Graphics2D theGraphics2D) {
-
+        myOptionScreen.draw(theGraphics2D);
     }
 
     public void drawGameCreateScreen(final Graphics2D theGraphics2D) {
@@ -76,6 +76,7 @@ public class UI {
             case LOAD -> myLoadGameScreen.handleHoverUpdate(theMousePoint);
             case SAVE -> mySaveGameScreen.handleHoverUpdate(theMousePoint);
             case GAME_CREATE -> myGameCreateScreen.handleHoverUpdate(theMousePoint);
+            case OPTION -> myOptionScreen.handleHoverUpdate(theMousePoint);
         }
     }
 
@@ -87,6 +88,7 @@ public class UI {
             case LOAD -> myLoadGameScreen.handleClick(theClickPoint);
             case SAVE -> mySaveGameScreen.handleClick(theClickPoint);
             case GAME_CREATE -> myGameCreateScreen.handleClick(theClickPoint);
+            case OPTION -> myOptionScreen.handleClick(theClickPoint);
         }
     }
 
@@ -104,5 +106,9 @@ public class UI {
 
     public GameScreen getGameScreen() {
         return myGameScreen;
+    }
+
+    public void loadSlotInfo() {
+        myLoadGameScreen.loadSaveSlotDetails();
     }
 }

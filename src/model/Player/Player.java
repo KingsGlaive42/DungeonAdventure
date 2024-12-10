@@ -11,8 +11,8 @@ import model.GameConfig;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
@@ -91,6 +91,10 @@ public class Player extends GameObject implements Serializable {
         initializeAnimations();
         loadSoundEffects();
         setDefaultValues();
+
+        if (GameConfig.isHighSpeed()) {
+            mySpeed = 15;
+        }
     }
 
     /**
@@ -117,6 +121,8 @@ public class Player extends GameObject implements Serializable {
             case "warrior" -> myHeroClass = new Warrior(thePlayerName);
             case "thief" -> myHeroClass = new Thief(thePlayerName);
             case "priestess" -> myHeroClass = new Priestess(thePlayerName);
+            case "berserker" -> myHeroClass = new Berserker(thePlayerName);
+            case "mage" -> myHeroClass = new Mage(thePlayerName);
             default -> throw new IllegalArgumentException("Invalid character class: " + theCharacterClass);
         }
     }
@@ -277,7 +283,22 @@ public class Player extends GameObject implements Serializable {
 
         // Draw the image with the transform applied
         graphics2D.drawImage(myAnimation.getSprite(), transform, null);
-        //graphics2D.fillRect(myX + TILE_SIZE, myY + TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+        if (GameConfig.isShowHitboxes()) {
+            float alpha = 0.5f;
+            AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+            graphics2D.setComposite(ac);
+
+            graphics2D.setColor(Color.CYAN);
+            graphics2D.fill(new Rectangle2D.Double(
+                    getX() + getTileSize(),
+                    getY() + getTileSize(),
+                    getTileSize(),
+                    getTileSize() * 2
+            ));
+            graphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        }
+
     }
 
     /**
@@ -535,6 +556,10 @@ public class Player extends GameObject implements Serializable {
         //System.out.println("Deserialized Room object.");
 
         setDefaultValues();
+
+        if (GameConfig.isHighSpeed()) {
+            mySpeed = 15;
+        }
 
         this.myInputListener = InputListener.getInstance();
         this.mySoundManager = SoundManager.getInstance();

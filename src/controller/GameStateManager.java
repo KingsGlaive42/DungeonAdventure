@@ -55,7 +55,10 @@ public class GameStateManager {
             case GAME:
                 mySoundManager.playBackgroundMusic(GameConfig.GAME_THEME);
                 break;
-            case LOAD, SAVE, GAME_CREATE, PAUSE:
+            case LOAD:
+                myUI.loadSlotInfo();
+                break;
+            case SAVE, GAME_CREATE, PAUSE:
                 break;
             case COMBAT:
                 mySoundManager.playBackgroundMusic(GameConfig.COMBAT_THEME);
