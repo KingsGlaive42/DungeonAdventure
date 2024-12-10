@@ -1,6 +1,7 @@
 package model.DungeonCharacters;
 
 import model.Combat.AttackResult;
+import model.GameConfig;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,6 +24,23 @@ public class Thief extends Hero implements Serializable {
     public Thief(final String theName) {
         super(theName, 75, 20, 40, 6, 0.8, 0.4);
     }
+
+    @Override
+    public AttackResult attack(final DungeonCharacter theTarget) {
+        Random rand = new Random();
+        if ((rand.nextInt(10) + 1) / 10.0 <= getChanceToHit() || GameConfig.isInfiniteDamage()) {
+            int damage = calculateDamage(getMinDamage(), getMaxDamage());
+
+            if (GameConfig.isInfiniteDamage()) {
+                damage = 99999;
+            }
+
+            return theTarget.takeDamage(damage);
+        } else {
+            return AttackResult.MISS;
+        }
+    }
+
 
     /**
      * This method is the thief's unique special skill.

@@ -79,7 +79,10 @@ public class Main {
         theAssetManager.loadAsset("easyButton", "src/resources/assets/Buttons/easyButton.png");
         theAssetManager.loadAsset("mediumButton", "src/resources/assets/Buttons/mediumButton.png");
         theAssetManager.loadAsset("hardButton", "src/resources/assets/Buttons/hardButton.png");
-
+        theAssetManager.loadAsset("infiniteHealthImage", "src/resources/assets/Buttons/infiniteHealthImage.png");
+        theAssetManager.loadAsset("infiniteDamageImage", "src/resources/assets/Buttons/infiniteDamageImage.png");
+        theAssetManager.loadAsset("highSpeedImage", "src/resources/assets/Buttons/highSpeedImage.png");
+        theAssetManager.loadAsset("showHitboxesImage", "src/resources/assets/Buttons/showHitboxImage.png");
     }
 
     private static void testSaveFunctionality(SaveFileManager saveFileManager, GameState gameState) {
