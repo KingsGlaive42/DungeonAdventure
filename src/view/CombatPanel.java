@@ -11,8 +11,6 @@ import java.io.IOException;
 
 import controller.CombatController;
 import model.Combat.AttackResult;
-import model.Combat.CombatEngine;
-import model.DungeonCharacters.*;
 import model.GameConfig;
 
 /**
@@ -39,6 +37,9 @@ public class CombatPanel extends JPanel {
     private static JLabel enemyImageLabel;
     private static ImageIcon heroImageIcon;
     private static ImageIcon enemyImageIcon;
+    private Image heroImage;
+    private Image enemyImage;
+    private JPanel visualPanel;
 
     /**
      * Combat Panel constructor.
@@ -115,7 +116,7 @@ public class CombatPanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
 
         // Create a JPanel with a background image
-        JPanel visualPanel = new JPanel(new BorderLayout()) {
+        visualPanel = new JPanel(new BorderLayout()) {
             private Image backgroundImage;
 
             {
@@ -142,7 +143,7 @@ public class CombatPanel extends JPanel {
 
         // Load and scale the hero image
         heroImageIcon = combatController.setImage(true);
-        Image heroImage = heroImageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        heroImage = heroImageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         heroImageIcon = new ImageIcon(heroImage);
         heroImageLabel = new JLabel(heroImageIcon); // Create a JLabel with the scaled image
         heroImageLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -152,7 +153,7 @@ public class CombatPanel extends JPanel {
 
         // Load and scale the enemy image
         enemyImageIcon = combatController.setImage(false);
-        Image enemyImage = enemyImageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        enemyImage = enemyImageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         enemyImageIcon = new ImageIcon(enemyImage);
         enemyImageLabel = new JLabel(enemyImageIcon);
         enemyImageLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -265,12 +266,18 @@ public class CombatPanel extends JPanel {
      * @param theMessage Message displayed on death of hero or enemy.
      */
     public void displayGameOver(final String theMessage) {
-        clearState();
         JOptionPane.showMessageDialog(this, theMessage, "Game Over", JOptionPane.INFORMATION_MESSAGE);
         combatController.switchToGamePanel();
     }
 
-    private void clearState() {
+    public void clearState() {
+        ImageIcon newHeroIcon = combatController.setImage(true);
+        ImageIcon newEnemyIcon = combatController.setImage(false);
+        Image newHeroImage = newHeroIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        Image newEnemyImage = newEnemyIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        heroImageIcon.setImage(newHeroImage);
+        enemyImageIcon.setImage(newEnemyImage);
+        visualPanel.repaint();
         reactivateButtons();
         actionLog.setText("");
     }

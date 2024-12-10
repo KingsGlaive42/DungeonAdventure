@@ -52,7 +52,7 @@ public class CombatController {
         enemy = theEnemy;
         updateHeroInfo();
         updateEnemyInfo();
-        setImage(false);
+        combatPanel.clearState();
         // Initialize combat logic, e.g., start turns
         System.out.println("Combat started between " + hero.getName() + " and " + enemy.getName());
     }
@@ -179,12 +179,12 @@ public class CombatController {
             if (enemy == null) {
                 theType = "Skeleton"; //Default
             } else {
-                System.out.println("It works");
                 theType = enemy.getClass().getSimpleName();
             }
+            System.out.println(theType);
             myImageIcon = switch (theType) {
                 case "Skeleton" -> new ImageIcon("src/resources/assets/Monsters/Skeleton.png");
-                case "Ogre" -> new ImageIcon("src/resources/assets/Monsters/Ogre.png");
+                case "Ogre" ->  new ImageIcon("src/resources/assets/Monsters/Ogre.png");
                 case "Gremlin" -> new ImageIcon("src/resources/assets/Monsters/Gremlin.png");
                 default -> myImageIcon;
             };
