@@ -30,7 +30,7 @@ public class UI {
         this.myLoadGameScreen = new LoadGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
         this.mySaveGameScreen = new SaveGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
         this.myOptionScreen = new OptionScreen();
-        this.myGameCreateScreen = new GameCreateScreen(this, theAssetManager, theGameController);
+        this.myGameCreateScreen = new GameCreateScreen(this, theAssetManager, theGameController, theGameStateManager);
         this.myWaitScreen = new LoadingScreen(theGameController, theGameStateManager);
     }
 
@@ -104,5 +104,9 @@ public class UI {
 
     public GameScreen getGameScreen() {
         return myGameScreen;
+    }
+
+    public void loadSlotInfo() {
+        myLoadGameScreen.loadSaveSlotDetails();
     }
 }
