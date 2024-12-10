@@ -41,7 +41,11 @@ public class Main {
         CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);
 
         CardLayoutManager cardLayoutManager = new CardLayoutManager(combatController, gameStateManager, ui);
-
+        combatController.setCardLayoutManager(cardLayoutManager);
+        gameController.setCardLayoutManager(cardLayoutManager);
+        gameController.setCombatController(combatController);
+        combatController.setCombatPanel(cardLayoutManager.getCombatPanel());
+        combatController.setGameController(gameController);
         gameController.setUI(ui);
         gameStateManager.setUI(ui);
 

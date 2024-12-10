@@ -34,6 +34,21 @@ public class CardLayoutManager {
         return cardPanel;
     }
 
+    public String getCurrentPanel() {
+        // Get the layout's current component by iterating through cardPanel's children
+        for (Component comp : cardPanel.getComponents()) {
+            if (comp.isVisible()) {
+                if (comp == gamePanel) {
+                    return "GamePanel";
+                } else if (comp == combatPanel) {
+                    return "CombatPanel";
+                }
+            }
+        }
+        return null; // If no panel is visible (unlikely), return null
+    }
+
+
     public GamePanel getGamePanel() {
         return gamePanel;
     }

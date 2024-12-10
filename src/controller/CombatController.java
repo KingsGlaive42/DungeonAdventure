@@ -3,9 +3,12 @@ package controller;
 import model.Combat.AttackResult;
 import model.Combat.CombatEngine;
 import model.DungeonCharacters.*;
+import model.PlayerInventory.HealingPotion;
+import view.CardLayoutManager;
 import view.CombatPanel;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * This is the controller class that connects
@@ -15,9 +18,11 @@ import javax.swing.*;
  */
 public class CombatController {
     private final CombatEngine combatEngine;
-    private final CombatPanel combatPanel;
+    private CombatPanel combatPanel;
     private final Hero hero;
     private Monster enemy;
+    private CardLayoutManager cardLayoutManager;
+    private GameController gameController;
 
     /**
      * Controller Constructor.
@@ -29,25 +34,32 @@ public class CombatController {
         hero = theHero;
         enemy = theEnemy;
         combatEngine = new CombatEngine();
-        combatPanel = new CombatPanel(this);
+        combatPanel = null;
+        resetTurns();
+    }
+
+    public void setCombatPanel(final CombatPanel theCombatPanel) {
+        combatPanel = theCombatPanel;
         updateHeroInfo();
         updateEnemyInfo();
-        resetTurns();
+    }
+
+    public void setGameController(final GameController theGameController) {
+        gameController = theGameController;
     }
 
     public void startCombat(final Monster theEnemy) {
         enemy = theEnemy;
+        updateHeroInfo();
+        updateEnemyInfo();
+        setImage(false);
         // Initialize combat logic, e.g., start turns
         System.out.println("Combat started between " + hero.getName() + " and " + enemy.getName());
     }
 
-    /**
-     * This method returns the Combat Panel.
-     *
-     * @return Combat Panel.
-     */
-    public CombatPanel getCombatPanel() {
-        return combatPanel;
+
+    public void setCardLayoutManager(final CardLayoutManager theCardLayoutManager) {
+        cardLayoutManager = theCardLayoutManager;
     }
 
     /**
@@ -163,7 +175,13 @@ public class CombatController {
                 default -> myImageIcon;
             };
         } else {
-            String theType = "Skeleton"; //enemy.getClass().getSimpleName();
+            String theType;
+            if (enemy == null) {
+                theType = "Skeleton"; //Default
+            } else {
+                System.out.println("It works");
+                theType = enemy.getClass().getSimpleName();
+            }
             myImageIcon = switch (theType) {
                 case "Skeleton" -> new ImageIcon("src/resources/assets/Monsters/Skeleton.png");
                 case "Ogre" -> new ImageIcon("src/resources/assets/Monsters/Ogre.png");
@@ -271,7 +289,15 @@ public class CombatController {
     }
 
     public void handlePotion() {
-
+        int health = hero.getHitPoints();
+        gameController.getInventory().useItem(new HealingPotion(), hero);
+        if (hero.getHitPoints() == health) {
+            combatPanel.logAction("No Potions!");
+        } else {
+            combatPanel.logAction(hero.getName() + " used a Potion!");
+            updateHeroInfo();
+        }
+        handleEnemyCounterattack();
     }
 
     /**
@@ -384,17 +410,25 @@ public class CombatController {
      * This method updates monster info after an action.
      */
     private void updateEnemyInfo() {
-        String enemyInfo = "Skeleton - HP: 50/50";//enemy.getName() + " - HP: " + enemy.getHitPoints() + "/" + enemy.getMaxHitPoints();
+        if (enemy == null) {
+            combatPanel.updateEnemyInfo("");
+            return;
+        }
+        String enemyInfo = enemy.getName() + " - HP: " + enemy.getHitPoints() + "/" + enemy.getMaxHitPoints();
         combatPanel.updateEnemyInfo(enemyInfo);
     }
 
     /**
      * This method switches to game panel when combat is finished
      */
-    // Method to switch from CombatPanel to GamePanel
     public void switchToGamePanel() {
-        //gamePanel.setVisible(true);  // Make GamePanel visible
-        //combatPanel.setVisible(false);  // Hide CombatPanel
-        //combatPanel.dispose();
+        if (hero.getHitPoints() == 0) {
+            Window window = SwingUtilities.getWindowAncestor(combatPanel);
+            if (window instanceof JFrame) {
+                ((JFrame) window).dispose();
+            }
+        } else {
+            cardLayoutManager.switchToGamePanel();
+        }
     }
 }

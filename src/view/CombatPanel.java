@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import controller.CombatController;
 import model.Combat.AttackResult;
+import model.Combat.CombatEngine;
 import model.DungeonCharacters.*;
 import model.GameConfig;
 
@@ -53,6 +54,7 @@ public class CombatPanel extends JPanel {
 
         // Create Hero and Enemy info panels
         heroInfo = new JLabel("Hero Info");
+        System.out.println("Constructor: " + heroInfo.getText());
         enemyInfo = new JLabel("Enemy Info");
 
         JPanel infoPanel = new JPanel(new GridLayout(1, 2));
@@ -235,6 +237,7 @@ public class CombatPanel extends JPanel {
      */
     public void updateHeroInfo(final String theInfo) {
         heroInfo.setText(theInfo);
+        System.out.println("Update: " + heroInfo.getText());
     }
 
     /**
@@ -251,7 +254,8 @@ public class CombatPanel extends JPanel {
      *
      * @param theMessage Message to be logged.
      */
-    public void logAction(final String theMessage) {
+    public void logAction(final String theMessage)
+    {
         actionLog.append(theMessage + "\n");
     }
 
@@ -261,8 +265,14 @@ public class CombatPanel extends JPanel {
      * @param theMessage Message displayed on death of hero or enemy.
      */
     public void displayGameOver(final String theMessage) {
+        clearState();
         JOptionPane.showMessageDialog(this, theMessage, "Game Over", JOptionPane.INFORMATION_MESSAGE);
         combatController.switchToGamePanel();
+    }
+
+    private void clearState() {
+        reactivateButtons();
+        actionLog.setText("");
     }
 
     /**
@@ -292,7 +302,7 @@ public class CombatPanel extends JPanel {
         heal1Button.setVisible(false);
         heal2Button.setVisible(false);
         heal3Button.setVisible(false);
-        returnButton.setVisible(false);  // Hide the 'Return' button when in action mode
+        returnButton.setVisible(false);
     }
 
     /**
@@ -497,25 +507,5 @@ public class CombatPanel extends JPanel {
         defendButton.setEnabled(true);
         usePotionButton.setEnabled(true);
         retreatButton.setEnabled(true);
-    }
-
-    //For testing
-    public static void main(String[] args) {
-        Hero theHero = new Priestess("Terra");
-        Monster enemy = new Skeleton(100, 30, 60, 10, 0.6, 0.4, 10, 20);
-
-        CombatController combatController = new CombatController(theHero, enemy);
-
-        SwingUtilities.invokeLater(() -> {
-            // Create the CombatPanel with the combatController
-            CombatPanel combatPanel = new CombatPanel(combatController);
-
-            // Create a JFrame and set CombatPanel as the content pane
-            JFrame frame = new JFrame("Combat Screen");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Ensures the window closes properly
-            frame.setSize(new Dimension(GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT));  // Set frame size
-            frame.setContentPane(combatPanel);  // Set the CombatPanel as the content
-            frame.setVisible(true);  // Make the frame visible
-        });
     }
 }

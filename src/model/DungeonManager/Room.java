@@ -276,6 +276,10 @@ public class Room implements Serializable {
         //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
     }
 
+    public void removeMonster(Monster theMonster) {
+        myRoomMonsters.remove(theMonster);
+    }
+
     /**
      * Returns a list of items in the room.
      *
