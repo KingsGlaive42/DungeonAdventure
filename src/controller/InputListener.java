@@ -169,6 +169,20 @@ public class InputListener implements KeyListener{
         return false;
     }
 
+    public void reset() {
+        isUpPressed = false;
+        isDownPressed = false;
+        isLeftPressed = false;
+        isRightPressed = false;
+        isArrowUpPressed = false;
+        isArrowDownPressed = false;
+        isArrowLeftPressed = false;
+        isArrowRightPressed = false;
+        isUsePressed = false;
+        isPausedPressed = false;
+        wasPausePressed = false;
+    }
+
     public void setLeftPressed(final boolean isPressed) {
         this.isLeftPressed = isPressed;
     }
