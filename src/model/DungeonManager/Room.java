@@ -29,7 +29,7 @@ public class Room implements Serializable {
     // File paths for loading assets
     private static final String FLOOR_SS_PATH = "src/resources/assets/Terrain/dungeon_floor.png";
     private static final String WALL_SS_PATH = "src/resources/assets/Terrain/dungeon_sprite_sheet.png";
-    //private static final String TREASURE_CHEST_PATH = "src/resources/assets/treasureChest.png";
+    private static final String TREASURE_CHEST_PATH = "src/resources/assets/treasureChest.png";
 
     // Room dimensions and constants
     private final static int ROOM_WIDTH = 17;
@@ -92,7 +92,7 @@ public class Room implements Serializable {
         try {
             myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
             myWallSpritesheet.loadSprite(WALL_SS_PATH);
-            //myTreasureChestSprite.loadSprite(TREASURE_CHEST_PATH);
+            myTreasureChestSprite.loadSprite(TREASURE_CHEST_PATH);
         } catch (final Exception theException) {
             throw new RuntimeException("Failed to load sprite sheets", theException);
         }
