@@ -34,14 +34,18 @@ public class Main {
         gameState.setMyPlayer(new Player("Priestess", "Phil", inventory));
 
         //testSaveFunctionality(saveFileManager, gameState);
-
+        CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);
         GameController gameController = new GameController(gameState.getMyPlayer(), gameState.getMyDungeon(), gameState.getMyInventory());
         GameStateManager gameStateManager = new GameStateManager(gameController);
-        UI ui = new UI(gameStateManager, assetManager, saveFileManager, gameController);
-        CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);
+        UI ui = new UI(gameStateManager, assetManager, saveFileManager, gameController, combatController);
+
 
         CardLayoutManager cardLayoutManager = new CardLayoutManager(combatController, gameStateManager, ui);
-
+        combatController.setCardLayoutManager(cardLayoutManager);
+        gameController.setCardLayoutManager(cardLayoutManager);
+        gameController.setCombatController(combatController);
+        combatController.setCombatPanel(cardLayoutManager.getCombatPanel());
+        combatController.setGameController(gameController);
         gameController.setUI(ui);
         gameStateManager.setUI(ui);
 
@@ -71,10 +75,10 @@ public class Main {
         theAssetManager.loadAsset("inheritanceImage", "src/resources/assets/Buttons/InheritanceButton.png");
         theAssetManager.loadAsset("polymorphismImage", "src/resources/assets/Buttons/PolymorphismButton.png");
         theAssetManager.loadAsset("warriorImage", "src/resources/assets/player/EdgarPortrait.png");
-        theAssetManager.loadAsset("thiefImage", "src/resources/assets/player/SetzerPortrait.png");
-        theAssetManager.loadAsset("priestessImage", "src/resources/assets/player/TerraPortrait.png");
-        theAssetManager.loadAsset("berserkerImage", "src/resources/assets/player/LockePortrait.png");
-        theAssetManager.loadAsset("mageImage", "src/resources/assets/player/CelesPortrait.png");
+        theAssetManager.loadAsset("thiefImage", "src/resources/assets/player/LockePortrait.png");
+        theAssetManager.loadAsset("priestessImage", "src/resources/assets/player/CelesPortrait.png");
+        theAssetManager.loadAsset("berserkerImage", "src/resources/assets/player/SetzerPortrait.png");
+        theAssetManager.loadAsset("mageImage","src/resources/assets/player/TerraPortrait.png" );
         theAssetManager.loadAsset("createGameButton", "src/resources/assets/Buttons/forwardButton.png");
         theAssetManager.loadAsset("easyButton", "src/resources/assets/Buttons/easyButton.png");
         theAssetManager.loadAsset("mediumButton", "src/resources/assets/Buttons/mediumButton.png");

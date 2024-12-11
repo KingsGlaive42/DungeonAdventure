@@ -2,6 +2,7 @@ package view;
 
 import controller.CombatController;
 import controller.GameStateManager;
+import controller.InputListener;
 import model.GameConfig;
 
 import javax.swing.*;
@@ -34,6 +35,21 @@ public class CardLayoutManager {
         return cardPanel;
     }
 
+    public String getCurrentPanel() {
+        // Get the layout's current component by iterating through cardPanel's children
+        for (Component comp : cardPanel.getComponents()) {
+            if (comp.isVisible()) {
+                if (comp == gamePanel) {
+                    return "GamePanel";
+                } else if (comp == combatPanel) {
+                    return "CombatPanel";
+                }
+            }
+        }
+        return null; // If no panel is visible (unlikely), return null
+    }
+
+
     public GamePanel getGamePanel() {
         return gamePanel;
     }
@@ -47,5 +63,7 @@ public class CardLayoutManager {
 
     public void switchToGamePanel() {
         cardLayout.show(cardPanel, "GamePanel");
+
+        InputListener.getInstance().reset();
     }
 }

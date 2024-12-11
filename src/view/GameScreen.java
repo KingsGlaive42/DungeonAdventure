@@ -99,7 +99,6 @@ public class GameScreen {
             toggleInventoryScreen();
         }
         if (isDialogueVisible()) {
-            System.out.println(isDialogueVisible);
             hideDialogue();
         }
     }

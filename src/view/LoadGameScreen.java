@@ -1,5 +1,6 @@
 package view;
 
+import controller.CombatController;
 import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
@@ -15,15 +16,17 @@ public class LoadGameScreen {
     private final GameStateManager myGameStateManager;
     private final SaveFileManager mySaveFileManager;
     private final GameController myGameController;
+    private final CombatController myCombatController;
 
     private final UIButton myBackButton;
     private final UIButton[] saveSlotButtons;
     private final String[] saveSlotDetails;
 
-    public LoadGameScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
+    public LoadGameScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager, final SaveFileManager theSaveFileManager, final GameController theGameController, final CombatController theCombatController) {
         this.myGameStateManager = theGameStateManager;
         this.mySaveFileManager = theSaveFileManager;
         this.myGameController = theGameController;
+        this.myCombatController = theCombatController;
 
         saveSlotButtons = new UIButton[3];
         for (int i = 0; i < 3; i++) {
@@ -110,6 +113,7 @@ public class LoadGameScreen {
                 myGameController.setMyDungeon(loadedState.getMyDungeon());
                 myGameController.setMyInventory(loadedState.getMyInventory());
                 myGameStateManager.setState(GameStateManager.State.GAME);
+                myCombatController.setHero((loadedState.getMyPlayer().getHeroClass()));
             } else {
                 System.err.println("Failed to load save file: " + saveFile.getName());
             }

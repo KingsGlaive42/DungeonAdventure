@@ -3,10 +3,12 @@ package controller;
 import model.DungeonCharacters.Hero;
 import model.DungeonCharacters.Monster;
 import model.DungeonManager.Dungeon;
+import model.DungeonManager.Room;
 import model.Player.Player;
 import model.PlayerInventory.Inventory;
 import model.PlayerInventory.Item;
 import model.PlayerInventory.ItemType;
+import view.CardLayoutManager;
 import view.UI;
 
 import java.awt.*;
@@ -16,6 +18,8 @@ public class GameController {
     private Dungeon myDungeon;
     private Inventory myInventory;
     private UI myUI;
+    private CardLayoutManager myCardLayoutManager;
+    private CombatController myCombatController;
 
     public GameController(final Player thePlayer, final Dungeon theDungeon, final Inventory theInventory) {
         myPlayer = thePlayer;
@@ -24,6 +28,10 @@ public class GameController {
     }
 
     public void update() {
+        if ("CombatPanel".equals(myCardLayoutManager.getCurrentPanel())) {
+            // Do nothing if the combat panel is active
+            return;
+        }
         if (myUI.getGameScreen().isMyInventoryVisible()) {
             myUI.getGameScreen().handleInventoryNavigation(InputListener.getInstance());
         } else {
@@ -33,9 +41,32 @@ public class GameController {
             Monster collidedMonster = myDungeon.getMyCurrentRoom().checkPlayerCollisionWithMonsters(myPlayer);
             if (collidedMonster != null) {
                 // start combat with monster
-                System.out.println("COLLISION");
+                myCombatController.startCombat(collidedMonster);
+                myCardLayoutManager.switchToCombatPanel();
+                //System.out.println("COLLISION");
+                myDungeon.getMyCurrentRoom().removeMonster(collidedMonster);
+            }
+
+            if (myDungeon.getMyCurrentRoom().checkPlayerCollisionWithTreasureChest(myPlayer)) {
+                if (myInventory.hasAllPillars()) {
+                    transitionToEndGameScreen();
+                } else {
+                    System.out.println("You need all four pillars to open the treasure chest");
+                }
             }
         }
+    }
+
+    public void transitionToEndGameScreen() {
+        System.out.println("you win");
+    }
+
+    public void setCardLayoutManager(final CardLayoutManager theCardLayoutManager) {
+        myCardLayoutManager = theCardLayoutManager;
+    }
+
+    public void setCombatController(final CombatController theCombatController) {
+        myCombatController = theCombatController;
     }
 
     public void draw(final Graphics2D theGraphics2D) {
@@ -45,7 +76,7 @@ public class GameController {
     }
 
 
-    public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, UI theUI) {
+    public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, final UI theUI) {
         if (theItem != null) {
             myInventory.useItem(theItem, theHero, theDungeon);
         }

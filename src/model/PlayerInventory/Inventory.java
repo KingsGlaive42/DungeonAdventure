@@ -33,7 +33,6 @@ public class Inventory implements Serializable {
     }
 
     public void removeItem(Item theItem) {
-        //myItems.remove(theItem);
         if (myItems.contains(theItem)) {
             myItems.remove(theItem);
             myItemCounts.put(theItem.getItemType(), myItemCounts.get(theItem.getItemType()) - 1);
@@ -86,6 +85,21 @@ public class Inventory implements Serializable {
         for (Item item : myItems) {
             System.out.println("- " + item.getName());
         }
+    }
+
+    public boolean hasHealingPotions() {
+        return getItemCount(ItemType.HEALING_POTION) >  0;
+    }
+
+    public boolean hasAllPillars() {
+        int count = 0;
+        for (int i = 0; i < myItems.size(); i++ ) {
+            if (myItems.get(i).getItemType() == ItemType.PILLAR) {
+                count++;
+            }
+        }
+
+        return count == 4;
     }
 
 }
