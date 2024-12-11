@@ -294,7 +294,7 @@ public class CombatController {
 
     public void handlePotion() {
         int health = hero.getHitPoints();
-        gameController.getInventory().useItem(new HealingPotion(), hero);
+        gameController.getInventory().useItem(new HealingPotion(), gameController.getPlayer().getHeroClass(), gameController.getDungeon());
         if (hero.getHitPoints() == health) {
             combatPanel.logAction("No Potions!");
         } else {

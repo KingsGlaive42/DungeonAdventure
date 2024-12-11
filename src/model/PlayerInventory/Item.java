@@ -1,6 +1,7 @@
 package model.PlayerInventory;
 
 import model.DungeonCharacters.Hero;
+import model.DungeonManager.Dungeon;
 
 import java.awt.image.BufferedImage;
 import java.io.Serial;
@@ -20,6 +21,8 @@ public abstract class Item implements Serializable {
         this.myDescription = theDescription;
         this.myType = theType;
     }
+
+    public abstract void use(final Hero theHero, final Dungeon theDungeon);
 
     public String getName() {
         return myName;

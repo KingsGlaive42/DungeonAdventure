@@ -17,38 +17,22 @@ public class Inventory implements Serializable {
 
     private final List<Item> myItems;
     private final Map<ItemType, Integer> myItemCounts;
-    private final Dungeon myDungeon;
 
     private static final int MAX_ITEMS = 21;
 
     public Inventory(Dungeon theDungeon) {
         myItems = new ArrayList<>();
         myItemCounts = new HashMap<>();
-        myDungeon = theDungeon;
     }
 
     public void addItem(Item theItem) {
         if (myItems.size() < MAX_ITEMS ) {
             myItems.add(theItem);
             myItemCounts.put(theItem.getItemType(), myItemCounts.getOrDefault(theItem.getItemType(), 0) + 1);
-
-            System.out.println(theItem.getName() + " added to inventory.");
-
-
-            displayInventory();
-
-            /*
-            // show surrounding rooms when vision potion is added for testing purposes
-            if (theItem instanceof VisionPotion visionPotion) {
-                visionPotion.use(myDungeon);
-
-                myItemCounts.put(theItem.getItemType(), myItemCounts.get(theItem.getItemType()) - 1);
-            }*/
         }
     }
 
     public void removeItem(Item theItem) {
-        //myItems.remove(theItem);
         if (myItems.contains(theItem)) {
             myItems.remove(theItem);
             myItemCounts.put(theItem.getItemType(), myItemCounts.get(theItem.getItemType()) - 1);
@@ -59,34 +43,22 @@ public class Inventory implements Serializable {
         }
     }
 
-    public void useItem(Item theItem, Hero theHero) {
+    public void useItem(Item theItem, Hero theHero, Dungeon theDungeon) {
         if (myItemCounts.getOrDefault(theItem.getItemType(), 0) <= 0) {
            System.out.println("No " + theItem.getItemType() + " in inventory!");
            return;
         }
-
-
-        switch (theItem.getItemType()) {
-            case HEALING_POTION:
-                if (theItem instanceof HealingPotion healingPotion) {
-                    healingPotion.use(theHero);
-                    removeItem(theItem);
-                }
-                break;
-            case VISION_POTION:
-                if (theItem instanceof VisionPotion visionPotion) {
-                    visionPotion.use(myDungeon);
-                    removeItem(theItem);
-                }
-                break;
-            case PILLAR:
-                System.out.println("The pillar of " + theItem.getName() + " cannot be used.");
-                break;
-            default:
-                System.out.println("Item type no recognized.");
-                break;
+        if (theItem.getItemType() == ItemType.HEALING_POTION) {
+            if (theHero.getHitPoints() < theHero.getMaxHitPoints()) {
+                theItem.use(theHero, theDungeon);
+                removeItem(theItem);
             }
-
+        } else  {
+            theItem.use(theHero, theDungeon);
+            if (theItem.getItemType() != ItemType.PILLAR) {
+                removeItem(theItem);
+            }
+        }
     }
 
     public int getItemCount(ItemType theType) {
@@ -113,6 +85,10 @@ public class Inventory implements Serializable {
         for (Item item : myItems) {
             System.out.println("- " + item.getName());
         }
+    }
+
+    public boolean hasHealingPotions() {
+        return getItemCount(ItemType.HEALING_POTION) >  0;
     }
 
     public boolean hasAllPillars() {

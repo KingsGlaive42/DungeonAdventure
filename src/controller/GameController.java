@@ -1,10 +1,13 @@
 package controller;
 
+import model.DungeonCharacters.Hero;
 import model.DungeonCharacters.Monster;
 import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 import model.Player.Player;
 import model.PlayerInventory.Inventory;
+import model.PlayerInventory.Item;
+import model.PlayerInventory.ItemType;
 import view.CardLayoutManager;
 import view.UI;
 
@@ -34,7 +37,7 @@ public class GameController {
         } else {
             myPlayer.update();
             myDungeon.checkDoorCollisions(myPlayer, this);
-            
+
             Monster collidedMonster = myDungeon.getMyCurrentRoom().checkPlayerCollisionWithMonsters(myPlayer);
             if (collidedMonster != null) {
                 // start combat with monster
@@ -72,17 +75,19 @@ public class GameController {
         myUI.drawGameHUD(theGraphics2D);
     }
 
-    /*
-    public void useItem(Item theItem) {
+
+    public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, final UI theUI) {
         if (theItem != null) {
-            myInventory.useItem(theItem, );
+            myInventory.useItem(theItem, theHero, theDungeon);
         }
     }
-    */
-
 
     public void setUI(final UI theUI) {
         myUI = theUI;
+    }
+
+    public UI getUI() {
+        return myUI;
     }
 
     public void setMyPlayer(final Player thePlayer) {
