@@ -28,6 +28,7 @@ public class Room implements Serializable {
     // File paths for loading assets
     private static final String FLOOR_SS_PATH = "src/resources/assets/Terrain/dungeon_floor.png";
     private static final String WALL_SS_PATH = "src/resources/assets/Terrain/dungeon_sprite_sheet.png";
+    private static final String TREASURE_CHEST_PATH = "src/resources/assets/treasureChest.png";
 
     // Room dimensions and constants
     private final static int ROOM_WIDTH = 17;
@@ -39,6 +40,7 @@ public class Room implements Serializable {
     // Sprites for the floor and wall textures
     private final Sprite myFloorSpritesheet = new Sprite();
     private final Sprite myWallSpritesheet = new Sprite();
+    private final Sprite myTreasureChestSprite = new Sprite();
 
     // List of items in the room
     private final List<Item> myRoomItems = new ArrayList<>();
@@ -88,6 +90,7 @@ public class Room implements Serializable {
         try {
             myFloorSpritesheet.loadSprite(FLOOR_SS_PATH);
             myWallSpritesheet.loadSprite(WALL_SS_PATH);
+            myTreasureChestSprite.loadSprite(TREASURE_CHEST_PATH);
         } catch (final Exception theException) {
             throw new RuntimeException("Failed to load sprite sheets", theException);
         }
@@ -224,6 +227,20 @@ public class Room implements Serializable {
 
         return playerBounds.intersects(monsterBounds);
     }
+
+    public boolean checkPlayerCollisionWithTreasureChest(final Player thePlayer) {
+        if (myRoomType != RoomType.END) {
+            return false;
+        }
+        Rectangle chestBounds = new Rectangle(
+                TILE_SIZE * 7, TILE_SIZE*5, TILE_SIZE, TILE_SIZE
+        );
+        Rectangle2D playerBounds = new Rectangle2D.Double(
+                thePlayer.getX(), thePlayer.getY(), thePlayer.getTileSize(), thePlayer.getTileSize() * 2
+        );
+        return playerBounds.intersects(chestBounds);
+    }
+
 
     //void addDoor(final DoorDirection theDirection) {
     /**
@@ -406,6 +423,19 @@ public class Room implements Serializable {
                 }
             }
             theGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        }
+
+        if (myRoomType == RoomType.END) {
+            theGraphics2D.drawImage(myTreasureChestSprite.getSprite(0, 0),TILE_SIZE * 8, TILE_SIZE*6, TILE_SIZE, TILE_SIZE, null);
+            if (GameConfig.isShowHitboxes()) {
+                theGraphics2D.setColor(Color.CYAN);
+                AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+                theGraphics2D.setComposite(ac);
+                theGraphics2D.fill(new Rectangle(
+                        TILE_SIZE * 8, TILE_SIZE*6, TILE_SIZE, TILE_SIZE
+                ));
+                theGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            }
         }
     }
 
