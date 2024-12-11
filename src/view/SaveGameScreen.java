@@ -13,7 +13,7 @@ import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;
 
-public class SaveGameScreen {
+public class SaveGameScreen implements Screen{
     private final GameStateManager myGameStateManager;
     private final SaveFileManager mySaveFileManager;
     private final GameController myGameController;

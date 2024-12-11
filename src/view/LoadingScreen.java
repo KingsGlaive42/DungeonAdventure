@@ -9,7 +9,7 @@ import model.Player.Player;
 
 import java.awt.*;
 
-public class LoadingScreen {
+public class LoadingScreen implements Screen{
     private final GameController myGameController;
     private final GameStateManager myGameStateManager;
     private final CombatController myCombatController;
@@ -49,6 +49,16 @@ public class LoadingScreen {
         theGraphics2D.setColor(Color.WHITE);
         theGraphics2D.setFont(new Font("Arial", Font.BOLD, 48));
         theGraphics2D.drawString("LOADING...", GameConfig.SCREEN_WIDTH / 2 - 150, GameConfig.SCREEN_HEIGHT / 2);
+    }
+
+    @Override
+    public void handleClick(Point theClickPoint) {
+
+    }
+
+    @Override
+    public void handleHoverUpdate(Point theMousePoint) {
+
     }
 
     public boolean isLoading() {

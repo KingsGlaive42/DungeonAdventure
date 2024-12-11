@@ -20,7 +20,7 @@ import java.util.Map;
 
 import static model.GameConfig.TILE_SIZE;
 
-public class GameScreen {
+public class GameScreen implements Screen{
     private final GameController myGameController;
     //private final DialogueManager myDialogueManager;
 

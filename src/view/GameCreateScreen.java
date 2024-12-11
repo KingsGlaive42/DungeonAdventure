@@ -5,8 +5,6 @@ import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
 import model.GameConfig;
 import model.Player.Player;
-import model.PlayerInventory.Inventory;
-import model.SaveGame.GameState;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,7 +12,7 @@ import java.awt.event.KeyEvent;
 import static model.GameConfig.theGraphics2D;
 import static model.GameConfig.NUM_CHARACTERS;
 
-public class GameCreateScreen {
+public class GameCreateScreen implements Screen{
     private final UI myUI;
 
     private UIButton[] myCharacterSelectButtons;
