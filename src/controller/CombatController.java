@@ -19,7 +19,7 @@ import java.awt.*;
 public class CombatController {
     private final CombatEngine combatEngine;
     private CombatPanel combatPanel;
-    private final Hero hero;
+    private Hero hero;
     private Monster enemy;
     private CardLayoutManager cardLayoutManager;
     private GameController gameController;
@@ -42,6 +42,10 @@ public class CombatController {
         combatPanel = theCombatPanel;
         updateHeroInfo();
         updateEnemyInfo();
+    }
+
+    public void setHero(final Hero theHero) {
+        this.hero = theHero;
     }
 
     public void setGameController(final GameController theGameController) {

@@ -1,5 +1,6 @@
 package view;
 
+import controller.CombatController;
 import controller.GameController;
 import controller.GameStateManager;
 import model.DungeonManager.Dungeon;
@@ -11,12 +12,14 @@ import java.awt.*;
 public class LoadingScreen {
     private final GameController myGameController;
     private final GameStateManager myGameStateManager;
+    private final CombatController myCombatController;
 
     private boolean isLoading = false;
 
-    public LoadingScreen(final GameController theGameController, final GameStateManager theGameStateManager) {
+    public LoadingScreen(final GameController theGameController, final GameStateManager theGameStateManager, final CombatController theCombatController) {
         myGameController = theGameController;
         myGameStateManager = theGameStateManager;
+        myCombatController = theCombatController;
     }
 
     public void loadGame(final Player thePlayer, final int theDungeonWidth, final int theDungeonHeight, final int theNumRooms) {
@@ -28,6 +31,7 @@ public class LoadingScreen {
 
                 myGameController.setMyPlayer(thePlayer);
                 myGameController.setMyDungeon(new Dungeon(theDungeonWidth, theDungeonHeight, theNumRooms));
+                myCombatController.setHero(thePlayer.getHeroClass());
 
                 myGameStateManager.setState(GameStateManager.State.GAME);
             } catch (InterruptedException e) {
