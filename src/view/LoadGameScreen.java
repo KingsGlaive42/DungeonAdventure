@@ -12,7 +12,7 @@ import model.GameConfig;
 import java.awt.*;
 import java.io.File;
 
-public class LoadGameScreen {
+public class LoadGameScreen implements Screen{
     private final GameStateManager myGameStateManager;
     private final SaveFileManager mySaveFileManager;
     private final GameController myGameController;

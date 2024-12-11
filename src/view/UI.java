@@ -10,7 +10,6 @@ import model.SaveGame.SaveFileManager;
 import java.awt.*;
 
 public class UI {
-
     private final GameStateManager myGameStateManager;
 
     private final TitleScreen myTitleScreen;

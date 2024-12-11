@@ -8,7 +8,7 @@ import java.awt.*;
 import static model.GameConfig.SCREEN_HEIGHT;
 import static model.GameConfig.SCREEN_WIDTH;
 
-public class TitleScreen {
+public class TitleScreen implements Screen{
     private final GameStateManager myGameStateManager;
     
     private final UIButton myPlayButton;

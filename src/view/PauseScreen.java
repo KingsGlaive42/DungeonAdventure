@@ -9,7 +9,7 @@ import java.awt.*;
 import static model.GameConfig.SCREEN_HEIGHT;
 import static model.GameConfig.SCREEN_WIDTH;
 
-public class PauseScreen {
+public class PauseScreen implements Screen{
     private static final int SLIDER_WIDTH = 200;
     private static final int SLIDER_HEIGHT = 10;
     private int myBackgroundMusicVolume = 50;

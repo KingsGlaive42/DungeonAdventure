@@ -6,7 +6,7 @@ import model.GameConfig;
 
 import java.awt.*;
 
-public class OptionScreen {
+public class OptionScreen implements Screen {
     private final GameStateManager myGameStateManager;
 
     private final UIButton[] myUIButtons;
