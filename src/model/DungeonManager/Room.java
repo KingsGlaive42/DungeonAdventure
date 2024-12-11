@@ -6,7 +6,6 @@ import model.DungeonCharacters.Monster;
 import model.GameConfig;
 import model.Player.Player;
 import model.PlayerInventory.Item;
-import model.PlayerInventory.ItemType;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -218,6 +217,11 @@ public class Room implements Serializable {
                 thePlayer.getTileSize() * 2
         );
         Rectangle2D monsterBounds = new Rectangle2D.Double(theMonster.getMonsterX(), theMonster.getMonsterY(), TILE_SIZE*2, TILE_SIZE*2);
+
+        if (theMonster.getName().equalsIgnoreCase("gremlin")) {
+            monsterBounds = new Rectangle2D.Double(theMonster.getMonsterX() + TILE_SIZE * 1.5, theMonster.getMonsterY() + TILE_SIZE * 1.5, TILE_SIZE * 2, TILE_SIZE * 2);
+        }
+
         return playerBounds.intersects(monsterBounds);
     }
 
@@ -395,8 +399,11 @@ public class Room implements Serializable {
             theGraphics2D.setComposite(ac);
             theGraphics2D.setColor(Color.CYAN);
             for (Monster monster : myRoomMonsters) {
-
-                theGraphics2D.fill(new Rectangle(monster.getMonsterX(), monster.getMonsterY(), TILE_SIZE*2, TILE_SIZE*2));
+                if (monster.getName().equalsIgnoreCase("gremlin")) {
+                    theGraphics2D.fill(new Rectangle2D.Double(monster.getMonsterX() + TILE_SIZE * 1.5, monster.getMonsterY() + TILE_SIZE * 1.5, TILE_SIZE * 2, TILE_SIZE * 2));
+                } else {
+                    theGraphics2D.fill(new Rectangle(monster.getMonsterX(), monster.getMonsterY(), TILE_SIZE * 2, TILE_SIZE * 2));
+                }
             }
             theGraphics2D.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
@@ -438,8 +445,8 @@ public class Room implements Serializable {
     }
 
     private void drawMonsters(final Graphics2D theGraphics2D) {
-        int scaleWidth = 64;
-        int scaleHeight = 64;
+        int scaleWidth;
+        int scaleHeight;
         for (Monster monster: myRoomMonsters) {
             if (monster.getName().equals("Gremlin")) {
                 scaleWidth = 156;
