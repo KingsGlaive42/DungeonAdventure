@@ -2,6 +2,7 @@ package view;
 
 import controller.CombatController;
 import controller.GameStateManager;
+import controller.InputListener;
 import model.GameConfig;
 
 import javax.swing.*;
@@ -62,5 +63,7 @@ public class CardLayoutManager {
 
     public void switchToGamePanel() {
         cardLayout.show(cardPanel, "GamePanel");
+
+        InputListener.getInstance().reset();
     }
 }

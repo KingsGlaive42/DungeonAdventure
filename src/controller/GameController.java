@@ -43,7 +43,7 @@ public class GameController {
                 // start combat with monster
                 myCombatController.startCombat(collidedMonster);
                 myCardLayoutManager.switchToCombatPanel();
-                System.out.println("COLLISION");
+                //System.out.println("COLLISION");
                 myDungeon.getMyCurrentRoom().removeMonster(collidedMonster);
             }
         }
