@@ -1,5 +1,6 @@
 package view;
 
+import controller.CombatController;
 import controller.GameController;
 import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
@@ -21,17 +22,17 @@ public class UI {
     private final GameCreateScreen myGameCreateScreen;
     private final LoadingScreen myWaitScreen;
 
-    public UI(final GameStateManager theGameStateManager, final AssetManager theAssetManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
+    public UI(final GameStateManager theGameStateManager, final AssetManager theAssetManager, final SaveFileManager theSaveFileManager, final GameController theGameController, final CombatController theCombatController) {
         this.myGameStateManager = theGameStateManager;
 
         this.myTitleScreen = new TitleScreen(theAssetManager, theGameStateManager);
         this.myGameScreen = new GameScreen(theAssetManager, theGameController);
         this.myPauseScreen = new PauseScreen(theAssetManager, theGameStateManager);
-        this.myLoadGameScreen = new LoadGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
+        this.myLoadGameScreen = new LoadGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController, theCombatController);
         this.mySaveGameScreen = new SaveGameScreen(theAssetManager, theGameStateManager, theSaveFileManager, theGameController);
         this.myOptionScreen = new OptionScreen(theGameStateManager, theAssetManager);
         this.myGameCreateScreen = new GameCreateScreen(this, theAssetManager, theGameController, theGameStateManager);
-        this.myWaitScreen = new LoadingScreen(theGameController, theGameStateManager);
+        this.myWaitScreen = new LoadingScreen(theGameController, theGameStateManager, theCombatController);
     }
 
     public void drawTitleScreen(final Graphics2D theGraphics2D) {

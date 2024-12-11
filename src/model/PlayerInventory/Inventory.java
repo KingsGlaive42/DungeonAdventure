@@ -115,4 +115,15 @@ public class Inventory implements Serializable {
         }
     }
 
+    public boolean hasAllPillars() {
+        int count = 0;
+        for (int i = 0; i < myItems.size(); i++ ) {
+            if (myItems.get(i).getItemType() == ItemType.PILLAR) {
+                count++;
+            }
+        }
+
+        return count == 4;
+    }
+
 }

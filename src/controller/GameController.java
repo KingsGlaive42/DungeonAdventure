@@ -1,12 +1,10 @@
 package controller;
 
-import model.DungeonCharacters.Hero;
 import model.DungeonCharacters.Monster;
 import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
 import model.Player.Player;
 import model.PlayerInventory.Inventory;
-import model.PlayerInventory.Item;
 import view.CardLayoutManager;
 import view.UI;
 
@@ -38,15 +36,26 @@ public class GameController {
             myDungeon.checkDoorCollisions(myPlayer, this);
             
             Monster collidedMonster = myDungeon.getMyCurrentRoom().checkPlayerCollisionWithMonsters(myPlayer);
-            Room currentRoom = null;
             if (collidedMonster != null) {
                 // start combat with monster
                 myCombatController.startCombat(collidedMonster);
                 myCardLayoutManager.switchToCombatPanel();
-                System.out.println("COLLISION");
+                //System.out.println("COLLISION");
                 myDungeon.getMyCurrentRoom().removeMonster(collidedMonster);
             }
+
+            if (myDungeon.getMyCurrentRoom().checkPlayerCollisionWithTreasureChest(myPlayer)) {
+                if (myInventory.hasAllPillars()) {
+                    transitionToEndGameScreen();
+                } else {
+                    System.out.println("You need all four pillars to open the treasure chest");
+                }
+            }
         }
+    }
+
+    public void transitionToEndGameScreen() {
+        System.out.println("you win");
     }
 
     public void setCardLayoutManager(final CardLayoutManager theCardLayoutManager) {
