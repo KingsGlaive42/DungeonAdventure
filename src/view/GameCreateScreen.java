@@ -9,7 +9,7 @@ import model.Player.Player;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-import static model.GameConfig.theGraphics2D;
+import static model.GameConfig.CLASS_NAMES;
 import static model.GameConfig.NUM_CHARACTERS;
 
 public class GameCreateScreen implements Screen{
@@ -54,7 +54,7 @@ public class GameCreateScreen implements Screen{
         myCharacterSelectButtons = new UIButton[NUM_CHARACTERS];
 
         for (int i = 0; i < NUM_CHARACTERS; i++) {
-            myCharacterSelectButtons[i] = new UIButton(theAssetManager.getAsset(theGraphics2D[i] + "Image"), new Rectangle(80 * i + 50, 60, 70, 70));
+            myCharacterSelectButtons[i] = new UIButton(theAssetManager.getAsset(CLASS_NAMES[i] + "Image"), new Rectangle(80 * i + 50, 60, 70, 70));
         }
     }
 
@@ -106,7 +106,7 @@ public class GameCreateScreen implements Screen{
         for (int i = 0; i < NUM_CHARACTERS; i++) {
             myCharacterSelectButtons[i].setHovered(myCharacterSelectButtons[i].contains(theMousePoint));
 
-            if (mySelectedCharacter != null && mySelectedCharacter.equals(theGraphics2D[i])) {
+            if (mySelectedCharacter != null && mySelectedCharacter.equals(CLASS_NAMES[i])) {
                 myCharacterSelectButtons[i].setHovered(true);
             }
         }
@@ -149,7 +149,7 @@ public class GameCreateScreen implements Screen{
     private void handleCharacterSelect(final Point theClickPoint) {
         for (int i = 0; i < NUM_CHARACTERS; i++) {
             if (myCharacterSelectButtons[i].contains(theClickPoint)) {
-                mySelectedCharacter = theGraphics2D[i];
+                mySelectedCharacter = CLASS_NAMES[i];
                 isCharacterSelected = true;
             }
         }
