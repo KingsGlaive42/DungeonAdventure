@@ -3,6 +3,7 @@ package model.PlayerInventory;
 import model.DungeonCharacters.Hero;
 import model.DungeonManager.Dungeon;
 import model.Player.Player;
+import view.UI;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,19 +21,19 @@ public class Inventory implements Serializable {
 
     private static final int MAX_ITEMS = 21;
 
-    public Inventory(Dungeon theDungeon) {
+    public Inventory(final Dungeon theDungeon) {
         myItems = new ArrayList<>();
         myItemCounts = new HashMap<>();
     }
 
-    public void addItem(Item theItem) {
+    public void addItem(final Item theItem) {
         if (myItems.size() < MAX_ITEMS ) {
             myItems.add(theItem);
             myItemCounts.put(theItem.getItemType(), myItemCounts.getOrDefault(theItem.getItemType(), 0) + 1);
         }
     }
 
-    public void removeItem(Item theItem) {
+    public void removeItem(final Item theItem) {
         if (myItems.contains(theItem)) {
             myItems.remove(theItem);
             myItemCounts.put(theItem.getItemType(), myItemCounts.get(theItem.getItemType()) - 1);
@@ -43,25 +44,28 @@ public class Inventory implements Serializable {
         }
     }
 
-    public void useItem(Item theItem, Hero theHero, Dungeon theDungeon) {
+    public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, final UI theUI) {
         if (myItemCounts.getOrDefault(theItem.getItemType(), 0) <= 0) {
-           System.out.println("No " + theItem.getItemType() + " in inventory!");
+           //System.out.println("No " + theItem.getItemType() + " in inventory!");
+            //theUI.getGameScreen().showDialogue("No " + theItem.getItemType() + " in inventory!");
            return;
         }
         if (theItem.getItemType() == ItemType.HEALING_POTION) {
             if (theHero.getHitPoints() < theHero.getMaxHitPoints()) {
-                theItem.use(theHero, theDungeon);
+                theItem.use(theHero, theDungeon, theUI);
                 removeItem(theItem);
+            } else {
+                theItem.use(theHero, theDungeon, theUI);
             }
         } else  {
-            theItem.use(theHero, theDungeon);
+            theItem.use(theHero, theDungeon, theUI);
             if (theItem.getItemType() != ItemType.PILLAR) {
                 removeItem(theItem);
             }
         }
     }
 
-    public int getItemCount(ItemType theType) {
+    public int getItemCount(final ItemType theType) {
         return myItemCounts.getOrDefault(theType, 0);
     }
 
@@ -69,7 +73,7 @@ public class Inventory implements Serializable {
         return myItems;
     }
 
-    public Item getItem(ItemType theType) {
+    public Item getItem(final ItemType theType) {
         for (Item item : myItems) {
             if (item.getItemType() == theType) {
                 return item;
@@ -77,7 +81,6 @@ public class Inventory implements Serializable {
         }
         return null;
     }
-
 
     public void displayInventory() {
         System.out.println("Items in Inventory: " + myItems.size());
@@ -93,12 +96,11 @@ public class Inventory implements Serializable {
 
     public boolean hasAllPillars() {
         int count = 0;
-        for (int i = 0; i < myItems.size(); i++ ) {
+        for (int i = 0; i < myItems.size(); i++) {
             if (myItems.get(i).getItemType() == ItemType.PILLAR) {
                 count++;
             }
         }
-
         return count == 4;
     }
 

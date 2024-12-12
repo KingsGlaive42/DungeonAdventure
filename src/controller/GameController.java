@@ -43,7 +43,6 @@ public class GameController {
                 // start combat with monster
                 myCombatController.startCombat(collidedMonster);
                 myCardLayoutManager.switchToCombatPanel();
-                //System.out.println("COLLISION");
                 myDungeon.getMyCurrentRoom().removeMonster(collidedMonster);
             }
 
@@ -51,14 +50,16 @@ public class GameController {
                 if (myInventory.hasAllPillars()) {
                     transitionToEndGameScreen();
                 } else {
-                    System.out.println("You need all four pillars to open the treasure chest");
+                    //System.out.println("You need all four pillars to open the treasure chest");
+                    myUI.getGameScreen().showDialogue("You need all four pillars to \nopen the treasure chest!");
                 }
             }
         }
     }
 
     public void transitionToEndGameScreen() {
-        System.out.println("you win");
+        myUI.getGameScreen().showDialogue("You win!");
+        //System.out.println("you win");
     }
 
     public void setCardLayoutManager(final CardLayoutManager theCardLayoutManager) {
@@ -78,7 +79,7 @@ public class GameController {
 
     public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, final UI theUI) {
         if (theItem != null) {
-            myInventory.useItem(theItem, theHero, theDungeon);
+            myInventory.useItem(theItem, theHero, theDungeon, theUI);
         }
     }
 

@@ -4,6 +4,7 @@ import controller.InputListener;
 import controller.SoundManager;
 import model.DungeonCharacters.Hero;
 import model.DungeonManager.Dungeon;
+import view.UI;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -38,8 +39,9 @@ public class Pillar extends Item {
     }
 
     @Override
-    public void use(Hero theHero, Dungeon theDungeon) {
-        System.out.println("Cannot use Pillars!");
+    public void use(Hero theHero, Dungeon theDungeon, UI theUI) {
+        //System.out.println("Cannot use Pillars!");
+        theUI.getGameScreen().showDialogue("Cannot use pillars!");
     }
 
     @Override

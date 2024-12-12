@@ -5,6 +5,7 @@ import controller.SoundManager;
 import model.DungeonCharacters.Hero;
 import model.DungeonManager.Dungeon;
 import model.DungeonManager.Room;
+import view.UI;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,16 +32,17 @@ public class VisionPotion extends Item implements Serializable {
 
 
     @Override
-    public void use(Hero theHero, Dungeon theDungeon) {
+    public void use(Hero theHero, Dungeon theDungeon, UI theUI) {
         Room currRoom = theDungeon.getMyCurrentRoom();
         Map<Point, Room> surroundingRooms = theDungeon.getSurroundingRooms(currRoom);
 
-        System.out.println("Revealing surrounding rooms:");
+        //System.out.println("Revealing surrounding rooms:");
         for (Map.Entry<Point, Room> entry : surroundingRooms.entrySet()) {
             Room room = entry.getValue();
             room.setVisibility(true);
             //System.out.println("Room at " + entry.getKey() + " -> Items: " + room.getRoomItems().size() + " item(s)");
         }
+        theUI.getGameScreen().showDialogue("Revealed surrounding rooms!");
 
     }
 

@@ -277,8 +277,11 @@ public class GameScreen {
 
         theGraphics2D.setFont(new Font("Monospaced", Font.PLAIN, 12));
         theGraphics2D.setColor(Color.LIGHT_GRAY);
-        int y = TILE_SIZE * 11 + 30;
-        theGraphics2D.drawString(myCurrentMessage, TILE_SIZE + 15, y);
+        int y = TILE_SIZE * 11 + 23;
+        for (String line : myCurrentMessage.split("\n")) {
+            theGraphics2D.drawString(line, TILE_SIZE + 15, y);
+            y += 14;
+        }
     }
 
 

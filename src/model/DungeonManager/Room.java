@@ -281,6 +281,11 @@ public class Room implements Serializable {
                 for (Item item : myRoomItems) {
                     theGameController.getInventory().addItem(item);
                 }
+                if (myRoomItems.size() == 1) {
+                    theGameController.getUI().getGameScreen().showDialogue("Added " + myRoomItems.getFirst().getName() + " to \ninventory!");
+                } else if (myRoomItems.size() == 2){
+                    theGameController.getUI().getGameScreen().showDialogue("Added " + myRoomItems.getFirst().getName() + " &\n" + myRoomItems.get(1).getName() + " to inventory!");
+                }
                 myRoomItems.clear();
                 placeMonsters();
             }
@@ -312,7 +317,6 @@ public class Room implements Serializable {
         if (this.hasPit) {
             int damage = (int)(Math.random() * 20 + 1);
             theGameController.getPlayer().getHeroClass().takeDamage(damage);
-            //System.out.println("Player took " + damage + " damage from the pit!");
             theGameController.getUI().getGameScreen().showDialogue("You fell into a pit! -" + damage + " HP");
         }
     }

@@ -2,6 +2,7 @@ package model.PlayerInventory;
 
 import model.DungeonCharacters.Hero;
 import model.DungeonManager.Dungeon;
+import view.UI;
 
 import java.awt.image.BufferedImage;
 import java.io.Serial;
@@ -22,7 +23,7 @@ public abstract class Item implements Serializable {
         this.myType = theType;
     }
 
-    public abstract void use(final Hero theHero, final Dungeon theDungeon);
+    public abstract void use(final Hero theHero, final Dungeon theDungeon, final UI theUI);
 
     public String getName() {
         return myName;

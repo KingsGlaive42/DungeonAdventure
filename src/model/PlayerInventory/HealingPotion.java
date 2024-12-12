@@ -4,6 +4,7 @@ import controller.InputListener;
 import controller.SoundManager;
 import model.DungeonCharacters.Hero;
 import model.DungeonManager.Dungeon;
+import view.UI;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -34,20 +35,18 @@ public class HealingPotion extends Item {
     }
 
     @Override
-    public void use(Hero theHero, Dungeon theDungeon) {
+    public void use(final Hero theHero, final Dungeon theDungeon, final UI theUI) {
         int oldHealth = theHero.getHitPoints();
-        System.out.println("Health: " + oldHealth);
         if (theHero.getHitPoints() < theHero.getMaxHitPoints()) {
             int newHealth = Math.min(theHero.getHitPoints() + myHealingAmount, theHero.getMaxHitPoints());
             theHero.setHitPoints(newHealth);
-            if (oldHealth + myHealingAmount <= theHero.getMaxHitPoints()) {
-                System.out.println(theHero.getName() + " uses a Healing Potion and restores " + myHealingAmount);
+            if (oldHealth + myHealingAmount < theHero.getMaxHitPoints()) {
+                theUI.getGameScreen().showDialogue("Healing potion restored \n" + myHealingAmount + " HP!");
             } else {
-                System.out.println(theHero.getName() + "'s full health has been restored!");
+                theUI.getGameScreen().showDialogue("Full health has been \nrestored!");
             }
-            System.out.println("Health: " + newHealth);
         } else {
-            System.out.println("You are already at maximum HP!");
+            theUI.getGameScreen().showDialogue("You are already at maximum \nHP!");
         }
     }
 
@@ -67,7 +66,6 @@ public class HealingPotion extends Item {
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         //System.out.println("Deserialized Room object.");
-
         loadSprite();
     }
 }
