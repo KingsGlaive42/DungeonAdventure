@@ -270,13 +270,20 @@ public class CombatPanel extends JPanel {
         combatController.switchToGamePanel();
     }
 
+    /**
+     *  method that resets the panel when it ends.
+     */
     public void clearState() {
         ImageIcon newHeroIcon = combatController.setImage(true);
         ImageIcon newEnemyIcon = combatController.setImage(false);
         Image newHeroImage = newHeroIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         Image newEnemyImage = newEnemyIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-        heroImageIcon.setImage(newHeroImage);
-        enemyImageIcon.setImage(newEnemyImage);
+        newHeroIcon.setImage(newHeroImage);
+        newEnemyIcon.setImage(newEnemyImage);
+        heroImageLabel.setIcon(newHeroIcon);
+        enemyImageLabel.setIcon(newEnemyIcon);
+        heroImageIcon = newHeroIcon;
+        enemyImageIcon = newEnemyIcon;
         visualPanel.repaint();
         reactivateButtons();
         actionLog.setText("");

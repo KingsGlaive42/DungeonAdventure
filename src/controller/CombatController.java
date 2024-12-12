@@ -38,20 +38,41 @@ public class CombatController {
         resetTurns();
     }
 
+    /**
+     * This method sets the JPanel that the controller interacts with.
+     *
+     * @param theCombatPanel JPanel to  interact with.
+     */
     public void setCombatPanel(final CombatPanel theCombatPanel) {
         combatPanel = theCombatPanel;
         updateHeroInfo();
         updateEnemyInfo();
     }
 
+    /**
+     * This method sets the player character in the combat panel.
+     *
+     * @param theHero the player character.
+     */
     public void setHero(final Hero theHero) {
         this.hero = theHero;
     }
 
+    /**
+     * This method sets the gameController that the
+     * combat controller interacts with.
+     *
+     * @param theGameController gameController to interact with.
+     */
     public void setGameController(final GameController theGameController) {
         gameController = theGameController;
     }
 
+    /**
+     * This method begins combat.
+     *
+     * @param theEnemy Enemy to fight with.
+     */
     public void startCombat(final Monster theEnemy) {
         enemy = theEnemy;
         updateHeroInfo();
@@ -62,6 +83,12 @@ public class CombatController {
     }
 
 
+    /**
+     * This method sets the CardLayoutManager for
+     * switching to gamePanel.
+     *
+     * @param theCardLayoutManager the CardLayoutManager.
+     */
     public void setCardLayoutManager(final CardLayoutManager theCardLayoutManager) {
         cardLayoutManager = theCardLayoutManager;
     }
@@ -422,6 +449,10 @@ public class CombatController {
         combatPanel.updateEnemyInfo(enemyInfo);
     }
 
+    private void resetEnemy() {
+        enemy.setHitPoints(enemy.getMaxHitPoints());
+    }
+
     /**
      * This method switches to game panel when combat is finished
      */
@@ -432,6 +463,7 @@ public class CombatController {
                 ((JFrame) window).dispose();
             }
         } else {
+            resetEnemy();
             cardLayoutManager.switchToGamePanel();
         }
     }
