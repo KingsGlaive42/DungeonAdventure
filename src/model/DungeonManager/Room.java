@@ -302,12 +302,22 @@ public class Room implements Serializable {
         myRoomItems.add(theItem);
     }
 
+    /**
+     * This method adds th given monster to the room.
+     *
+     * @param theMonster Monster to be added.
+     */
     public void addMonster(Monster theMonster) {
         myRoomMonsters.add(theMonster);
         //System.out.println("Monster added to room: " + myRoomType);
         //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
     }
 
+    /**
+     * This method damanges player when they fall in a pit.
+     *
+     * @param theGameController Game Controller.
+     */
     public void handlePitDamage(final GameController theGameController) {
         if (this.hasPit) {
             int damage = (int)(Math.random() * 20 + 1);
@@ -317,7 +327,11 @@ public class Room implements Serializable {
         }
     }
 
-
+    /**
+     * This method removes the given monster from the room.
+     *
+     * @param theMonster Monster to be removed
+     */
     public void removeMonster(Monster theMonster) {
         myRoomMonsters.remove(theMonster);
     }
