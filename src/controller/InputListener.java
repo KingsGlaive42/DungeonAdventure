@@ -5,6 +5,11 @@ import view.GameScreen;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+/**
+ * This is the Input Listener class that listens to what keys the user presses.
+ *
+ * @author Jayden Fausto
+ */
 public class InputListener implements KeyListener{
     private final int UP = KeyEvent.VK_W;
     private final int DOWN = KeyEvent.VK_S;
@@ -27,7 +32,11 @@ public class InputListener implements KeyListener{
 
     private static InputListener myInstance;
 
-
+    /**
+     * This method returns the instance of InputListener.
+     *
+     * @return Instance of Input Listener.
+     */
     public static InputListener getInstance() {
         if (myInstance == null) {
             myInstance = new InputListener();
@@ -37,6 +46,11 @@ public class InputListener implements KeyListener{
     }
 
 
+    /**
+     * This method adds name player types to game.
+     *
+     * @param theKey the event to be processed
+     */
     @Override
     public void keyTyped(final KeyEvent theKey) {
         if (isTypingName) {
@@ -50,6 +64,12 @@ public class InputListener implements KeyListener{
         }
     }
 
+    /**
+     * This method checks which of the movement/selection
+     * keys were pressed.
+     *
+     * @param theKey the event to be processed
+     */
     @Override
     public void keyPressed(final KeyEvent theKey) {
         int keyCode = theKey.getKeyCode();
@@ -86,6 +106,12 @@ public class InputListener implements KeyListener{
         }
     }
 
+    /**
+     * This method checks which of the movement/selection
+     * keys were released.
+     *
+     * @param theKey the event to be processed
+     */
     @Override
     public void keyReleased(final KeyEvent theKey) {
         int keyCode = theKey.getKeyCode();
@@ -122,42 +148,92 @@ public class InputListener implements KeyListener{
         }
     }
 
+    /**
+     * This method checks if up was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isUpPressed() {
         return isUpPressed;
     }
 
+    /**
+     * This method checks if down was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isDownPressed() {
         return isDownPressed;
     }
 
+    /**
+     * This method checks if left was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isLeftPressed() {
         return isLeftPressed;
     }
 
+    /**
+     * This method checks if right was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isRightPressed() {
         return isRightPressed;
     }
 
+    /**
+     * This method checks if arrowUp was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isArrowUpPressed() {
         return isArrowUpPressed;
     }
 
+    /**
+     * This method checks if arrowDown was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isArrowDownPressed() {
         return isArrowDownPressed;
     }
 
+    /**
+     * This method checks if arrowLeft was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isArrowLeftPressed() {
         return isArrowLeftPressed;
     }
 
+    /**
+     * This method checks if arrowRight was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isArrowRightPressed() {
         return isArrowRightPressed;
     }
 
+    /**
+     * This method checks if use was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isUsePressed() {
         return isUsePressed;
     }
 
+    /**
+     * This method checks if pause was pressed.
+     *
+     * @return True if pressed, false if not.
+     */
     public boolean isPauseJustPressed() {
         if (isPausedPressed && !wasPausePressed) {
             wasPausePressed = true;
@@ -169,6 +245,9 @@ public class InputListener implements KeyListener{
         return false;
     }
 
+    /**
+     * This method resets all the button pressed booleans.
+     */
     public void reset() {
         isUpPressed = false;
         isDownPressed = false;
@@ -183,6 +262,11 @@ public class InputListener implements KeyListener{
         wasPausePressed = false;
     }
 
+    /**
+     * This method sets if left was pressed.
+     *
+     * @param isPressed true if pressed, false if not.
+     */
     public void setLeftPressed(final boolean isPressed) {
         this.isLeftPressed = isPressed;
     }

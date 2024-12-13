@@ -319,6 +319,9 @@ public class CombatController {
         }
     }
 
+    /**
+     * This method handles the user drinking a healing potion.
+     */
     public void handlePotion() {
         int health = hero.getHitPoints();
         gameController.getInventory().useItem(new HealingPotion(), gameController.getPlayer().getHeroClass(), gameController.getDungeon());

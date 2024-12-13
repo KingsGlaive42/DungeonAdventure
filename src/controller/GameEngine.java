@@ -5,6 +5,11 @@ import view.GamePanel;
 
 import java.awt.*;
 
+/**
+ * This is the GameEngine Class
+ *
+ * @author Jayden Fausto
+ */
 public class GameEngine implements Runnable {
     private final GamePanel myGamePanel;
     private final GameStateManager myGameStateManager;
@@ -12,11 +17,20 @@ public class GameEngine implements Runnable {
     private Thread myGameThread;
     private boolean isRunning;
 
+    /**
+     * GameEngine Constructor.
+     *
+     * @param theGamePanel GamePanel.
+     * @param theGameStateManager GameStateManager.
+     */
     public GameEngine(final GamePanel theGamePanel, final GameStateManager theGameStateManager) {
         myGamePanel = theGamePanel;
         myGameStateManager = theGameStateManager;
     }
 
+    /**
+     * This method starts the game.
+     */
     public void startGame() {
         if (myGameThread == null) {
             isRunning = true;
@@ -36,6 +50,9 @@ public class GameEngine implements Runnable {
         }
     }
 
+    /**
+     * This method runs the game.
+     */
     @Override
     public void run() {
         double deltaTime = 0;
@@ -54,7 +71,10 @@ public class GameEngine implements Runnable {
             }
         }
     }
-    
+
+    /**
+     * This method updates game state.
+     */
     private void update() {
         myGameStateManager.update();
     }
