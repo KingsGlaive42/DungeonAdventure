@@ -9,6 +9,9 @@ import java.awt.*;
 import static model.GameConfig.SCREEN_HEIGHT;
 import static model.GameConfig.SCREEN_WIDTH;
 
+/**
+ * This is the PauseScreen Class.
+ */
 public class PauseScreen implements Screen{
     private static final int SLIDER_WIDTH = 200;
     private static final int SLIDER_HEIGHT = 10;
@@ -20,6 +23,12 @@ public class PauseScreen implements Screen{
     private final GameStateManager myGameStateManager;
     private final UIButton myBackButton;
 
+    /**
+     * Pause Screen Constructor.
+     *
+     * @param theAssetManager AssetManager.
+     * @param theGameStateManager GameStateManager.
+     */
     public PauseScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager) {
         this.myGameStateManager = theGameStateManager;
         mySaveButton = new UIButton(theAssetManager.getAsset("saveButton"), new Rectangle(10, 10, 55, 55));
@@ -27,6 +36,11 @@ public class PauseScreen implements Screen{
         myBackButton = new UIButton(theAssetManager.getAsset("backButton"), new Rectangle(25, 325, 70, 70));
     }
 
+    /**
+     * This method draws the screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void draw(final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 150));
         theGraphics2D.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -42,6 +56,11 @@ public class PauseScreen implements Screen{
         myBackButton.draw(theGraphics2D);
     }
 
+    /**
+     * This method handles clicking.
+     *
+     * @param theClickPoint Clicked point.
+     */
     public void handleClick(final Point theClickPoint) {
         if (myBgmSliderBounds.contains(theClickPoint)) {
             int relativeX = theClickPoint.x - myBgmSliderBounds.x;
@@ -66,12 +85,22 @@ public class PauseScreen implements Screen{
         }
     }
 
+    /**
+     * This method handles hovering.
+     *
+     * @param theMousePoint Hovering point.
+     */
     public void handleHoverUpdate(final Point theMousePoint) {
         mySaveButton.setHovered(mySaveButton.contains(theMousePoint));
         myLoadButton.setHovered(myLoadButton.contains(theMousePoint));
         myBackButton.setHovered(myBackButton.contains(theMousePoint));
     }
 
+    /**
+     * This method draws volume options.
+     *
+     * @param theGraphics2D Graphics.
+     */
     private void drawVolumeOptions(final Graphics2D theGraphics2D) {
         int x = SCREEN_WIDTH / 2 - SLIDER_WIDTH / 2;
         int y = SCREEN_HEIGHT / 2;
@@ -84,6 +113,15 @@ public class PauseScreen implements Screen{
         mySfxSliderBounds = new Rectangle(x, sfxY, SLIDER_WIDTH, SLIDER_HEIGHT);
     }
 
+    /**
+     * This method draws the sliders.
+     *
+     * @param theX X position of sliders.
+     * @param theY Y position of sliders.
+     * @param theVolume Volume level.
+     * @param theLabel Volume Label
+     * @param theGraphics2D Graphics
+     */
     private void drawSlider(final int theX, final int theY, final int theVolume, final String theLabel, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(Color.DARK_GRAY);
         theGraphics2D.fillRect(theX, theY, SLIDER_WIDTH, SLIDER_HEIGHT);

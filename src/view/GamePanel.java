@@ -11,10 +11,21 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * This is the Game Panel Class
+ *
+ * @author Jayden Fausto
+ */
 public class GamePanel extends JPanel {
     private final GameStateManager myGameStateManager;
     private final UI myUI;
 
+    /**
+     * Game Panel Constructor.
+     *
+     * @param theGameStateManager GameStateManager.
+     * @param theUI UI.
+     */
     public GamePanel(final GameStateManager theGameStateManager, final UI theUI) {
         InputListener myInputListener = InputListener.getInstance();
         myGameStateManager = theGameStateManager;
@@ -32,6 +43,11 @@ public class GamePanel extends JPanel {
         this.addMouseMotionListener(new MouseInputAdapter());
     }
 
+    /**
+     * This method paints the graphics.
+     *
+     * @param theGraphics theGraphics.
+     */
     public void paintComponent(final Graphics theGraphics) {
         super.paintComponent(theGraphics);
 
@@ -42,6 +58,9 @@ public class GamePanel extends JPanel {
         graphics2D.dispose();
     }
 
+    /**
+     * This method repaints based on mouse hovers or clicks.
+     */
     private class MouseInputAdapter extends MouseAdapter {
         @Override
         public void mouseMoved(final MouseEvent theMouseEvent) {
@@ -56,6 +75,9 @@ public class GamePanel extends JPanel {
         }
     }
 
+    /**
+     * This method repaints the screen based on keys pressed.
+     */
     private class KeyInputAdapter extends KeyAdapter {
         @Override
         public void keyPressed(final KeyEvent theEvent) {

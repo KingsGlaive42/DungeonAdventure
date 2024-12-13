@@ -13,6 +13,11 @@ import java.awt.*;
 import java.io.File;
 import java.time.LocalDateTime;
 
+/**
+ * This is the SaveGameScreen Class
+ *
+ * @author Jayden Fausto
+ */
 public class SaveGameScreen implements Screen{
     private final GameStateManager myGameStateManager;
     private final SaveFileManager mySaveFileManager;
@@ -22,7 +27,14 @@ public class SaveGameScreen implements Screen{
     private final UIButton[] saveSlotButtons;
     private final String[] saveSlotDetails;
 
-
+    /**
+     * SaveGameScreen Constructor
+     *
+     * @param theAssetManager AssetManager.
+     * @param theGameStateManager GameStateManager.
+     * @param theSaveFileManager SaveFileManager.
+     * @param theGameController GameController.
+     */
     public SaveGameScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager, final SaveFileManager theSaveFileManager, final GameController theGameController) {
         this.myGameStateManager = theGameStateManager;
         this.mySaveFileManager = theSaveFileManager;
@@ -42,6 +54,9 @@ public class SaveGameScreen implements Screen{
 
     }
 
+    /**
+     * This method loads save slot details.
+     */
     private void loadSaveSlotDetails() {
         for (int i = 0; i < 3; i++) {
             File saveFile = mySaveFileManager.getSaveFile(i + 1);
@@ -62,11 +77,22 @@ public class SaveGameScreen implements Screen{
         }
     }
 
+    /**
+     * This method gets save file details.
+     *
+     * @param theSaveFile filePath for save file.
+     * @return String representation of save file.
+     */
     private String getSaveFileDetails(final File theSaveFile) {
         long lastModified = theSaveFile.lastModified();
         return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(lastModified));
     }
 
+    /**
+     * This method draws the screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void draw(final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(Color.BLACK);
         theGraphics2D.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
@@ -85,6 +111,11 @@ public class SaveGameScreen implements Screen{
         myBackButton.draw(theGraphics2D);
     }
 
+    /**
+     * This method handles hovering.
+     *
+     * @param theMousePoint Hovering point.
+     */
     public void handleHoverUpdate(final Point theMousePoint) {
         for (UIButton slotButton : saveSlotButtons) {
             slotButton.setHovered(slotButton.contains(theMousePoint));
@@ -92,6 +123,11 @@ public class SaveGameScreen implements Screen{
         myBackButton.setHovered(myBackButton.contains(theMousePoint));
     }
 
+    /**
+     * This method handles clicking.
+     *
+     * @param theClickPoint Click point.
+     */
     public void handleClick(final Point theClickPoint) {
         for (int i = 0; i < saveSlotButtons.length; i++) {
             if (saveSlotButtons[i].contains(theClickPoint)) {
@@ -110,6 +146,11 @@ public class SaveGameScreen implements Screen{
         }
     }
 
+    /**
+     * This method saves the game.
+     *
+     * @param theSlotNumber Save Slot.
+     */
     private void saveGame(final int theSlotNumber) {
         File saveFile = mySaveFileManager.getSaveFile(theSlotNumber);
 
@@ -126,6 +167,13 @@ public class SaveGameScreen implements Screen{
         }
     }
 
+    /**
+     * This method draws the window.
+     *
+     * @param theY Y position of Window.
+     * @param theSlotIndex Slot Index
+     * @param theGraphics2D Graphics.
+     */
     private void drawSubWindow(final int theY, final int theSlotIndex, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 210));
         theGraphics2D.fillRoundRect(100, theY, 350, 75, 35, 35);

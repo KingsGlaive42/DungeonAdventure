@@ -6,12 +6,23 @@ import model.GameConfig;
 
 import java.awt.*;
 
+/**
+ * This is the Option Screen class.
+ *
+ * @author Jayden Fausto
+ */
 public class OptionScreen implements Screen {
     private final GameStateManager myGameStateManager;
 
     private final UIButton[] myUIButtons;
     private final UIButton myBackButton;
 
+    /**
+     * OptionScreen Constructor
+     *
+     * @param theGameStateManager GameStateManager
+     * @param theAssetManager AssetManager.
+     */
     public OptionScreen(final GameStateManager theGameStateManager, final AssetManager theAssetManager) {
         this.myGameStateManager = theGameStateManager;
 
@@ -23,6 +34,11 @@ public class OptionScreen implements Screen {
         myBackButton = new UIButton(theAssetManager.getAsset("backButton"), new Rectangle(25, 325, 70, 70));
     }
 
+    /**
+     * This method draws the screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void draw(final Graphics2D theGraphics2D) {
         if (theGraphics2D == null) {
             throw new IllegalArgumentException("Graphics2D Cannot be null");
@@ -42,6 +58,11 @@ public class OptionScreen implements Screen {
         myBackButton.draw(theGraphics2D);
     }
 
+    /**
+     * This method handles clicking.
+     *
+     * @param theClickPoint Clicked point.
+     */
     public void handleClick(final Point theClickPoint) {
         for (int i = 0; i < myUIButtons.length; i++) {
             if (myUIButtons[i].contains(theClickPoint)) {
@@ -69,6 +90,11 @@ public class OptionScreen implements Screen {
         }
     }
 
+    /**
+     * This method handles hovering.
+     *
+     * @param theMousePoint Hovering point.
+     */
     public void handleHoverUpdate(final Point theMousePoint) {
         for (UIButton myUIButton : myUIButtons) {
             myUIButton.setHovered(myUIButton.contains(theMousePoint));
