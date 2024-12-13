@@ -109,6 +109,20 @@ public class Skeleton extends Monster implements Serializable {
         return idleAnimation.getSprite();
     }
 
+    @Override
+    public Monster cloneMonster() {
+        return new Skeleton(
+                this.getHitPoints(),
+                this.getMinDamage(),
+                this.getMaxDamage(),
+                this.getAttackSpeed(),
+                this.getChanceToHit(),
+                this.getMyHealChance(),
+                this.getMyMinHeal(),
+                this.getMyMaxHeal()
+        );
+    }
+
     /**
      * Custom deserialization method to restore transient fields.
      *

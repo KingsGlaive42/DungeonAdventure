@@ -54,6 +54,18 @@ public abstract class Monster extends DungeonCharacter implements Serializable {
         this.monsterY = theY;
     }
 
+    public double getMyHealChance() {
+        return myHealChance;
+    }
+
+    public int getMyMinHeal() {
+        return myMinHeal;
+    }
+
+    public int getMyMaxHeal() {
+        return myMaxHeal;
+    }
+
     public int getMonsterX() {
         return monsterX;
     }
@@ -63,4 +75,6 @@ public abstract class Monster extends DungeonCharacter implements Serializable {
     }
 
     public abstract BufferedImage getSprite();
+
+    public abstract Monster cloneMonster();
 }

@@ -7,14 +7,16 @@ import model.DungeonCharacters.Skeleton;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-//NOTE: Monster factory
-public class MonsterDatabase {
+public class MonsterFactory {
     private static final String db = "jdbc:sqlite:data/monster.db";
 
-    public List<Monster> loadMonsters() {
-        List<Monster> monsters = new ArrayList<>();
+    public Map<String, Monster> loadMonsterTemplates() {
+        //List<Monster> monsters = new ArrayList<>();
+        Map<String, Monster> templates = new HashMap<>();
         try (Connection con = DriverManager.getConnection(db)) {
             String sql = "SELECT name, hit_points, min_damage, max_damage, " +
                     "attack_speed, chance_to_hit, heal_chance, min_heal, max_heal FROM monsters";
@@ -34,14 +36,15 @@ public class MonsterDatabase {
                 Monster monster = createMonster(name, hitPoints, minDamage, maxDamage, attackSpeed, chanceToHit,
                         healChance, minHeal, maxHeal);
                 if (monster != null) {
-                    monsters.add(monster);
+                    //monsters.add(monster);
+                    templates.put(name, monster);
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return monsters;
+        return templates;
     }
 
     private Monster createMonster(String theName, int theHitPoints, int theMinDamage, int theMaxDamage, int theAttackSpeed,

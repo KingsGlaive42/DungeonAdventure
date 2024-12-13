@@ -1,40 +1,43 @@
-package model.Database;
+package model.Database.Tests;
 
+import model.Database.MonsterFactory;
 import model.DungeonCharacters.Monster;
 import org.junit.jupiter.api.*;
-import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MonsterDatabaseTest {
 
-    private MonsterDatabase monsterDatabase;
+    private MonsterFactory monsterDatabase;
 
     @BeforeEach
     public void setUp() {
-        monsterDatabase = new MonsterDatabase();
+        monsterDatabase = new MonsterFactory();
     }
 
     @Test
-    public void testLoadMonsterList() {
-        List<Monster> monsters = monsterDatabase.loadMonsters();
+    public void testLoadMonster() {
+        Map<String, Monster> monsters = monsterDatabase.loadMonsterTemplates();
         assertNotNull(monsters, "Monster list should not be null");
         assertFalse(monsters.isEmpty(), "Monster list should not be empty");
 
-        boolean expected = monsters.stream().anyMatch(monster -> monster.getName().equals("Ogre"));
+        //boolean expected = monsters.stream().anyMatch(monster -> monster.getName().equals("Ogre"));
+        boolean expected = monsters.containsKey("Ogre");
         assertTrue(expected, "Expected monster not found in list.");
     }
 
     @Test
     public void testMonsterCount() {
-        List<Monster> monsters = monsterDatabase.loadMonsters();
+        Map<String, Monster> monsters = monsterDatabase.loadMonsterTemplates();
         int expected = 3;
         assertEquals(expected, monsters.size(), "The number of monsters loaded should be 3.");
     }
 
     @Test
     public void testMonsterAttributes() {
-        List<Monster> monsters = monsterDatabase.loadMonsters();
-        for (Monster monster : monsters) {
+        Map<String, Monster> monsters = monsterDatabase.loadMonsterTemplates();
+        for (Monster monster : monsters.values()) {
             assertNotNull(monster.getName(), "Monster name should not be null.");
             assertFalse(monster.getName().isEmpty(), "Monster name should not be empty.");
             assertTrue(monster.getHitPoints() > 0, "Monster HP should be greater than 0.");
