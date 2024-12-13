@@ -20,6 +20,7 @@ public class TitleScreen implements Screen{
     private final UIButton myLoadButton;
     private final UIButton myOptionsButton;
     private final UIButton myExitButton;
+    private final UIButton myHowToPlayButton;
 
     /**
      * TitleScreen Constructor.
@@ -34,6 +35,7 @@ public class TitleScreen implements Screen{
         myLoadButton = new UIButton(theAssetManager.getAsset("loadButton"), new Rectangle(10, 350, 55, 55));
         myOptionsButton = new UIButton(theAssetManager.getAsset("optionButton"), new Rectangle(210, 214, 112, 55));
         myExitButton = new UIButton(theAssetManager.getAsset("exitButton"), new Rectangle(210, 269, 112, 55));
+        myHowToPlayButton = new UIButton(theAssetManager.getAsset("htpButton"), new Rectangle(450, 350, 60, 60));
     }
 
     /**
@@ -49,6 +51,7 @@ public class TitleScreen implements Screen{
         myLoadButton.draw(theGraphics2D);
         myOptionsButton.draw(theGraphics2D);
         myExitButton.draw(theGraphics2D);
+        myHowToPlayButton.draw(theGraphics2D);
     }
 
     /**
@@ -61,6 +64,7 @@ public class TitleScreen implements Screen{
         myLoadButton.setHovered(myLoadButton.contains(theMousePoint));
         myOptionsButton.setHovered(myOptionsButton.contains(theMousePoint));
         myExitButton.setHovered(myExitButton.contains(theMousePoint));
+        myHowToPlayButton.setHovered(myHowToPlayButton.contains(theMousePoint));
     }
 
     /**
@@ -77,6 +81,8 @@ public class TitleScreen implements Screen{
             myGameStateManager.setState(GameStateManager.State.OPTION);
         } else if (myExitButton.contains(theClickPoint)) {
             System.exit(0);
+        } else if (myHowToPlayButton.contains(theClickPoint)) {
+            myGameStateManager.setState(GameStateManager.State.HTP);
         }
     }
 }

@@ -5,7 +5,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+/**
+ * Saves Gamestates to a file
+ */
 public class GameSaver {
+    /**
+     * Saves GameStates to a save file
+     *
+     * @param theGameState the Game State to be saves.
+     * @param theFileName the path where the game will be saved to.
+     * @return true if it successfully saved, false otherwise
+     */
     public static boolean saveGame(final GameState theGameState, final String theFileName) {
         File file = new File(theFileName);
         File parentDir = file.getParentFile();

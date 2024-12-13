@@ -24,7 +24,8 @@ public class GameStateManager {
         LOAD,
         SAVE,
         GAME_CREATE,
-        LOADING_GAME
+        LOADING_GAME,
+        HTP
     }
 
     private final GameController myGameController;
@@ -159,6 +160,9 @@ public class GameStateManager {
                 break;
             case LOADING_GAME:
                 myUI.drawLoadingGameScreen(theGraphics2D);
+                break;
+            case HTP:
+                myUI.drawHowToPlayScreen(theGraphics2D);
                 break;
         }
     }

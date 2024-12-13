@@ -262,8 +262,6 @@ public class Room implements Serializable {
         return playerBounds.intersects(chestBounds);
     }
 
-
-    //void addDoor(final DoorDirection theDirection) {
     /**
      * Adds a door in the specified direction.
      *
