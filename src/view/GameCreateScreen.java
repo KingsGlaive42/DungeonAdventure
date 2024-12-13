@@ -159,7 +159,7 @@ public class GameCreateScreen implements Screen{
 
         if (myCreateGameButton.contains(theClickPoint)) {
             if (isCharacterSelected && !myPlayerName.isEmpty()) {
-                myUI.loadGame(new Player(mySelectedCharacter, myPlayerName, myGameController.getInventory()), 3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty);
+                myUI.loadGame(new Player(mySelectedCharacter, myPlayerName), 3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty);
             } else {
                 System.out.println("Please select a character and enter a name.");
             }
