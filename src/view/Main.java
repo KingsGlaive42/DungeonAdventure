@@ -87,6 +87,13 @@ public class Main {
         theAssetManager.loadAsset("infiniteDamageImage", "src/resources/assets/Buttons/infiniteDamageImage.png");
         theAssetManager.loadAsset("highSpeedImage", "src/resources/assets/Buttons/highSpeedImage.png");
         theAssetManager.loadAsset("showHitboxesImage", "src/resources/assets/Buttons/showHitboxImage.png");
+        theAssetManager.loadAsset("htp1", "src/resources/htp1.png");
+        theAssetManager.loadAsset("htp2", "src/resources/htp2.png");
+        theAssetManager.loadAsset("htp3", "src/resources/htp3.png");
+        theAssetManager.loadAsset("htp4", "src/resources/htp4.png");
+        theAssetManager.loadAsset("htpButton", "src/resources/htpbutton.png");
+
+
     }
 
     private static void testSaveFunctionality(SaveFileManager saveFileManager, GameState gameState) {
