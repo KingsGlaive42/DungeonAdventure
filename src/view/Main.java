@@ -45,6 +45,7 @@ public class Main {
         gameController.setCombatController(combatController);
         combatController.setCombatPanel(cardLayoutManager.getCombatPanel());
         combatController.setGameController(gameController);
+        combatController.setGameStateManager(gameStateManager);
         gameController.setUI(ui);
         gameStateManager.setUI(ui);
 
