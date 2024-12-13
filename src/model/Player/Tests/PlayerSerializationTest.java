@@ -11,7 +11,7 @@ public class PlayerSerializationTest {
     public static void main(String[] args) {
         Dungeon dungeon = new Dungeon(10, 10, 20);
         Inventory inventory = new Inventory(dungeon);
-        Player player = new Player("warrior", "warrior", inventory);
+        Player player = new Player("warrior", "warrior");
 
         // Save the room to a file
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("room.ser"))) {

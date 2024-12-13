@@ -31,7 +31,7 @@ public class Main {
         gameState.setMyDungeon(dungeon);
         Inventory inventory = new Inventory(gameState.getMyDungeon());
         gameState.setMyInventory(inventory);
-        gameState.setMyPlayer(new Player("Priestess", "Phil", inventory));
+        gameState.setMyPlayer(new Player("Priestess", "Phil"));
 
         //testSaveFunctionality(saveFileManager, gameState);
         CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);

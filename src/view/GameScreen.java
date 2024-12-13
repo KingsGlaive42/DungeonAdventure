@@ -148,7 +148,7 @@ public class GameScreen implements Screen{
 
     private void drawInventoryScreen(final Graphics2D theGraphics2D) {
         drawSubWindow(TILE_SIZE * 8, TILE_SIZE,  TILE_SIZE * 5, TILE_SIZE * 11, theGraphics2D);
-        List<Item> items = myGameController.getPlayer().getMyInventory().getItems();
+        List<Item> items = myGameController.getInventory().getItems();
 
         int xStart = TILE_SIZE * 8 + 15;
         int yStart = TILE_SIZE + 19;
@@ -192,7 +192,7 @@ public class GameScreen implements Screen{
         if (theInputListener.isArrowRightPressed())
             moveCursor(0, 1);
 
-        if (theInputListener.isUsePressed() && getSlotIndex() < myGameController.getPlayer().getMyInventory().getItems().size()) {
+        if (theInputListener.isUsePressed() && getSlotIndex() < myGameController.getInventory().getItems().size()) {
             useItem();
         }
     }
@@ -211,7 +211,7 @@ public class GameScreen implements Screen{
 
     private void useItem() {
         int slotIndex = getSlotIndex();
-        Item selectedItem = myGameController.getPlayer().getMyInventory().getItems().get(slotIndex);
+        Item selectedItem = myGameController.getInventory().getItems().get(slotIndex);
 
         if (selectedItem != null) {
             myGameController.useItem(selectedItem, myGameController.getPlayer().getHeroClass(), myGameController.getDungeon(), myGameController.getUI());
@@ -220,7 +220,7 @@ public class GameScreen implements Screen{
 
     public void drawDescriptionScreen(final Graphics2D theGraphics2D) {
         int itemIndex = getSlotIndex();
-        List<Item> items = myGameController.getPlayer().getMyInventory().getItems();
+        List<Item> items = myGameController.getInventory().getItems();
         if (itemIndex < items.size()) {
             drawSubWindow(TILE_SIZE, TILE_SIZE * 8, TILE_SIZE * 7, TILE_SIZE * 3, theGraphics2D);
             theGraphics2D.setColor(Color.YELLOW);

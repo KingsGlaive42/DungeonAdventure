@@ -6,6 +6,7 @@ import controller.GameStateManager;
 import model.DungeonManager.Dungeon;
 import model.GameConfig;
 import model.Player.Player;
+import model.PlayerInventory.Inventory;
 
 import java.awt.*;
 
@@ -28,9 +29,10 @@ public class LoadingScreen implements Screen{
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
-
+                Dungeon dungeon = new Dungeon(theDungeonWidth, theDungeonHeight, theNumRooms);
                 myGameController.setMyPlayer(thePlayer);
-                myGameController.setMyDungeon(new Dungeon(theDungeonWidth, theDungeonHeight, theNumRooms));
+                myGameController.setMyDungeon(dungeon);
+                myGameController.setMyInventory(new Inventory(dungeon));
                 myCombatController.setHero(thePlayer.getHeroClass());
 
                 myGameStateManager.setState(GameStateManager.State.GAME);
