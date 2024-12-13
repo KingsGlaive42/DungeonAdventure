@@ -49,7 +49,7 @@ public class Berserker extends Hero implements Serializable {
         this.takeDamage(GameConfig.isInfiniteHealth() ? 0 : 10);
         int tempMin = getMinDamage();
         int tempMax = getMaxDamage();
-        setMinDamage(65);
+        setMinDamage(75);
         setMaxDamage(90);
 
         if (GameConfig.isInfiniteDamage()) {

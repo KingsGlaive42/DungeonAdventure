@@ -16,7 +16,7 @@ public abstract class DungeonCharacter implements Serializable {
     private int myMinDamage;
     private int myMaxDamage;
     private final int myAttackSpeed;
-    private final double myChanceToHit;
+    private double myChanceToHit;
     private final Random rand;
     private final int myMaxHitPoints;
 
@@ -89,16 +89,78 @@ public abstract class DungeonCharacter implements Serializable {
      * @return Character name.
      */
     public String getName() { return myName; }
+
+    /**
+     * This method returns current hit points.
+     *
+     * @return current hit points.
+     */
     public int getHitPoints() { return myCurrentHitPoints; }
+
+    /**
+     * This method sets hit points.
+     *
+     * @param theCurrentHitPoints New Current Hit Points.
+     */
     public void setHitPoints(final int theCurrentHitPoints) {
         this.myCurrentHitPoints = Math.min(theCurrentHitPoints, myMaxHitPoints); // Ensures HP does not exceed max
     }
+
+    /**
+     * This method gets the attack speed.
+     *
+     * @return attack speed.
+     */
     public int getAttackSpeed() { return myAttackSpeed; }
+
+    /**
+     * This method returns min damage.
+     *
+     * @return min damage.
+     */
     public int getMinDamage() { return myMinDamage; }
+
+    /**
+     * This method sets min damage.
+     *
+     * @param theMinDamage new min damage.
+     */
     public void setMinDamage(final int theMinDamage) { this.myMinDamage = theMinDamage; }
+
+    /**
+     * This method gets max damage.
+     *
+     * @return Max Damage.
+     */
     public int getMaxDamage() { return myMaxDamage; }
+
+    /**
+     * This method sets max damage.
+     *
+     * @param theMaxDamage new max damage.
+     */
     public void setMaxDamage(final int theMaxDamage) { this.myMaxDamage = theMaxDamage; }
+
+    /**
+     * This method gets chance to hit.
+     *
+     * @return returns chance to hit.
+     */
     public double getChanceToHit() { return myChanceToHit; }
+
+    /**
+     * This method gets max hit points.
+     *
+     * @return max hit points.
+     */
     public int getMaxHitPoints() { return myMaxHitPoints; }
 
+    /**
+     * This method sets the chance to hit for testing.
+     *
+     * @param theChanceToHit New Chance To Hit.
+     */
+    public void setChanceToHit(final double theChanceToHit) {
+        myChanceToHit = theChanceToHit;
+    }
 }
