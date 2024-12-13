@@ -5,16 +5,19 @@ import controller.GameStateManager;
 import model.AnimationSystem.AssetManager;
 import model.GameConfig;
 import model.Player.Player;
-import model.PlayerInventory.Inventory;
-import model.SaveGame.GameState;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-import static model.GameConfig.theGraphics2D;
+import static model.GameConfig.CLASS_NAMES;
 import static model.GameConfig.NUM_CHARACTERS;
 
-public class GameCreateScreen {
+/**
+ * This is the GameCreateScreen class
+ *
+ * @author Jayden Fausto
+ */
+public class GameCreateScreen implements Screen{
     private final UI myUI;
 
     private UIButton[] myCharacterSelectButtons;
@@ -37,6 +40,14 @@ public class GameCreateScreen {
     private final UIButton myHardDifficultyButton;
 
 
+    /**
+     * GameCreateScreen Constructor
+     *
+     * @param theUI UI.
+     * @param theAssetManager AssetManager.
+     * @param theGameController GameController.
+     * @param theGameStateManager GameStateManager.
+     */
     public GameCreateScreen(final UI theUI, final AssetManager theAssetManager, final GameController theGameController, final GameStateManager theGameStateManager) {
         myUI = theUI;
 
@@ -52,14 +63,24 @@ public class GameCreateScreen {
         myHardDifficultyButton = new UIButton(theAssetManager.getAsset("hardButton"), new Rectangle(210, 170, 70, 70));
     }
 
+    /**
+     * This method creates character buttons.
+     *
+     * @param theAssetManager AssetManager.
+     */
     private void createCharacterButtons(final AssetManager theAssetManager) {
         myCharacterSelectButtons = new UIButton[NUM_CHARACTERS];
 
         for (int i = 0; i < NUM_CHARACTERS; i++) {
-            myCharacterSelectButtons[i] = new UIButton(theAssetManager.getAsset(theGraphics2D[i] + "Image"), new Rectangle(80 * i + 50, 60, 70, 70));
+            myCharacterSelectButtons[i] = new UIButton(theAssetManager.getAsset(CLASS_NAMES[i] + "Image"), new Rectangle(80 * i + 50, 60, 70, 70));
         }
     }
 
+    /**
+     * This method draws the screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void draw(final Graphics2D theGraphics2D) {
         if (theGraphics2D == null) {
             throw new IllegalArgumentException("Graphics2D Cannot be null");
@@ -104,11 +125,16 @@ public class GameCreateScreen {
         myHardDifficultyButton.draw(theGraphics2D);
     }
 
+    /**
+     * This method handles the player hovering over a button.
+     *
+     * @param theMousePoint MousePointer.
+     */
     public void handleHoverUpdate(final Point theMousePoint) {
         for (int i = 0; i < NUM_CHARACTERS; i++) {
             myCharacterSelectButtons[i].setHovered(myCharacterSelectButtons[i].contains(theMousePoint));
 
-            if (mySelectedCharacter != null && mySelectedCharacter.equals(theGraphics2D[i])) {
+            if (mySelectedCharacter != null && mySelectedCharacter.equals(CLASS_NAMES[i])) {
                 myCharacterSelectButtons[i].setHovered(true);
             }
         }
@@ -121,6 +147,11 @@ public class GameCreateScreen {
         myCreateGameButton.setHovered(myCreateGameButton.contains(theMousePoint));
     }
 
+    /**
+     * This method handles mouse click.
+     *
+     * @param theClickPoint Point where mouse clicked
+     */
     public void handleClick(final Point theClickPoint) {
         isNameInputFocused = myNameInputFieldBounds.contains(theClickPoint);
         
@@ -128,7 +159,7 @@ public class GameCreateScreen {
 
         if (myCreateGameButton.contains(theClickPoint)) {
             if (isCharacterSelected && !myPlayerName.isEmpty()) {
-                myUI.loadGame(new Player(mySelectedCharacter, myPlayerName, myGameController.getInventory()), 3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty);
+                myUI.loadGame(new Player(mySelectedCharacter, myPlayerName), 3 * myDifficulty, 3 * myDifficulty, 3 * myDifficulty);
             } else {
                 System.out.println("Please select a character and enter a name.");
             }
@@ -148,15 +179,26 @@ public class GameCreateScreen {
         }
     }
 
+    /**
+     * This method handles the selected character.
+     *
+     * @param theClickPoint Point where mouse clicked
+     */
     private void handleCharacterSelect(final Point theClickPoint) {
         for (int i = 0; i < NUM_CHARACTERS; i++) {
             if (myCharacterSelectButtons[i].contains(theClickPoint)) {
-                mySelectedCharacter = theGraphics2D[i];
+                mySelectedCharacter = CLASS_NAMES[i];
                 isCharacterSelected = true;
             }
         }
     }
 
+    /**
+     * This method handles key presses.
+     *
+     * @param keyCode Which Key was Pressed.
+     * @param keyChar Key Character.
+     */
     public void handleKeyPress(final int keyCode, final char keyChar) {
         if (isNameInputFocused) {
             if (keyCode == KeyEvent.VK_BACK_SPACE && !myPlayerName.isEmpty()) {

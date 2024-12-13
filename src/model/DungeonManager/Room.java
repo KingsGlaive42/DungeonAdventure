@@ -205,6 +205,12 @@ public class Room implements Serializable {
         return null;
     }
 
+    /**
+     * This method checks if player has collided with a monster.
+     *
+     * @param thePlayer Player character.
+     * @return Monster that collided.
+     */
     public Monster checkPlayerCollisionWithMonsters(Player thePlayer) {
         for (Monster monster : myRoomMonsters) {
             if (isPlayerCollidingWithMonster(thePlayer, monster)) {
@@ -214,6 +220,13 @@ public class Room implements Serializable {
         return null;
     }
 
+    /**
+     * This helper method checks if player has collided with a monster.
+     *
+     * @param thePlayer Player character.
+     * @param theMonster Monster character.
+     * @return true if collided, false if not.
+     */
     private boolean isPlayerCollidingWithMonster(Player thePlayer, Monster theMonster) {
         Rectangle2D playerBounds = new Rectangle2D.Double(
                 thePlayer.getX() + thePlayer.getTileSize(),
@@ -230,6 +243,12 @@ public class Room implements Serializable {
         return playerBounds.intersects(monsterBounds);
     }
 
+    /**
+     * This method checks if player has collided with treasure chest.
+     *
+     * @param thePlayer PLayer character.
+     * @return true if collided, false if not.
+     */
     public boolean checkPlayerCollisionWithTreasureChest(final Player thePlayer) {
         if (myRoomType != RoomType.END) {
             return false;
@@ -307,12 +326,22 @@ public class Room implements Serializable {
         myRoomItems.add(theItem);
     }
 
+    /**
+     * This method adds th given monster to the room.
+     *
+     * @param theMonster Monster to be added.
+     */
     public void addMonster(Monster theMonster) {
         myRoomMonsters.add(theMonster);
         //System.out.println("Monster added to room: " + myRoomType);
         //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
     }
 
+    /**
+     * This method damanges player when they fall in a pit.
+     *
+     * @param theGameController Game Controller.
+     */
     public void handlePitDamage(final GameController theGameController) {
         if (this.hasPit) {
             int damage = (int)(Math.random() * 20 + 1);
@@ -321,7 +350,11 @@ public class Room implements Serializable {
         }
     }
 
-
+    /**
+     * This method removes the given monster from the room.
+     *
+     * @param theMonster Monster to be removed
+     */
     public void removeMonster(Monster theMonster) {
         myRoomMonsters.remove(theMonster);
     }
@@ -500,6 +533,11 @@ public class Room implements Serializable {
         }
     }
 
+    /**
+     * This method draws monsters in the room.
+     *
+     * @param theGraphics2D Graphics.
+     */
     private void drawMonsters(final Graphics2D theGraphics2D) {
         int scaleWidth;
         int scaleHeight;
@@ -521,6 +559,9 @@ public class Room implements Serializable {
         }
     }
 
+    /**
+     * This method places monsters in the room.
+     */
     private void placeMonsters() {
         if (myRoomMonsters.isEmpty()) {
             return;

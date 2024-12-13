@@ -75,4 +75,13 @@ public class Hero extends DungeonCharacter implements Serializable {
     public double getChanceToBlock() {
         return myChanceToBlock;
     }
+
+    /**
+     * This method sets the chance to block for testing.
+     *
+     * @param theChanceToBlock New chance to block.
+     */
+    public void setChanceToBlock(final double theChanceToBlock) {
+        myChanceToBlock = theChanceToBlock;
+    }
 }

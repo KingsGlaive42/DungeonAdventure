@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+/**
+ * This is the SoundManager class that manages which sound is played.
+ */
 public class SoundManager {
     private static SoundManager myInstance;
     private Clip myBackgroundMusic;
@@ -12,12 +15,20 @@ public class SoundManager {
     private float myBackgroundVolume;
     private float myEffectsVolume;
 
+    /**
+     * Sound Manager Constructor.
+     */
     private SoundManager() {
         mySoundEffects = new HashMap<>();
         myBackgroundVolume = 60.0f;
         myEffectsVolume = 75.0f;
     }
 
+    /**
+     * This method returns an instance of the SoundManager class.
+     *
+     * @return Instance of SoundManager.
+     */
     public static SoundManager getInstance() {
         if (myInstance == null) {
             myInstance = new SoundManager();
@@ -26,6 +37,11 @@ public class SoundManager {
         return myInstance;
     }
 
+    /**
+     * This method plays the background music of the game.
+     *
+     * @param theFilePath filePath for music file.
+     */
     public void playBackgroundMusic(final String theFilePath) {
         stopBackgroundMusic();
 
@@ -41,6 +57,9 @@ public class SoundManager {
         }
     }
 
+    /**
+     * This method stops playing background music.
+     */
     public void stopBackgroundMusic() {
         if (myBackgroundMusic != null && myBackgroundMusic.isRunning()) {
             myBackgroundMusic.stop();
@@ -48,6 +67,12 @@ public class SoundManager {
         }
     }
 
+    /**
+     * This method loads sound effects.
+     *
+     * @param theKey Key for audio file.
+     * @param theFilePath filePath for audio files.
+     */
     public void loadSoundEffect(final String theKey, final String theFilePath) {
         try {
             Clip clip = AudioSystem.getClip();
@@ -59,6 +84,11 @@ public class SoundManager {
         }
     }
 
+    /**
+     * This method plays the Sound Effect associated with the given key.
+     *
+     * @param theKey Key to choose audio file.
+     */
     public void playSoundEffect(final String theKey) {
         Clip clip = mySoundEffects.get(theKey);
         if (clip != null) {
@@ -70,6 +100,12 @@ public class SoundManager {
         }
     }
 
+    /**
+     * This method sets the volume.
+     *
+     * @param theClip Audio Clip.
+     * @param theVolumePercentage Volume percentage.
+     */
     private void setVolume(final Clip theClip, final float theVolumePercentage) {
         if (theClip != null) {
             FloatControl volumeControl = (FloatControl) theClip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -80,6 +116,11 @@ public class SoundManager {
         }
     }
 
+    /**
+     * This method sets the background volume to the given volume level.
+     *
+     * @param theVolumePercentage volume level.
+     */
     public void setBackgroundVolume(final float theVolumePercentage) {
         myBackgroundVolume = theVolumePercentage;
         if (myBackgroundMusic != null) {
@@ -87,6 +128,11 @@ public class SoundManager {
         }
     }
 
+    /**
+     * This method sets effects volume to given volume level.
+     *
+     * @param theVolumePercentage volume level.
+     */
     public void setEffectsVolume(final float theVolumePercentage) {
         myEffectsVolume = theVolumePercentage;
         for (Clip clip : mySoundEffects.values()) {

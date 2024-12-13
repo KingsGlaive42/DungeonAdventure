@@ -19,7 +19,7 @@ class PlayerTest {
         myInputListener = InputListener.getInstance();
         Dungeon dungeon = new Dungeon(10, 10, 20);
         Inventory inventory = new Inventory(dungeon);
-        myPlayer = new Player("Warrior", "TestPlayer", inventory);
+        myPlayer = new Player("Warrior", "TestPlayer");
     }
 
     @Test
@@ -31,18 +31,16 @@ class PlayerTest {
     @Test
     public void testConstructorInvalidCharacterClass() {
         Dungeon dungeon = new Dungeon(10, 10, 20);
-        Inventory inventory = new Inventory(dungeon);
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new Player("invalidClass", "TestPlayer", inventory));
+                new Player("invalidClass", "TestPlayer"));
         assertEquals("Invalid character class: invalidClass", exception.getMessage());
     }
 
     @Test
     public void testConstructorNullName() {
         Dungeon dungeon = new Dungeon(10, 10, 20);
-        Inventory inventory = new Inventory(dungeon);
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                new Player("warrior", null, inventory));
+                new Player("warrior", null));
         assertEquals("Player name cannot be null or empty.", exception.getMessage());
     }
 

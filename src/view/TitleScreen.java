@@ -8,7 +8,12 @@ import java.awt.*;
 import static model.GameConfig.SCREEN_HEIGHT;
 import static model.GameConfig.SCREEN_WIDTH;
 
-public class TitleScreen {
+/**
+ * This is the TitleScreen Class
+ *
+ * @author Jayden Fausto
+ */
+public class TitleScreen implements Screen{
     private final GameStateManager myGameStateManager;
     
     private final UIButton myPlayButton;
@@ -16,6 +21,12 @@ public class TitleScreen {
     private final UIButton myOptionsButton;
     private final UIButton myExitButton;
 
+    /**
+     * TitleScreen Constructor.
+     *
+     * @param theAssetManager AssetManager.
+     * @param theGameStateManager GameStateManager.
+     */
     public TitleScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager) {
         this.myGameStateManager = theGameStateManager;
         
@@ -25,6 +36,11 @@ public class TitleScreen {
         myExitButton = new UIButton(theAssetManager.getAsset("exitButton"), new Rectangle(210, 269, 112, 55));
     }
 
+    /**
+     * This method draws the screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void draw(final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(Color.BLACK);
         theGraphics2D.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -35,6 +51,11 @@ public class TitleScreen {
         myExitButton.draw(theGraphics2D);
     }
 
+    /**
+     * This method handles hovering.
+     *
+     * @param theMousePoint Hovering point.
+     */
     public void handleHoverUpdate(final Point theMousePoint) {
         myPlayButton.setHovered(myPlayButton.contains(theMousePoint));
         myLoadButton.setHovered(myLoadButton.contains(theMousePoint));
@@ -42,6 +63,11 @@ public class TitleScreen {
         myExitButton.setHovered(myExitButton.contains(theMousePoint));
     }
 
+    /**
+     * This method handles clicking.
+     *
+     * @param theClickPoint Click point.
+     */
     public void handleClick(final Point theClickPoint) {
         if (myPlayButton.contains(theClickPoint)) {
             myGameStateManager.setState(GameStateManager.State.GAME_CREATE);

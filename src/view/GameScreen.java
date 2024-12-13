@@ -20,7 +20,12 @@ import java.util.Map;
 
 import static model.GameConfig.TILE_SIZE;
 
-public class GameScreen {
+/**
+ * This is the GameScreen Class
+ *
+ * @author Aileen Rosas
+ */
+public class GameScreen implements Screen{
     private final GameController myGameController;
     //private final DialogueManager myDialogueManager;
 
@@ -49,6 +54,12 @@ public class GameScreen {
     private final int mySlotSize = 39;
     private final int myPadding = 7;
 
+    /**
+     * GameScreen Constructor.
+     *
+     * @param theAssetManager AssetManager.
+     * @param theGameController GameController.
+     */
     public GameScreen(final AssetManager theAssetManager, final GameController theGameController) {
         this.myGameController = theGameController;
         //this.myDialogueManager = new DialogueManager();
@@ -67,6 +78,11 @@ public class GameScreen {
         loadRoomImages();
     }
 
+    /**
+     * This method draws the screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void draw(final Graphics2D theGraphics2D) {
         myMapButton.draw(theGraphics2D);
         myInventoryButton.draw(theGraphics2D);
@@ -81,6 +97,11 @@ public class GameScreen {
         drawDialogue(theGraphics2D);
     }
 
+    /**
+     * This method handles when the player hovers over a button.
+     *
+     * @param theMousePoint Mouse Pointer.
+     */
     public void handleHoverUpdate(final Point theMousePoint) {
         myMapButton.setHovered(myMapButton.contains(theMousePoint));
         myInventoryButton.setHovered(myInventoryButton.contains(theMousePoint));
@@ -91,6 +112,11 @@ public class GameScreen {
         }
     }
 
+    /**
+     * This method handles the player clicking a button.
+     *
+     * @param theClickPoint Clicked point.
+     */
     public void handleClick(final Point theClickPoint) {
         if (myMapButton.contains(theClickPoint)) {
             toggleMapScreen();
@@ -103,6 +129,11 @@ public class GameScreen {
         }
     }
 
+    /**
+     * This method draws the map screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     private void drawMapScreen(final Graphics2D theGraphics2D) {
         if (myMapBackground != null) {
             theGraphics2D.setClip(new RoundRectangle2D.Float(TILE_SIZE+5, TILE_SIZE+5, TILE_SIZE*7-5, TILE_SIZE*7-5, 35, 35));
@@ -146,9 +177,14 @@ public class GameScreen {
         }
     }
 
+    /**
+     * This method draws the inventory screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     private void drawInventoryScreen(final Graphics2D theGraphics2D) {
         drawSubWindow(TILE_SIZE * 8, TILE_SIZE,  TILE_SIZE * 5, TILE_SIZE * 11, theGraphics2D);
-        List<Item> items = myGameController.getPlayer().getMyInventory().getItems();
+        List<Item> items = myGameController.getInventory().getItems();
 
         int xStart = TILE_SIZE * 8 + 15;
         int yStart = TILE_SIZE + 19;
@@ -173,6 +209,16 @@ public class GameScreen {
         }
     }
 
+    /**
+     * This method draws the Item slots.
+     *
+     * @param theX X position for Item Slot.
+     * @param theY Y position for Item Slot.
+     * @param theWidth Width of Item Slot.
+     * @param theHeight Height of Item Slot.
+     * @param theItem The Item.
+     * @param theGraphics2D Graphics.
+     */
     private void drawItemSlot(final int theX, final int theY, final int theWidth, final int theHeight, final Item theItem, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(Color.DARK_GRAY);
         theGraphics2D.fillRoundRect(theX+1, theY+1, theWidth-1, theHeight-1, 10, 10);
@@ -182,6 +228,11 @@ public class GameScreen {
         }
     }
 
+    /**
+     * This method handles inventory navigation.
+     *
+     * @param theInputListener InputListener.
+     */
     public void handleInventoryNavigation(InputListener theInputListener) {
         if (theInputListener.isArrowUpPressed())
             moveCursor(-1, 0);
@@ -192,11 +243,17 @@ public class GameScreen {
         if (theInputListener.isArrowRightPressed())
             moveCursor(0, 1);
 
-        if (theInputListener.isUsePressed() && getSlotIndex() < myGameController.getPlayer().getMyInventory().getItems().size()) {
+        if (theInputListener.isUsePressed() && getSlotIndex() < myGameController.getInventory().getItems().size()) {
             useItem();
         }
     }
 
+    /**
+     * This method moves the cursor to different row/column.
+     *
+     * @param myRowChange Numbers of rows to move by.
+     * @param myColChange Number of columns to change by.
+     */
     public void moveCursor(int myRowChange, int myColChange) {
         int newRow = Math.max(0, Math.min(mySlotRow + myRowChange, myInventoryRows - 1));
         int newCol = Math.max(0, Math.min(mySlotCol + myColChange, myInventoryCols - 1));
@@ -205,22 +262,35 @@ public class GameScreen {
         mySlotCol = newCol;
     }
 
+    /**
+     * This method returns the slot index.
+     *
+     * @return slot index.
+     */
     public int getSlotIndex() {
         return mySlotCol + (mySlotRow * 3);
     }
 
+    /**
+     * This method uses an item.
+     */
     private void useItem() {
         int slotIndex = getSlotIndex();
-        Item selectedItem = myGameController.getPlayer().getMyInventory().getItems().get(slotIndex);
+        Item selectedItem = myGameController.getInventory().getItems().get(slotIndex);
 
         if (selectedItem != null) {
             myGameController.useItem(selectedItem, myGameController.getPlayer().getHeroClass(), myGameController.getDungeon(), myGameController.getUI());
         }
     }
 
+    /**
+     * This method draws the description screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void drawDescriptionScreen(final Graphics2D theGraphics2D) {
         int itemIndex = getSlotIndex();
-        List<Item> items = myGameController.getPlayer().getMyInventory().getItems();
+        List<Item> items = myGameController.getInventory().getItems();
         if (itemIndex < items.size()) {
             drawSubWindow(TILE_SIZE, TILE_SIZE * 8, TILE_SIZE * 7, TILE_SIZE * 3, theGraphics2D);
             theGraphics2D.setColor(Color.YELLOW);
@@ -236,6 +306,9 @@ public class GameScreen {
         }
     }
 
+    /**
+     * This method loads room images.
+     */
     private void loadRoomImages() {
         roomTypeImages.put(RoomType.START, loadImage("src/resources/assets/Map/room_start_floor.png"));
         roomTypeImages.put(RoomType.END, loadImage("src/resources/assets/Map/room_exit_floor.png"));
@@ -245,6 +318,12 @@ public class GameScreen {
         myMapBackground = loadImage("src/resources/assets/Map/map_background.png");
     }
 
+    /**
+     * This method loads an image.
+     *
+     * @param theFile filePath of image.
+     * @return the Image.
+     */
     private Image loadImage(final String theFile) {
         try {
             return ImageIO.read(new File(theFile));
@@ -254,20 +333,38 @@ public class GameScreen {
     }
 
 
+    /**
+     * This method shows dialogue.
+     *
+     * @param theMessage Message to be shown.
+     */
     public void showDialogue(String theMessage) {
         myCurrentMessage = theMessage;
         isDialogueVisible = true;
     }
 
+    /**
+     * This message hides dialogue.
+     */
     public void hideDialogue() {
         myCurrentMessage = "";
         isDialogueVisible = false;
     }
 
+    /**
+     * This message checks if dialogue is visible.
+     *
+     * @return true if dialogue is visible, false if not.
+     */
     public boolean isDialogueVisible() {
         return isDialogueVisible;
     }
 
+    /**
+     * This method draws the dialogue.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void drawDialogue(final Graphics2D theGraphics2D) {
         if (!isDialogueVisible || myCurrentMessage.isEmpty()) {
             return;
@@ -284,24 +381,48 @@ public class GameScreen {
         }
     }
 
-
-
+    /**
+     * This method gets the room image.
+     *
+     * @param theRoomType RoomType.
+     * @return the image.
+     */
     private Image getRoomImage(final RoomType theRoomType) {
         return roomTypeImages.getOrDefault(theRoomType, roomTypeImages.get(RoomType.FILLER));
     }
 
+    /**
+     * This method checks if inventory is visible.
+     *
+     * @return true if inventory is invisible, false if not.
+     */
     public boolean isMyInventoryVisible() {
         return isInventoryVisible;
     }
 
+    /**
+     * This method toggles the map screen.
+     */
     private void toggleMapScreen() {
         isMapVisible = !isMapVisible;
     }
 
+    /**
+     * This method toggles inventory screen.
+     */
     private void toggleInventoryScreen() {
         isInventoryVisible = !isInventoryVisible;
     }
 
+    /**
+     * This method draws the sub window.
+     *
+     * @param theX X position of window.
+     * @param theY Y position of window.
+     * @param theWidth Width of window.
+     * @param theHeight Height of window.
+     * @param theGraphics2D Graphics.
+     */
     private void drawSubWindow(final int theX, final int theY, final int theWidth, final int theHeight, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 210));
         theGraphics2D.fillRoundRect(theX, theY, theWidth, theHeight, 35, 35);

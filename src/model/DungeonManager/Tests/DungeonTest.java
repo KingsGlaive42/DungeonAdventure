@@ -23,7 +23,7 @@ public class DungeonTest {
     void setUp() {
         dungeon = new Dungeon(10, 10, 20);
         inventory = new Inventory(dungeon);
-        player = new Player("warrior", "PlayerName", inventory);
+        player = new Player("warrior", "PlayerName");
         gameController = new GameController(player, dungeon, inventory);
     }
 

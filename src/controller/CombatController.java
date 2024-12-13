@@ -40,20 +40,41 @@ public class CombatController {
         resetTurns();
     }
 
+    /**
+     * This method sets the JPanel that the controller interacts with.
+     *
+     * @param theCombatPanel JPanel to  interact with.
+     */
     public void setCombatPanel(final CombatPanel theCombatPanel) {
         myCombatPanel = theCombatPanel;
         updateHeroInfo();
         updateEnemyInfo();
     }
 
+    /**
+     * This method sets the player character in the combat panel.
+     *
+     * @param theHero the player character.
+     */
     public void setHero(final Hero theHero) {
         this.myHero = theHero;
     }
 
+    /**
+     * This method sets the gameController that the
+     * combat controller interacts with.
+     *
+     * @param theGameController gameController to interact with.
+     */
     public void setGameController(final GameController theGameController) {
         myGameController = theGameController;
     }
 
+    /**
+     * This method begins combat.
+     *
+     * @param theEnemy Enemy to fight with.
+     */
     public void startCombat(final Monster theEnemy) {
         myEnemy = theEnemy;
         updateHeroInfo();
@@ -64,6 +85,12 @@ public class CombatController {
     }
 
 
+    /**
+     * This method sets the CardLayoutManager for
+     * switching to gamePanel.
+     *
+     * @param theCardLayoutManager the CardLayoutManager.
+     */
     public void setCardLayoutManager(final CardLayoutManager theCardLayoutManager) {
         myCardLayoutManager = theCardLayoutManager;
     }
@@ -294,6 +321,9 @@ public class CombatController {
         }
     }
 
+    /**
+     * This method handles the user drinking a healing potion.
+     */
     public void handlePotion() {
         int health = myHero.getHitPoints();
         Item hPotion = myGameController.getInventory().getItem(ItemType.HEALING_POTION);
@@ -427,6 +457,10 @@ public class CombatController {
         myCombatPanel.updateEnemyInfo(enemyInfo);
     }
 
+    private void resetEnemy() {
+        myEnemy.setHitPoints(myEnemy.getMaxHitPoints());
+    }
+
     /**
      * This method switches to game panel when combat is finished
      */
@@ -437,6 +471,8 @@ public class CombatController {
                 ((JFrame) window).dispose();
             }
         } else {
+            myCardLayoutManager.switchToGamePanel();
+            resetEnemy();
             myCardLayoutManager.switchToGamePanel();
         }
     }

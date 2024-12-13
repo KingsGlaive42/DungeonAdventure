@@ -12,7 +12,12 @@ import model.GameConfig;
 import java.awt.*;
 import java.io.File;
 
-public class LoadGameScreen {
+/**
+ * This is the LoadGameScreen method
+ *
+ * @author Jayden Fausto
+ */
+public class LoadGameScreen implements Screen{
     private final GameStateManager myGameStateManager;
     private final SaveFileManager mySaveFileManager;
     private final GameController myGameController;
@@ -22,6 +27,15 @@ public class LoadGameScreen {
     private final UIButton[] saveSlotButtons;
     private final String[] saveSlotDetails;
 
+    /**
+     * LoadGameScreen Constructor
+     *
+     * @param theAssetManager AssetManager.
+     * @param theGameStateManager GameStateManager.
+     * @param theSaveFileManager SaveFileManager.
+     * @param theGameController GameController.
+     * @param theCombatController CombatController.
+     */
     public LoadGameScreen(final AssetManager theAssetManager, final GameStateManager theGameStateManager, final SaveFileManager theSaveFileManager, final GameController theGameController, final CombatController theCombatController) {
         this.myGameStateManager = theGameStateManager;
         this.mySaveFileManager = theSaveFileManager;
@@ -41,6 +55,9 @@ public class LoadGameScreen {
         loadSaveSlotDetails();
     }
 
+    /**
+     * THis method loads save files in their slots.
+     */
     public void loadSaveSlotDetails() {
         for (int i = 0; i < 3; i++) {
             File saveFile = mySaveFileManager.getSaveFile(i + 1);
@@ -61,11 +78,22 @@ public class LoadGameScreen {
         }
     }
 
+    /**
+     * Helper method that gets save file details
+     *
+     * @param theSaveFile the Save File
+     * @return String representation of save file.
+     */
     private String getSaveFileDetails(final File theSaveFile) {
         long lastModified = theSaveFile.lastModified();
         return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(lastModified));
     }
 
+    /**
+     * This method draws the screen.
+     *
+     * @param theGraphics2D Graphics.
+     */
     public void draw(final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(Color.BLACK);
         theGraphics2D.fillRect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
@@ -84,6 +112,11 @@ public class LoadGameScreen {
         myBackButton.draw(theGraphics2D);
     }
 
+    /**
+     * This method handles mouse hovering.
+     *
+     * @param theMousePoint Hovering point.
+     */
     public void handleHoverUpdate(final Point theMousePoint) {
         for (UIButton slotButton : saveSlotButtons) {
             slotButton.setHovered(slotButton.contains(theMousePoint));
@@ -91,6 +124,11 @@ public class LoadGameScreen {
         myBackButton.setHovered(myBackButton.contains(theMousePoint));
     }
 
+    /**
+     * This method handles mouse clicks
+     *
+     * @param theClickPoint Click point.
+     */
     public void handleClick(final Point theClickPoint) {
         for (int i = 0; i < saveSlotButtons.length; i++) {
             if (saveSlotButtons[i].contains(theClickPoint)) {
@@ -104,6 +142,11 @@ public class LoadGameScreen {
         }
     }
 
+    /**
+     * This method loads a game.
+     *
+     * @param theSlotNumber Slot save data is in.
+     */
     private void loadGame(final int theSlotNumber) {
         File saveFile = mySaveFileManager.getSaveFile(theSlotNumber);
         if (saveFile.exists()) {
@@ -122,6 +165,13 @@ public class LoadGameScreen {
         }
     }
 
+    /**
+     * This method draws the window.
+     *
+     * @param theY Y position of window.
+     * @param theSlotIndex Slot Index.
+     * @param theGraphics2D Graphics.
+     */
     private void drawSubWindow(final int theY, final int theSlotIndex, final Graphics2D theGraphics2D) {
         theGraphics2D.setColor(new Color(0, 0, 0, 210));
         theGraphics2D.fillRoundRect(100, theY, 350, 75, 35, 35);

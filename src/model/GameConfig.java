@@ -12,8 +12,8 @@ public class GameConfig {
     public static final int SCREEN_HEIGHT = TILE_SIZE * MAX_SCREEN_ROWS;
 
     // CHARACTER INFO
-    public static final String[] theGraphics2D = {"warrior", "thief", "priestess", "berserker", "mage"};
-    public static final int NUM_CHARACTERS = theGraphics2D.length;
+    public static final String[] CLASS_NAMES = {"warrior", "thief", "priestess", "berserker", "mage"};
+    public static final int NUM_CHARACTERS = CLASS_NAMES.length;
 
     // Game loop settings
     public static final int FPS = 30;

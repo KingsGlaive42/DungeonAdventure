@@ -4,8 +4,6 @@ import model.DungeonCharacters.DungeonCharacter;
 import model.DungeonCharacters.Hero;
 import model.DungeonCharacters.Monster;
 
-import static java.lang.Math.min;
-
 /**
  * This is the Combat Engine class that houses
  * the model for the combat system.
@@ -85,7 +83,7 @@ public class CombatEngine {
         return theAttacker.useSpecialSkill(theDefender);
     }
 
-    /**
+    /**@
      * This method increases the block chance when defending.
      *
      * @param theEnemy the hero defending.
@@ -103,14 +101,5 @@ public class CombatEngine {
     public void resetDefend(final Monster theEnemy) {
         theEnemy.setMaxDamage(theEnemy.getMaxDamage() + 20);
         theEnemy.setMinDamage(theEnemy.getMinDamage() + 20);
-    }
-
-    /**
-     * This method heals the user when a potion is used.
-     *
-     * @param theTarget person who drank potion.
-     */
-    public void heal(final DungeonCharacter theTarget) {
-        theTarget.setHitPoints(min(theTarget.getHitPoints() + 20, theTarget.getMaxHitPoints()));
     }
 }
