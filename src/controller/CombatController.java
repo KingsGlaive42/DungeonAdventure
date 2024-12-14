@@ -25,6 +25,7 @@ public class CombatController {
     private Monster myEnemy;
     private CardLayoutManager myCardLayoutManager;
     private GameController myGameController;
+    private GameStateManager myGameStateManager;
 
     /**
      * Controller Constructor.
@@ -68,6 +69,16 @@ public class CombatController {
      */
     public void setGameController(final GameController theGameController) {
         myGameController = theGameController;
+    }
+
+    /**
+     * This method sets the GameStateManager that the
+     * combat controller interacts with.
+     *
+     * @param theGameStateManager gameStateManager to interact with.
+     */
+    public void setGameStateManager(final GameStateManager theGameStateManager) {
+        myGameStateManager = theGameStateManager;
     }
 
     /**
@@ -466,12 +477,9 @@ public class CombatController {
      */
     public void switchToGamePanel() {
         if (myHero.getHitPoints() == 0) {
-            Window window = SwingUtilities.getWindowAncestor(myCombatPanel);
-            if (window instanceof JFrame) {
-                ((JFrame) window).dispose();
-            }
-        } else {
+            myGameStateManager.setState(GameStateManager.State.MENU);
             myCardLayoutManager.switchToGamePanel();
+        } else {
             resetEnemy();
             myCardLayoutManager.switchToGamePanel();
         }

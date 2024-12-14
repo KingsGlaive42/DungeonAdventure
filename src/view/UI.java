@@ -25,6 +25,7 @@ public class UI {
     private final OptionScreen myOptionScreen;
     private final GameCreateScreen myGameCreateScreen;
     private final LoadingScreen myWaitScreen;
+    private final HowToPlayScreen myHowToPlayScreen;
 
     /**
      * UI Constructor
@@ -46,6 +47,7 @@ public class UI {
         this.myOptionScreen = new OptionScreen(theGameStateManager, theAssetManager);
         this.myGameCreateScreen = new GameCreateScreen(this, theAssetManager, theGameController, theGameStateManager);
         this.myWaitScreen = new LoadingScreen(theGameController, theGameStateManager, theCombatController);
+        this.myHowToPlayScreen = new HowToPlayScreen(theAssetManager, theGameStateManager);
     }
 
     /**
@@ -122,6 +124,10 @@ public class UI {
         }
     }
 
+    public void drawHowToPlayScreen(final Graphics2D theGraphics2D) {
+        myHowToPlayScreen.draw(theGraphics2D);
+    }
+
     /**
      * This method updates hover states.
      *
@@ -136,6 +142,7 @@ public class UI {
             case SAVE -> mySaveGameScreen.handleHoverUpdate(theMousePoint);
             case GAME_CREATE -> myGameCreateScreen.handleHoverUpdate(theMousePoint);
             case OPTION -> myOptionScreen.handleHoverUpdate(theMousePoint);
+            case HTP -> myHowToPlayScreen.handleHoverUpdate(theMousePoint);
         }
     }
 
@@ -153,6 +160,7 @@ public class UI {
             case SAVE -> mySaveGameScreen.handleClick(theClickPoint);
             case GAME_CREATE -> myGameCreateScreen.handleClick(theClickPoint);
             case OPTION -> myOptionScreen.handleClick(theClickPoint);
+            case HTP -> myHowToPlayScreen.handleClick(theClickPoint);
         }
     }
 
