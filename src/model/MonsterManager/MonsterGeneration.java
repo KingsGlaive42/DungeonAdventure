@@ -7,37 +7,58 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+ * The MonsterGeneration class is responsible for generating a list of monsters
+ * based on templates loaded from the MonsterFactory.
+ *
+ * It uses a random selection process to create a specified number of monsters,
+ * ensuring each monster is a clone of a template from the available monster types.
+ * @author Aileen
+ */
 public class MonsterGeneration {
-    //private final List<Monster> myMonsters;
+    // A map containing the monster templates loaded from the database
     private final Map<String, Monster> myMonsterTemplates;
+
+    // Random number generator for selecting monsters randomly
     private final Random rand;
 
+    /**
+     * Constructs a new MonsterGeneration instance.
+     * It initializes the monster templates by loading them from the database
+     * and creates a new instance of the Random class for random selections.
+     */
     public MonsterGeneration() {
-        //this.myMonsters = new ArrayList<>();
-        //MonsterFactory factory = new MonsterFactory();
         this.myMonsterTemplates = new MonsterFactory().loadMonsterTemplates();
         this.rand = new Random();
-        //loadMonsters();
     }
 
+    /**
+     * Generates a list of monsters based on the templates loaded from the database.
+     * The number of monsters generated is specified by the parameter theNumOfMonsters.
+     *
+     * A random monster is selected from the available templates for each generated monster.
+     * Each selected monster is cloned to ensure that the original templates remain unchanged.
+     *
+     *
+     * @param theNumOfMonsters The number of monsters to generate.
+     * @return A list of randomly generated Monster objects.
+     */
     public List<Monster> generateMonsters(int theNumOfMonsters) {
         List<Monster> generatedMonsters = new ArrayList<>();
-        //List<String> monsterTypes = new ArrayList<>(myMonsterTemplates.keySet());
 
         for (int i = 0; i < theNumOfMonsters; i++) {
-            //Monster monster = myMonsters.get(rand.nextInt(myMonsters.size()));
-            //generatedMonsters.add(monster);
-            //System.out.println("Generated monster: " + monster.getName());
-            //String randomType = monsterTypes.get(rand.nextInt()(monsterTypes.size()));
             String[] keys = myMonsterTemplates.keySet().toArray(new String[0]);
             String selectedMonster = keys[rand.nextInt(keys.length)];
             Monster monster = myMonsterTemplates.get(selectedMonster).cloneMonster();
 
-            //Monster newMonster = cloneMonster(template);
             if (monster != null) {
                 generatedMonsters.add(monster);
             }
         }
         return generatedMonsters;
+    }
+
+    public Map<String, Monster> getMyMonsterTemplates() {
+        return myMonsterTemplates;
     }
 }

@@ -27,15 +27,11 @@ import static model.GameConfig.TILE_SIZE;
  */
 public class GameScreen implements Screen{
     private final GameController myGameController;
-    //private final DialogueManager myDialogueManager;
 
     private final UIButton myMapButton;
     private final UIButton myInventoryButton;
 
     private final UIButton myFirstPillarSlot;
-    //private final UIButton mySecondPillerSlot;
-    //private final UIButton myThirdPillarSlot;
-    //private final UIButton myFourthPillerSlot;
 
     private boolean isMapVisible;
     private boolean isInventoryVisible;
@@ -62,7 +58,6 @@ public class GameScreen implements Screen{
      */
     public GameScreen(final AssetManager theAssetManager, final GameController theGameController) {
         this.myGameController = theGameController;
-        //this.myDialogueManager = new DialogueManager();
 
         myMapButton = new UIButton(theAssetManager.getAsset("mapButton"), new Rectangle(412, 344, 60, 60));
         myInventoryButton = new UIButton(theAssetManager.getAsset("inventoryButton"), new Rectangle(478, 350, 48, 48));
@@ -71,7 +66,6 @@ public class GameScreen implements Screen{
         isInventoryVisible = false;
         isDialogueVisible = false;
         myCurrentMessage = "";
-
 
         myFirstPillarSlot = new UIButton(theAssetManager.getAsset("abstractionImage"), new Rectangle(TILE_SIZE * 9, 215, TILE_SIZE, TILE_SIZE));
 

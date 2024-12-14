@@ -31,19 +31,17 @@ public class Inventory implements Serializable {
      *
      * @param theDungeon the Dungeon.
      */
-    public Inventory(Dungeon theDungeon) {
     public Inventory(final Dungeon theDungeon) {
         myItems = new ArrayList<>();
         myItemCounts = new HashMap<>();
     }
 
-    public void addItem(final Item theItem) {
     /**
      * This method adds items to the player's inventory.
      *
      * @param theItem Item to be added.
      */
-    public void addItem(Item theItem) {
+    public void addItem(final Item theItem) {
         if (myItems.size() < MAX_ITEMS ) {
             myItems.add(theItem);
             myItemCounts.put(theItem.getItemType(), myItemCounts.getOrDefault(theItem.getItemType(), 0) + 1);
@@ -55,7 +53,6 @@ public class Inventory implements Serializable {
      *
      * @param theItem Item to be removed.
      */
-    public void removeItem(Item theItem) {
     public void removeItem(final Item theItem) {
         if (myItems.contains(theItem)) {
             myItems.remove(theItem);
@@ -67,7 +64,6 @@ public class Inventory implements Serializable {
         }
     }
 
-    public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, final UI theUI) {
     /**
      * This method uses an item in the player inventory.
      *
@@ -75,10 +71,8 @@ public class Inventory implements Serializable {
      * @param theHero Hero that is using item.
      * @param theDungeon Dungeon.
      */
-    public void useItem(Item theItem, Hero theHero, Dungeon theDungeon) {
+    public void useItem(final Item theItem, final Hero theHero, final Dungeon theDungeon, final UI theUI) {
         if (myItemCounts.getOrDefault(theItem.getItemType(), 0) <= 0) {
-           //System.out.println("No " + theItem.getItemType() + " in inventory!");
-            //theUI.getGameScreen().showDialogue("No " + theItem.getItemType() + " in inventory!");
            return;
         }
         if (theItem.getItemType() == ItemType.HEALING_POTION) {
@@ -96,29 +90,33 @@ public class Inventory implements Serializable {
         }
     }
 
-    public int getItemCount(final ItemType theType) {
     /**
      * This method returns the Item Count of an item type.
      *
      * @param theType ItemType.
      * @return number of that ItemType.
      */
-    public int getItemCount(ItemType theType) {
+    public int getItemCount(final ItemType theType) {
         return myItemCounts.getOrDefault(theType, 0);
     }
 
     /**
-     * This method gets all items.
+     * Returns the list of all items in the inventory.
      *
-     * @return list of all items.
+     * @return A list containing all the items in the inventory.
      */
     public List<Item> getItems() {
         return myItems;
     }
 
+    /**
+     * Retrieves the first item of a specified type from the inventory.
+     * If no item of the specified type is found, returns null.
+     *
+     * @param theType The type of item to retrieve.
+     * @return The first item of the specified type, or null if not found.
+     */
     public Item getItem(final ItemType theType) {
-
-    public Item getItem(ItemType theType) {
         for (Item item : myItems) {
             if (item.getItemType() == theType) {
                 return item;
@@ -127,16 +125,17 @@ public class Inventory implements Serializable {
         return null;
     }
 
+    /**
+     * Displays the items in the inventory to the console.
+     * Shows the total number of items and lists each item by its name.
+     * Used for testing
+     */
     public void displayInventory() {
         System.out.println("Items in Inventory: " + myItems.size());
         System.out.println("Inventory: ");
         for (Item item : myItems) {
             System.out.println("- " + item.getName());
         }
-    }
-
-    public boolean hasHealingPotions() {
-        return getItemCount(ItemType.HEALING_POTION) >  0;
     }
 
     /**
@@ -153,5 +152,4 @@ public class Inventory implements Serializable {
         }
         return count == 4;
     }
-
 }

@@ -9,32 +9,61 @@ import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * Represents a Skeleton monster in the game.
+ * This class extends the Monster abstract class and includes animations and sprite management
+ * for various actions such as idle, attack, death, and hit states.
+ */
 public class Skeleton extends Monster implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /** File paths for Skeleton spritesheets. */
     private static final String SKELETON_SS_IDLE = "src/resources/assets/Monsters/skeleton_sprite_idle.png";
     private static final String SKELETON_SS_ATTACK = "src/resources/assets/Monsters/skeleton_sprite_attack.png";
     private static final String SKELETON_SS_DEATH = "src/resources/assets/Monsters/skeleton_sprite_death.png";
     private static final String SKELETON_SS_HIT = "src/resources/assets/Monsters/skeleton_sprite_hit.png";
 
+    /** Number of frames for each animation state. */
     private static final int IDLE_SPRITES = 5;
     private static final int ATTACK_SPRITES = 9;
     private static final int DEATH_SPRITES = 12;
     private static final int HIT_SPRITES = 6;
 
+    /** Sprite loaders for each animation state. */
     private Sprite idleSpriteLoader;
     private Sprite attackSpriteLoader;
     private Sprite deathSpriteLoader;
     private Sprite hitSpriteLoader;
+
+    /** Animations for each state. */
     private Animation idleAnimation;
     private Animation attackAnimation;
     private Animation deathAnimation;
     private Animation hitAnimation;
 
+    /**
+     * Tracks the last update time for animations.
+     */
     private long lastUpdate;
+
+    /**
+     * Frame time for animation updates (milliseconds per frame).
+     */
     private final long FT = 1000 / 60;
 
+    /**
+     * Constructs a Skeleton monster with the specified attributes.
+     *
+     * @param theHitPoints    The hit points of the Skeleton.
+     * @param theMinDamage    The minimum damage the Skeleton can deal.
+     * @param theMaxDamage    The maximum damage the Skeleton can deal.
+     * @param theAttackSpeed  The attack speed of the Skeleton.
+     * @param theChanceToHit  The chance to hit for the Skeleton.
+     * @param theHealChance   The chance for the Skeleton to heal.
+     * @param theMinHeal      The minimum amount of healing.
+     * @param theMaxHeal      The maximum amount of healing.
+     */
     public Skeleton(int theHitPoints, int theMinDamage,
                     int theMaxDamage, int theAttackSpeed, double theChanceToHit, double theHealChance,
                     int theMinHeal, int theMaxHeal) {
@@ -45,6 +74,9 @@ public class Skeleton extends Monster implements Serializable {
         lastUpdate = System.currentTimeMillis();
     }
 
+    /**
+     * Loads the sprite sheets for the Skeleton's animations.
+     */
     private void loadSprites() {
         idleSpriteLoader = new Sprite();
         idleSpriteLoader.loadSprite(SKELETON_SS_IDLE);
@@ -59,13 +91,9 @@ public class Skeleton extends Monster implements Serializable {
         hitSpriteLoader.loadSprite(SKELETON_SS_HIT);
     }
 
-    private BufferedImage getIdleSprite(int theFrameIndex) {
-        if (theFrameIndex < 0 || theFrameIndex >= IDLE_SPRITES) {
-            throw new IllegalArgumentException("Invalid frame for sprite");
-        }
-        return idleSpriteLoader.getSprite(theFrameIndex,0, 128, 128);
-    }
-
+    /**
+     * Initializes the animations for the Skeleton's various states.
+     */
     private void initializeAnimations() {
         BufferedImage[] idleFrames = new BufferedImage[IDLE_SPRITES];
         for (int i = 0; i < IDLE_SPRITES; i++) {
@@ -96,6 +124,11 @@ public class Skeleton extends Monster implements Serializable {
         hitAnimation.start();
     }
 
+    /**
+     * Returns the current sprite based on the Skeleton's state.
+     *
+     * @return The current frame of the idle animation.
+     */
     @Override
     public BufferedImage getSprite() {
         // return animation based on state
@@ -109,6 +142,11 @@ public class Skeleton extends Monster implements Serializable {
         return idleAnimation.getSprite();
     }
 
+    /**
+     * Clones the current Skeleton instance.
+     *
+     * @return A new Skeleton instance with the same attributes as the current one.
+     */
     @Override
     public Monster cloneMonster() {
         return new Skeleton(

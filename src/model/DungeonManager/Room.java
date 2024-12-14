@@ -75,7 +75,6 @@ public class Room implements Serializable {
         if (theRoomType == null) {
             throw new IllegalArgumentException("Room type cannot be null");
         }
-
         myX = theX;
         myY = theY;
         myRoomType = theRoomType;
@@ -290,12 +289,9 @@ public class Room implements Serializable {
         if (theGameController == null) {
             throw new IllegalArgumentException("The gameController cannot be null.");
         }
-
         if (!isVisited) {
             if (this.hasPit) {
-                //System.out.println("Fell in pit");
                 handlePitDamage(theGameController);
-
             } else {
                 for (Item item : myRoomItems) {
                     theGameController.getInventory().addItem(item);
@@ -319,7 +315,7 @@ public class Room implements Serializable {
      * @param theItem The item to add.
      * @throws IllegalArgumentException if theItem is null.
      */
-    public void addItem(Item theItem) {
+    public void addItem(final Item theItem) {
         if (theItem == null) {
             throw new IllegalArgumentException("Item cannot be null");
         }
@@ -331,10 +327,8 @@ public class Room implements Serializable {
      *
      * @param theMonster Monster to be added.
      */
-    public void addMonster(Monster theMonster) {
+    public void addMonster(final Monster theMonster) {
         myRoomMonsters.add(theMonster);
-        //System.out.println("Monster added to room: " + myRoomType);
-        //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
     }
 
     /**
@@ -366,15 +360,6 @@ public class Room implements Serializable {
      */
     public List<Item> getRoomItems() {
         return Collections.unmodifiableList(myRoomItems);
-    }
-
-    /**
-     * Returns the X coordinate of the room.
-     *
-     * @return The X coordinate of the room.
-     */
-    public List<Monster> getMyRoomMonsters() {
-        return myRoomMonsters;
     }
 
     public int getX() {
@@ -439,10 +424,18 @@ public class Room implements Serializable {
         this.hasPit = thePit;
     }
 
+    /**
+     * Sets the visibility status of a room
+     * @param theVisibility
+     */
     public void setVisibility(final boolean theVisibility) {
         this.isVisible = theVisibility;
     }
 
+    /**
+     * Gets the visibility status of a room
+     * @return
+     */
     public boolean getVisibility() {
         return isVisible;
     }
@@ -566,7 +559,6 @@ public class Room implements Serializable {
         if (myRoomMonsters.isEmpty()) {
             return;
         }
-
         List<Point> availablePositions = new ArrayList<>();
         int startX = 4;
         int startY = 4;
@@ -588,7 +580,6 @@ public class Room implements Serializable {
                 Point pos = availablePositions.get(i);
                 Monster monster = myRoomMonsters.get(i);
                 monster.setPosition(pos.x, pos.y);
-                //System.out.println("Placing " + myRoomMonsters.size() + " monsters in room (" + myX + ", " + myY + ")");
             }
         }
     }

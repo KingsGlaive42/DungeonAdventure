@@ -12,18 +12,37 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
-
+/**
+ * Represents a healing potion item in the inventory.
+ * <p>
+ * This item restores a random amount of health points (between 5 and 15) to a hero when used.
+ * The healing potion also has an associated image for display in the UI.
+ * </p>
+ * @author Aileen
+ */
 public class HealingPotion extends Item {
 
+    // The amount of health points this potion restores
     private final int myHealingAmount;
+
+    // The image associated with this healing potion
     private transient BufferedImage IMAGE;
 
+    /**
+     * Constructs a new HealingPotion object with a random healing amount between 5 and 15 HP.
+     * Also loads the potion's sprite image.
+     */
     public HealingPotion() {
         super("Healing Potion", "Restores a random amount of \nhealth points. \n(5-15 HP)", ItemType.HEALING_POTION);
         this.myHealingAmount = (int)(Math.random() * 11 + 5); // 5-15 HP
         loadSprite();
     }
 
+    /**
+     * Loads the sprite image for the healing potion.
+     * The image is read from the file system and stored in the IMAGE field.
+     * If an error occurs during loading, the image will be set to null.
+     */
     private void loadSprite() {
         BufferedImage temp;
         try {
@@ -34,6 +53,16 @@ public class HealingPotion extends Item {
         IMAGE = temp;
     }
 
+    /**
+     * Uses the healing potion on the given hero.
+     * The hero's health is restored by a random amount (between 5 and 15 HP), but it will not exceed the hero's maximum health.
+     * A dialogue is displayed to the user indicating how much health was restored or if the hero is already at full health.
+     *
+     *
+     * @param theHero The hero who will use the healing potion.
+     * @param theDungeon The current dungeon (not used in this method, but included for consistency).
+     * @param theUI The UI object used to display messages to the user.
+     */
     @Override
     public void use(final Hero theHero, final Dungeon theDungeon, final UI theUI) {
         int oldHealth = theHero.getHitPoints();
@@ -50,6 +79,11 @@ public class HealingPotion extends Item {
         }
     }
 
+    /**
+     * Returns the image associated with this healing potion.
+     *
+     * @return The BufferedImage representing the healing potion sprite.
+     */
     @Override
     public BufferedImage getImage() {
         return IMAGE;

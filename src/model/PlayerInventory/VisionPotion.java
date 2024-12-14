@@ -13,13 +13,27 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Map;
 
+/**
+ * Represents a Vision Potion item in the inventory.
+ * The Vision Potion reveals up to 8 nearby rooms in the dungeon when used.
+ * @author Aileen
+ */
 public class VisionPotion extends Item implements Serializable {
     private transient BufferedImage IMAGE;
+
+    /**
+     * Constructs a Vision Potion with a default name, description, and type.
+     * The image representing the potion is also loaded.
+     */
     public VisionPotion() {
         super("Vision Potion", "Reveals up to 8 nearby rooms.", ItemType.VISION_POTION);
         loadSprite();
     }
 
+    /**
+     * Loads the image representing the Vision Potion from the specified file path.
+     * If the image cannot be loaded, it sets the image to null.
+     */
     private void loadSprite() {
         BufferedImage temp;
         try {
@@ -30,22 +44,32 @@ public class VisionPotion extends Item implements Serializable {
         IMAGE = temp;
     }
 
-
+    /**
+     * Uses the Vision Potion to reveal surrounding rooms in the dungeon.
+     * Each surrounding room is set to visible, and the player is notified.
+     *
+     * @param theHero The hero using the potion.
+     * @param theDungeon The dungeon in which the potion is used.
+     * @param theUI The UI to display messages to the player.
+     */
     @Override
     public void use(Hero theHero, Dungeon theDungeon, UI theUI) {
         Room currRoom = theDungeon.getMyCurrentRoom();
         Map<Point, Room> surroundingRooms = theDungeon.getSurroundingRooms(currRoom);
 
-        //System.out.println("Revealing surrounding rooms:");
         for (Map.Entry<Point, Room> entry : surroundingRooms.entrySet()) {
             Room room = entry.getValue();
             room.setVisibility(true);
-            //System.out.println("Room at " + entry.getKey() + " -> Items: " + room.getRoomItems().size() + " item(s)");
         }
         theUI.getGameScreen().showDialogue("Revealed surrounding rooms!");
 
     }
 
+    /**
+     * Returns the image representing the Vision Potion.
+     *
+     * @return The image of the Vision Potion.
+     */
     @Override
     public BufferedImage getImage() {
         return IMAGE;

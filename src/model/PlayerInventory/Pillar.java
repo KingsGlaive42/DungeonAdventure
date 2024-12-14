@@ -13,21 +13,32 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
 
+/**
+ * Represents a Pillar item in the inventory.
+ * The Pillar is required to exit the dungeon and cannot be used for other purposes.
+ * @author Aileen
+ */
 public class Pillar extends Item {
     private final String myName;
     private static final String IMAGE_PATH = "src/resources/assets/Inventory/";
     private transient BufferedImage pillarImage;
 
+    /**
+     * Constructs a Pillar with a given name.
+     * The name defines the pillar's identity, and the image is loaded based on the name.
+     *
+     * @param theName The name of the pillar (e.g., "Fire", "Water").
+     */
     public Pillar(String theName) {
         super("'" + theName.charAt(0) + "' pillar", "The pillar of " + theName.toLowerCase() + ". \nRequired to exit the dungeon.", ItemType.PILLAR);
         this.myName = theName;
         loadPillarImage();
     }
 
-    public String getPillarName() {
-        return myName;
-    }
-
+    /**
+     * Loads the image associated with the pillar based on its name.
+     * The image is loaded from a specific file path, and if an error occurs, it sets the image to null.
+     */
     private void loadPillarImage() {
         String imageName = myName.toLowerCase();
         try {
@@ -38,12 +49,24 @@ public class Pillar extends Item {
         }
     }
 
+    /**
+     * Uses the pillar item.
+     * Since pillars cannot be used, this method shows a message saying that pillars cannot be used.
+     *
+     * @param theHero    The hero using the item.
+     * @param theDungeon The dungeon where the item is being used.
+     * @param theUI      The UI for showing any relevant messages.
+     */
     @Override
     public void use(Hero theHero, Dungeon theDungeon, UI theUI) {
-        //System.out.println("Cannot use Pillars!");
         theUI.getGameScreen().showDialogue("Cannot use pillars!");
     }
 
+    /**
+     * Returns the image representation of the pillar.
+     *
+     * @return The image of the pillar.
+     */
     @Override
     public BufferedImage getImage() {
         return pillarImage;

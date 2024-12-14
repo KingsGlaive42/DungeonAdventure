@@ -8,22 +8,32 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serial;
 import java.io.Serializable;
+/**
+ * The Ogre class represents a specific type of Monster in the game.
+ * It includes animations, sprite loading, and a clone method for creating new Ogre instances.
+ * @author Aileen
+ */
 
 public class Ogre extends Monster implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    // File paths for sprite sheets
     private static final String OGRE_SS_IDLE = "src/resources/assets/Monsters/ogre_sprite_idle.png";
     private static final String OGRE_SS_ATTACK = "src/resources/assets/Monsters/ogre_sprite_attack.png";
     private static final String OGRE_SS_DEATH = "src/resources/assets/Monsters/ogre_sprite_death.png";
     private static final String OGRE_SS_HIT = "src/resources/assets/Monsters/ogre_sprite_hit.png";
+
+    // Frame counts for animations
     private static final int IDLE_ATTACK_SPRITES = 8;
     private static final int DEATH_SPRITES = 10;
     private static final int HIT_SPRITES = 6;
 
+    // Frame time / update
     private long lastUpdate;
     private final long FT = 1000 / 60;
 
+    // Sprites and animations
     private Sprite idleSpriteLoader;
     private Sprite attackSpriteLoader;
     private Sprite deathSpriteLoader;
@@ -33,7 +43,18 @@ public class Ogre extends Monster implements Serializable {
     private Animation deathAnimation;
     private Animation hitAnimation;
 
-
+    /**
+     * Constructs an Ogre with the specified attributes.
+     *
+     * @param theHitPoints    The initial hit points of the Ogre.
+     * @param theMinDamage    The minimum damage the Ogre can deal.
+     * @param theMaxDamage    The maximum damage the Ogre can deal.
+     * @param theAttackSpeed  The attack speed of the Ogre.
+     * @param theChanceToHit  The chance of successfully hitting an opponent.
+     * @param theHealChance   The chance of the Ogre healing itself after taking damage.
+     * @param theMinHeal      The minimum amount of health the Ogre can heal.
+     * @param theMaxHeal      The maximum amount of health the Ogre can heal.
+     */
     public Ogre(int theHitPoints, int theMinDamage,
                 int theMaxDamage, int theAttackSpeed, double theChanceToHit, double theHealChance,
                 int theMinHeal, int theMaxHeal) {
@@ -44,6 +65,9 @@ public class Ogre extends Monster implements Serializable {
         lastUpdate = System.currentTimeMillis();
     }
 
+    /**
+     * Loads sprite sheets for the Ogre's animations.
+     */
     private void loadSprites() {
         idleSpriteLoader = new Sprite();
         idleSpriteLoader.loadSprite(OGRE_SS_IDLE);
@@ -58,6 +82,9 @@ public class Ogre extends Monster implements Serializable {
         hitSpriteLoader.loadSprite(OGRE_SS_HIT);
     }
 
+    /**
+     * Initializes animations for the Ogre using the loaded sprite sheets.
+     */
     private void initializeAnimations() {
 
         BufferedImage[] idleFrames = new BufferedImage[IDLE_ATTACK_SPRITES];
@@ -89,6 +116,11 @@ public class Ogre extends Monster implements Serializable {
         hitAnimation.start();
     }
 
+    /**
+     * Retrieves the current sprite based on the Ogre's state and animation.
+     *
+     * @return The current frame of the idle animation.
+     */
     @Override
     public BufferedImage getSprite() {
         // return animation based on state
@@ -102,6 +134,11 @@ public class Ogre extends Monster implements Serializable {
         return idleAnimation.getSprite();
     }
 
+    /**
+     * Creates a copy of the Ogre with the same attributes.
+     *
+     * @return A new instance of Ogre with identical attributes.
+     */
     @Override
     public Monster cloneMonster() {
         return new Ogre(

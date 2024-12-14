@@ -150,6 +150,7 @@ public class Dungeon implements Serializable {
         return Collections.unmodifiableMap(surroundingRooms);
     }
 
+    /** @return A map of all rooms in the dungeon. */
     public Map<Point, Room> getMyRooms() {
         return myRooms;
     }
@@ -163,10 +164,12 @@ public class Dungeon implements Serializable {
         return myCurrentRoom;
     }
 
+    /** @return The height of the dungeon. */
     public int getMyHeight() {
         return myHeight;
     }
 
+    /** @return The width of the dungeon. */
     public int getMyWidth() {
         return myWidth;
     }

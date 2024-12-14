@@ -155,7 +155,7 @@ public class DungeonGenerator implements Serializable {
     }
 
     /**
-     * Adds dungeon items (healing potions, vision potions, pits) to the rooms.
+     * Adds dungeon items (healing potions, vision potions, pits) and monsters to the rooms.
      */
     private void addDungeonItemsAndMonsters() {
         MonsterGeneration monsters = new MonsterGeneration();
@@ -179,8 +179,6 @@ public class DungeonGenerator implements Serializable {
                 } else if (room.getRoomType() == RoomType.END) {
                     for (int j = 0; j < 4; j++) {
                         room.addMonster(randomMonsters.get(monsterIndex));
-                        //System.out.println("Monster index: " + monsterIndex + ", Total Monsters: " + randomMonsters.size());
-
                         monsterIndex++;
                     }
                 } else if (monsterIndex < randomMonsters.size() && Math.random() < 0.2 && room.getRoomType() == RoomType.FILLER) {
@@ -199,15 +197,12 @@ public class DungeonGenerator implements Serializable {
     private void placeRandomItems(final Room room) {
         if (Math.random() < PIT_PROBABILITY) {
             room.setPit(true);
-            //System.out.println("add a pit");
         } else if (!room.getPit()){
             if (Math.random() < HEALING_POTION_PROBABILITY) {
-                //System.out.println("add healing potion");
                 HealingPotion hPotion = new HealingPotion();
                 room.addItem(hPotion);
             }
             if (Math.random() < VISION_POTION_PROBABILITY) {
-                //System.out.println("add vision potion");
                 VisionPotion vPotion = new VisionPotion();
                 room.addItem(vPotion);
             }

@@ -37,9 +37,7 @@ public class Main {
         CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);
         GameController gameController = new GameController(gameState.getMyPlayer(), gameState.getMyDungeon(), gameState.getMyInventory());
         GameStateManager gameStateManager = new GameStateManager(gameController);
-        CombatController combatController = new CombatController(gameState.getMyPlayer().getHeroClass(), null);
         UI ui = new UI(gameStateManager, assetManager, saveFileManager, gameController, combatController);
-        //UI ui = new UI(gameStateManager, assetManager, saveFileManager, gameController, combatController);
 
         CardLayoutManager cardLayoutManager = new CardLayoutManager(combatController, gameStateManager, ui);
         combatController.setCardLayoutManager(cardLayoutManager);

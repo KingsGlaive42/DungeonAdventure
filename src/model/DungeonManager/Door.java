@@ -117,10 +117,20 @@ public class Door implements Serializable {
         return playerBounds.intersects(myRect);
     }
 
+    /**
+     * Gets the X coordinate of the door.
+     *
+     * @return The X coordinate of the door.
+     */
     public double getX() {
         return myX;
     }
 
+    /**
+     * Gets the Y coordinate of the door.
+     *
+     * @return The Y coordinate of the door.
+     */
     public double getY() {
         return myY;
     }
