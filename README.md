@@ -17,9 +17,7 @@ Welcome to **Dungeon Adventure**, a turn-based RPG game developed as part of a g
 ## Features
 
 - **Randomly Generated Dungeon**: Each playthrough offers a unique experience with randomly placed items, monsters, and dungeon layout.
-- **Hero Selection**: Choose from multiple hero classes, each with unique stats and special abilities:
-  - **Warrior**: Excels in melee combat with a special skill, *Crushing Blow*.
-  - **[Other Classes]**: (List other classes with a brief description of their skills and stats.)
+- **Hero Selection**: Choose from multiple hero classes, each with unique stats and special abilities
 - **Turn-Based Combat**: Engage in strategic battles against enemies with varying difficulty levels.
 - **Item Collection**: Discover potions, weapons, and the four Pillars of OOP hidden throughout the dungeon.
 - **SQLite Integration**: Store and retrieve character and monster stats from a database.
